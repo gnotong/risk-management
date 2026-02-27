@@ -9,6 +9,8 @@ import com.notgabs.corp.service.NotificationService;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.UUID;
+import com.notgabs.corp.model.Incident;
+import com.notgabs.corp.model.PlanAction;
 
 @Path("/api/risques")
 @Produces(MediaType.APPLICATION_JSON)
@@ -71,6 +73,13 @@ public class RisqueResource {
         if (entity == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+        long incidentCount = Incident.count("risque", entity);
+        long planCount = PlanAction.count("risque", entity);
+        
+        if (incidentCount > 0 || planCount > 0) {
+            throw new WebApplicationException("Suppression interdite : Ce risque est lié à un Incident ou un Plan d'Action.", Response.Status.BAD_REQUEST);
+        }
+        
         entity.delete();
         return Response.status(204).build();
     }

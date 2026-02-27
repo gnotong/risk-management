@@ -5,7 +5,10 @@
         <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">Tableau de Bord des Risques</h2>
         <p class="text-gray-400 mt-2 text-lg">Vue globale de la cartographie des risques et filtrage dynamique.</p>
       </div>
-      <div class="flex gap-3">
+      <div class="flex flex-wrap justify-end gap-3 mt-4 md:mt-0">
+        <button @click="isModalOpen = true" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center gap-2 group cursor-pointer lg:mr-4">
+          <span class="text-lg group-hover:scale-110 transition-transform">+</span> Nouveau Risque
+        </button>
         <button @click="exportPDF" class="glass hover:bg-white/10 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 group cursor-pointer hover:border-white/30">
           <span class="group-hover:scale-110 transition-transform">📄</span> Export PDF
         </button>
@@ -65,16 +68,23 @@
         </div>
       </div>
     </div>
+    
+    <RiskFormModal :isOpen="isModalOpen" @close="isModalOpen = false" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRiskStore } from '../stores/riskStore';
 import FilterBar from '../components/FilterBar.vue';
 import RiskHeatmap from '../components/RiskHeatmap.vue';
+import RiskFormModal from '../components/RiskFormModal.vue';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 const store = useRiskStore();
+const isModalOpen = ref(false);
 
 onMounted(() => {
   store.fetchRisques();
@@ -98,11 +108,39 @@ const getScoreColor = (score: number) => {
 };
 
 const exportPDF = () => {
-  alert("Génération PDF (Simulation jsPDF)...");
+  const doc = new jsPDF();
+  doc.text("Rapport des Risques", 14, 15);
+  
+  const tableData = store.filteredRisks.map(r => [
+    r.libelle,
+    r.score,
+    r.statut,
+    r.proprietaire?.nom || 'Non assigné'
+  ]);
+
+  autoTable(doc, {
+    head: [['Libellé', 'Score', 'Statut', 'Opérateur']],
+    body: tableData,
+    startY: 20,
+    theme: 'grid',
+    styles: { font: 'helvetica', fontSize: 10 }
+  });
+
+  doc.save('risques.pdf');
 };
 
 const exportExcel = () => {
-  alert("Génération Excel (Simulation)...");
+  const wsData = store.filteredRisks.map(r => ({
+    'Libellé': r.libelle,
+    'Score': r.score,
+    'Statut': r.statut,
+    'Opérateur': r.proprietaire?.nom || 'Non assigné'
+  }));
+  
+  const ws = XLSX.utils.json_to_sheet(wsData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Risques");
+  XLSX.writeFile(wb, "risques.xlsx");
 };
 </script>
 

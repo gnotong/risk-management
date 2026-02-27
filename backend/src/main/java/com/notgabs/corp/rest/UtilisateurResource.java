@@ -7,6 +7,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
+import com.notgabs.corp.model.Risque;
+import com.notgabs.corp.model.PlanAction;
 
 @Path("/api/utilisateurs")
 @Produces(MediaType.APPLICATION_JSON)
@@ -36,5 +38,24 @@ public class UtilisateurResource {
         }
         user.persist();
         return Response.ok(user).status(201).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response delete(@PathParam("id") UUID id) {
+        Utilisateur entity = Utilisateur.findById(id);
+        if (entity == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        long riskCount = Risque.count("proprietaire", entity);
+        long planCount = PlanAction.count("responsable", entity);
+        
+        if (riskCount > 0 || planCount > 0) {
+            throw new WebApplicationException("Suppression interdite : Cet utilisateur est responsable d'un Risque ou d'un Plan d'Action.", Response.Status.BAD_REQUEST);
+        }
+        
+        entity.delete();
+        return Response.status(204).build();
     }
 }

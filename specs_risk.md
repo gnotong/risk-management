@@ -87,7 +87,7 @@ L'interface doit être réactive (Composition API) et strictement typée.
 
 
 * 
-**Recherche** : Filtres dynamiques par libellé, criticité et statut.
+**Recherche** : Filtres dynamiques par libellé, criticité et statut. Elle ne doit pas etre case sensitive.
 
 
 2. Plans d'Action & Suivi 

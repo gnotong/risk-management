@@ -7,6 +7,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
+import com.notgabs.corp.model.Recommandation;
+import com.notgabs.corp.model.StatutAudit;
+import com.notgabs.corp.model.StatutRecommandation;
 
 @Path("/api/audits")
 @Produces(MediaType.APPLICATION_JSON)
@@ -46,6 +49,14 @@ public class AuditResource {
         if (entity == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+        
+        if (audit.statutAudit == StatutAudit.TERMINE && entity.statutAudit != StatutAudit.TERMINE) {
+            long openRecs = Recommandation.count("audit = ?1 and statut != ?2", entity, StatutRecommandation.TERMINE);
+            if (openRecs > 0) {
+                throw new WebApplicationException("Clôture interdite : L'audit a des recommandations non terminées.", Response.Status.BAD_REQUEST);
+            }
+        }
+
         entity.nom = audit.nom;
         entity.description = audit.description;
         entity.dateRealisation = audit.dateRealisation;
