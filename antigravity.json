@@ -1,0 +1,40 @@
+{
+    "project_name": "risk-management",
+    "structure": "monorepo",
+    "stack": {
+        "backend": {
+            "framework": "Quarkus",
+            "language": "Java 21",
+            "orm": "Hibernate with Panache",
+            "build_tool": "Maven",
+            "port": 8080
+        },
+        "frontend": {
+            "framework": "Vue.js 3",
+            "api_style": "Composition API",
+            "state_management": "Pinia",
+            "package_manager": "npm",
+            "port": 5173
+        }
+    },
+    "deployment": {
+        "target": "Docker",
+        "orchestration": "docker-compose"
+    },
+    "agent_policies": {
+        "execution_env": "wsl_ubuntu",
+        "shell": "zsh",
+        "allow_terminal_commands": "ask_always",
+        "preferred_model": "gemini-3-pro"
+    },
+    "custom_instructions": [
+        "Toujours utiliser 'quarkus-dev' pour le développement backend.",
+        "Le frontend doit utiliser TypeScript de manière stricte.",
+        "Hibernate : Privilégier les entités étendant 'PanacheEntity' pour le CRUD de base.",
+        "Les composants Vue doivent être dans le dossier /src/components et les vues dans /src/views.",
+        "Architecture monorepo : le backend et le frontend sont dans des sous-dossiers respectifs.",
+        "Docker : Générer un Dockerfile multi-stage pour le backend (Quarkus native ou JVM) et un pour le frontend (Nginx).",
+        "Docker-Compose : Créer un fichier à la racine pour orchestrer backend, frontend et PostgreSQL.",
+        "Zsh/WSL : Toutes les commandes de build doivent être testées via zsh."
+    ]
+}

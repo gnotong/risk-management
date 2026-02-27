@@ -1,0 +1,102 @@
+time="2026-02-27T23:35:37+01:00" level=warning msg="/home/notong/workspace/risk-management/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Image risk-management-backend Building 
+ Image risk-management-frontend Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.03kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 541B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/nginx:alpine
+#3 ...
+
+#4 [internal] load metadata for docker.io/library/node:20-alpine
+#4 DONE 0.3s
+
+#3 [internal] load metadata for docker.io/library/nginx:alpine
+#3 DONE 0.3s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 73B done
+#5 DONE 0.0s
+
+#6 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:1d13701a5f9f3fb01aaa88cef2344d65b6b5bf6b7d9fa4cf0dca557a8d7702ba
+#6 resolve docker.io/library/nginx:alpine@sha256:1d13701a5f9f3fb01aaa88cef2344d65b6b5bf6b7d9fa4cf0dca557a8d7702ba 0.0s done
+#6 DONE 0.0s
+
+#7 [build 1/6] FROM docker.io/library/node:20-alpine@sha256:09e2b3d9726018aecf269bd35325f46bf75046a643a66d28360ec71132750ec8
+#7 resolve docker.io/library/node:20-alpine@sha256:09e2b3d9726018aecf269bd35325f46bf75046a643a66d28360ec71132750ec8 0.0s done
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 1.24kB done
+#8 DONE 0.0s
+
+#9 [build 4/6] RUN npm install
+#9 CACHED
+
+#10 [build 2/6] WORKDIR /app
+#10 CACHED
+
+#11 [build 3/6] COPY package*.json ./
+#11 CACHED
+
+#12 [build 5/6] COPY . .
+#12 CACHED
+
+#13 [build 6/6] RUN npm run build
+#13 0.627 
+#13 0.627 > frontend@0.0.0 build
+#13 0.627 > vue-tsc -b && vite build
+#13 0.627 
+#13 5.135 vite v7.3.1 building client environment for production...
+#13 5.305 transforming...
+#13 5.439 ✓ 8 modules transformed.
+#13 5.441 ✗ Build failed in 253ms
+#13 5.442 error during build:
+#13 5.442 [@tailwindcss/vite:generate:build] Cannot apply unknown utility class `shadow-[-10px_-10px_30px_4px_rgba(0,`
+#13 5.442 file: /app/src/index.css
+#13 5.442     at onInvalidCandidate (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:21:1511)
+#13 5.442     at $e (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:16:36740)
+#13 5.442     at file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:21:355
+#13 5.442     at Ar (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:3:1733)
+#13 5.442     at I (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:3:1377)
+#13 5.442     at Ce (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:21:172)
+#13 5.442     at Gi (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:38:294)
+#13 5.442     at async ao (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:38:631)
+#13 5.442     at async vf (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:38:1406)
+#13 5.442     at async uu (file:///app/node_modules/@tailwindcss/node/dist/index.mjs:10:3458)
+#13 ERROR: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+------
+ > [build 6/6] RUN npm run build:
+5.442     at onInvalidCandidate (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:21:1511)
+5.442     at $e (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:16:36740)
+5.442     at file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:21:355
+5.442     at Ar (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:3:1733)
+5.442     at I (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:3:1377)
+5.442     at Ce (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:21:172)
+5.442     at Gi (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:38:294)
+5.442     at async ao (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:38:631)
+5.442     at async vf (file:///app/node_modules/tailwindcss/dist/chunk-L5IEUH3R.mjs:38:1406)
+5.442     at async uu (file:///app/node_modules/@tailwindcss/node/dist/index.mjs:10:3458)
+------
+Dockerfile:6
+
+--------------------
+
+   4 |     RUN npm install
+
+   5 |     COPY . .
+
+   6 | >>> RUN npm run build
+
+   7 |     
+
+   8 |     FROM nginx:alpine
+
+--------------------
+
+failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+

@@ -1,0 +1,42 @@
+{
+  "id" : "io.quarkus.platform:quarkus-cassandra-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7",
+  "platform" : true,
+  "bom" : "io.quarkus.platform:quarkus-cassandra-bom::pom:3.15.7",
+  "quarkus-core-version" : "3.15.7",
+  "extensions" : [ {
+    "name" : "DataStax Apache Cassandra client",
+    "description" : "Connect to Apache Cassandra, DataStax Enterprise and DataStax Astra databases",
+    "metadata" : {
+      "scm-url" : "https://github.com/datastax/cassandra-quarkus",
+      "built-with-quarkus-core" : "3.0.0.Final",
+      "guide" : "https://quarkus.io/guides/cassandra",
+      "keywords" : [ "cassandra", "DataStax", "nosql", "datastore" ],
+      "status" : "preview",
+      "extension-dependencies" : [ "io.quarkus:quarkus-core", "io.quarkus:quarkus-arc", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-smallrye-health", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-jsonp" ],
+      "categories" : [ "data" ]
+    },
+    "artifact" : "com.datastax.oss.quarkus:cassandra-quarkus-client::jar:1.2.0",
+    "origins" : [ "io.quarkus.platform:quarkus-cassandra-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  } ],
+  "categories" : [ {
+    "id" : "integration",
+    "name" : "Integration",
+    "description" : "Connectors to read to write from a skew of systems (file, S#, Twitter, etc)",
+    "metadata" : {
+      "pinned" : [ "org.apache.camel.quarkus:camel-quarkus-core", "org.apache.camel.quarkus:camel-quarkus-core-xml" ]
+    }
+  }, {
+    "id" : "business-automation",
+    "name" : "Business Automation",
+    "description" : "Rules engine, BPM, etc"
+  } ],
+  "metadata" : {
+    "platform-release" : {
+      "platform-key" : "io.quarkus.platform",
+      "stream" : "3.15",
+      "version" : "3.15.7",
+      "members" : [ "io.quarkus.platform:quarkus-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-qpid-jms-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-cassandra-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-amazon-services-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-camel-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-debezium-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-blaze-persistence-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-google-cloud-services-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-operator-sdk-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+    },
+    "last-bom-update" : "io.quarkus.platform:quarkus-cassandra-bom:3.1.0.CR1"
+  }
+}

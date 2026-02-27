@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-dark-bg: #0b0f19;
+  --color-dark-card: #151b2b;
+  --color-dark-card-hover: #1e2538;
+}
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-gray-100 antialiased min-h-screen font-sans;
+  }
+}
+
+/* Custom Utilities for Glassmorphism */
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+
+  .glass-card {
+    @apply bg-dark-card/80 backdrop-blur-lg border border-white/5 rounded-2xl shadow-2xl transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply bg-dark-card-hover/90 border-white/20 shadow-2xl cursor-pointer;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500;
+  }
+}

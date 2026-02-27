@@ -1,0 +1,218 @@
+{
+  "id" : "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7",
+  "platform" : true,
+  "bom" : "io.quarkus.platform:quarkus-cxf-bom::pom:3.15.7",
+  "quarkus-core-version" : "3.15.7",
+  "extensions" : [ {
+    "name" : "Quarkus CXF OpenTelemetry",
+    "description" : "Collect metrics using https://micrometer.io/[Micrometer].",
+    "metadata" : {
+      "requires-quarkus-core" : "[3.15,)",
+      "extension-dependencies" : [ "io.quarkiverse.cxf:quarkus-cxf", "io.quarkus:quarkus-arc", "io.quarkiverse.cxf:quarkus-cxf-saaj", "io.quarkiverse.cxf:quarkus-cxf-woodstox", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-jaxp", "io.quarkus:quarkus-jackson", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-opentelemetry", "io.quarkus:quarkus-core", "io.quarkus:quarkus-tls-registry", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-virtual-threads", "io.quarkus:quarkus-grpc-common" ],
+      "keywords" : [ "soap", "cxf", "services" ],
+      "categories" : [ "integration" ],
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/reference/extensions/quarkus-cxf-integration-tracing-opentelemetry.html",
+      "minimum-java-version" : "17",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-integration-tracing-opentelemetry::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF Logging (deprecated)",
+    "description" : "Deprecated, use io.quarkiverse.cxf:quarkus-cxf instead",
+    "metadata" : {
+      "extension-dependencies" : [ "io.quarkiverse.cxf:quarkus-cxf", "io.quarkus:quarkus-arc", "io.quarkus:quarkus-core", "io.quarkiverse.cxf:quarkus-cxf-saaj", "io.quarkiverse.cxf:quarkus-cxf-woodstox", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-jaxp", "io.quarkus:quarkus-jackson", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-tls-registry", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-virtual-threads" ],
+      "minimum-java-version" : "17",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "unlisted" : true,
+      "status" : [ "stable", "deprecated" ],
+      "requires-quarkus-core" : "[3.15,)",
+      "keywords" : [ "cxf", "jaxws", "jax-ws", "services", "soap" ],
+      "categories" : [ "integration" ],
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-rt-features-logging::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF Metrics",
+    "description" : "Collect metrics using https://micrometer.io/[Micrometer].",
+    "metadata" : {
+      "requires-quarkus-core" : "[3.15,)",
+      "extension-dependencies" : [ "io.quarkiverse.cxf:quarkus-cxf", "io.quarkus:quarkus-arc", "io.quarkus:quarkus-core", "io.quarkiverse.cxf:quarkus-cxf-saaj", "io.quarkiverse.cxf:quarkus-cxf-woodstox", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-jaxp", "io.quarkus:quarkus-jackson", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-tls-registry", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-virtual-threads" ],
+      "keywords" : [ "soap", "cxf", "services" ],
+      "categories" : [ "integration" ],
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/reference/extensions/quarkus-cxf-rt-features-metrics.html",
+      "minimum-java-version" : "17",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-rt-features-metrics::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF Transports HTTP Async",
+    "description" : "Implement async SOAP Clients using Apache HttpComponents HttpClient 5",
+    "metadata" : {
+      "requires-quarkus-core" : "[3.15,)",
+      "extension-dependencies" : [ "io.quarkus:quarkus-arc", "io.quarkus:quarkus-core", "io.quarkiverse.cxf:quarkus-cxf", "io.quarkiverse.cxf:quarkus-cxf-saaj", "io.quarkiverse.cxf:quarkus-cxf-woodstox", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-jaxp", "io.quarkus:quarkus-jackson", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-tls-registry", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-virtual-threads" ],
+      "keywords" : [ "soap", "cxf", "services" ],
+      "categories" : [ "integration" ],
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/reference/extensions/quarkus-cxf-rt-transports-http-hc5.html",
+      "minimum-java-version" : "17",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-rt-transports-http-hc5::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF WS-ReliableMessaging",
+    "description" : "Consume and produce web services with Web Services Reliable Messaging (WS-ReliableMessaging, WSRM)",
+    "metadata" : {
+      "extension-dependencies" : [ "io.quarkiverse.cxf:quarkus-cxf", "io.quarkus:quarkus-arc", "io.quarkus:quarkus-core", "io.quarkiverse.cxf:quarkus-cxf-saaj", "io.quarkiverse.cxf:quarkus-cxf-woodstox", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-jaxp", "io.quarkus:quarkus-jackson", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-tls-registry", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-virtual-threads", "io.quarkiverse.cxf:quarkus-cxf-rt-ws-security", "io.quarkiverse.cxf:quarkus-cxf-santuario-xmlsec" ],
+      "minimum-java-version" : "17",
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/reference/extensions/quarkus-cxf-rt-ws-rm.html",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "status" : "stable",
+      "requires-quarkus-core" : "[3.15,)",
+      "keywords" : [ "cxf", "jaxws", "jax-ws", "services", "soap", "ws", "wsrm", "reliable", "messaging", "ws-reliablemessaging" ],
+      "categories" : [ "integration" ],
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-rt-ws-rm::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF WS-Security",
+    "description" : "Consume and produce web services with Web Services Security (WS-Security, WSS)",
+    "metadata" : {
+      "extension-dependencies" : [ "io.quarkiverse.cxf:quarkus-cxf", "io.quarkus:quarkus-arc", "io.quarkiverse.cxf:quarkus-cxf-saaj", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-jaxp", "io.quarkus:quarkus-jackson", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-tls-registry", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-virtual-threads", "io.quarkiverse.cxf:quarkus-cxf-woodstox", "io.quarkus:quarkus-core", "io.quarkiverse.cxf:quarkus-cxf-santuario-xmlsec" ],
+      "minimum-java-version" : "17",
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/reference/extensions/quarkus-cxf-rt-ws-security.html",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "status" : "stable",
+      "requires-quarkus-core" : "[3.15,)",
+      "keywords" : [ "cxf", "jaxws", "jax-ws", "services", "soap", "ws", "wss", "ws-security" ],
+      "categories" : [ "integration" ],
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-rt-ws-security::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF SAAJ",
+    "description" : "Native support for SOAP with Attachments API for Java (SAAJ)",
+    "metadata" : {
+      "requires-quarkus-core" : "[3.15,)",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "keywords" : [ "attachments", "saaj", "soap", "xml" ],
+      "status" : "stable",
+      "extension-dependencies" : [ "io.quarkus:quarkus-core" ],
+      "unlisted" : true,
+      "categories" : [ "xml" ],
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/index.html",
+      "minimum-java-version" : "17",
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-saaj::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Santuario XML Security",
+    "description" : "Native support for Apache Santuario XML Security",
+    "metadata" : {
+      "requires-quarkus-core" : "[3.15,)",
+      "extension-dependencies" : [ "io.quarkus:quarkus-core", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-arc", "io.quarkus:quarkus-jaxp" ],
+      "keywords" : [ "santuario", "security", "xml", "xmlsec" ],
+      "categories" : [ "miscellaneous" ],
+      "minimum-java-version" : "17",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "built-with-quarkus-core" : "3.15.0",
+      "status" : "stable"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-santuario-xmlsec::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF STS",
+    "description" : "The CXF Security Token Service (STS) implementation",
+    "metadata" : {
+      "extension-dependencies" : [ "io.quarkiverse.cxf:quarkus-cxf", "io.quarkus:quarkus-arc", "io.quarkus:quarkus-core", "io.quarkiverse.cxf:quarkus-cxf-saaj", "io.quarkiverse.cxf:quarkus-cxf-woodstox", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-jaxp", "io.quarkus:quarkus-jackson", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-tls-registry", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-virtual-threads", "io.quarkiverse.cxf:quarkus-cxf-rt-ws-security", "io.quarkiverse.cxf:quarkus-cxf-santuario-xmlsec" ],
+      "minimum-java-version" : "17",
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/reference/extensions/quarkus-cxf-services-sts.html",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "status" : "stable",
+      "requires-quarkus-core" : "[3.15,)",
+      "keywords" : [ "cxf", "jaxws", "jax-ws", "services", "soap", "ws", "sts", "trust", "ws-trust" ],
+      "categories" : [ "integration" ],
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-services-sts::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF Woodstox",
+    "description" : "Native support for Woodstox StAX and SAX parsers",
+    "metadata" : {
+      "requires-quarkus-core" : "[3.15,)",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "keywords" : [ "xml" ],
+      "status" : "stable",
+      "extension-dependencies" : [ "io.quarkus:quarkus-core" ],
+      "unlisted" : true,
+      "categories" : [ "xml" ],
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/index.html",
+      "minimum-java-version" : "17",
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-woodstox::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "CXF XJC Plugins",
+    "description" : "CXF XJC plugins for wsdl2java code generation",
+    "metadata" : {
+      "extension-dependencies" : [ "io.quarkus:quarkus-core" ],
+      "minimum-java-version" : "17",
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/reference/extensions/quarkus-cxf-xjc-plugins.html",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "status" : "stable",
+      "requires-quarkus-core" : "[3.15,)",
+      "keywords" : [ "soap", "xml", "xjc" ],
+      "categories" : [ "xml" ],
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf-xjc-plugins::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  }, {
+    "name" : "Quarkus CXF",
+    "description" : "Core capabilities for implementing SOAP clients and JAX-WS services",
+    "metadata" : {
+      "extension-dependencies" : [ "io.quarkus:quarkus-arc", "io.quarkus:quarkus-core", "io.quarkiverse.cxf:quarkus-cxf-saaj", "io.quarkiverse.cxf:quarkus-cxf-woodstox", "io.quarkus:quarkus-jaxb", "io.quarkus:quarkus-jaxp", "io.quarkus:quarkus-jackson", "io.quarkus:quarkus-vertx-http", "io.quarkus:quarkus-tls-registry", "io.quarkus:quarkus-mutiny", "io.quarkus:quarkus-smallrye-context-propagation", "io.quarkus:quarkus-vertx", "io.quarkus:quarkus-netty", "io.quarkus:quarkus-virtual-threads" ],
+      "minimum-java-version" : "17",
+      "guide" : "https://quarkiverse.github.io/quarkiverse-docs/quarkus-cxf/dev/reference/extensions/quarkus-cxf.html",
+      "scm-url" : "https://github.com/quarkiverse/quarkus-cxf",
+      "status" : "stable",
+      "requires-quarkus-core" : "[3.15,)",
+      "keywords" : [ "cxf", "jaxws", "jax-ws", "services", "soap" ],
+      "categories" : [ "integration" ],
+      "built-with-quarkus-core" : "3.15.0"
+    },
+    "artifact" : "io.quarkiverse.cxf:quarkus-cxf::jar:3.15.3",
+    "origins" : [ "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+  } ],
+  "categories" : [ {
+    "id" : "integration",
+    "name" : "Integration",
+    "description" : "Connectors to read to write from a skew of systems (file, S#, Twitter, etc)",
+    "metadata" : {
+      "pinned" : [ "org.apache.camel.quarkus:camel-quarkus-core", "org.apache.camel.quarkus:camel-quarkus-core-xml" ]
+    }
+  }, {
+    "id" : "business-automation",
+    "name" : "Business Automation",
+    "description" : "Rules engine, BPM, etc"
+  } ],
+  "metadata" : {
+    "platform-release" : {
+      "platform-key" : "io.quarkus.platform",
+      "stream" : "3.15",
+      "version" : "3.15.7",
+      "members" : [ "io.quarkus.platform:quarkus-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-qpid-jms-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-cassandra-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-amazon-services-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-cxf-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-camel-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-debezium-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-blaze-persistence-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-google-cloud-services-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7", "io.quarkus.platform:quarkus-operator-sdk-bom-quarkus-platform-descriptor:3.15.7:json:3.15.7" ]
+    },
+    "last-bom-update" : "io.quarkus.platform:quarkus-cxf-bom:3.15.2"
+  }
+}

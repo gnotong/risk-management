@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Feb 27 22:42:45 CET 2026
+https\://repo.gradle.org/artifactory/libs-releases/.error=
+https\://repo.gradle.org/artifactory/libs-releases/.lastUpdated=1772228565163
+https\://repo.maven.apache.org/maven2/.lastUpdated=1772228565194
