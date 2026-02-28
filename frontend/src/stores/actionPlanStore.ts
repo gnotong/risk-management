@@ -42,6 +42,17 @@ export const useActionPlanStore = defineStore('actionPlan', () => {
         return await res.json();
     };
 
+    const deletePlan = async (id: string) => {
+        const res = await fetch(`/api/planactions/${id}`, {
+            method: 'DELETE'
+        });
+        if (!res.ok) {
+            throw new Error("Impossible de supprimer ce plan d'action.");
+        }
+        // Remove from local list if present
+        plans.value = plans.value.filter(p => p.id !== id);
+    };
+
     const fetchSuivis = async (id: string) => {
         const res = await fetch(`/api/planactions/${id}/suivis`);
         if (!res.ok) return [];
@@ -58,5 +69,5 @@ export const useActionPlanStore = defineStore('actionPlan', () => {
         return await res.json();
     };
 
-    return { plans, loading, fetchPlans, getPlanById, updatePlan, fetchSuivis, addSuivi };
+    return { plans, loading, fetchPlans, getPlanById, updatePlan, deletePlan, fetchSuivis, addSuivi };
 });

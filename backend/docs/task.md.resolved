@@ -1,0 +1,70 @@
+# Risk Management Application Implementation Task List
+
+## 1. Project Initialization
+- [x] Create Monorepo Structure (`/backend`, `/frontend`, `/docker`)
+- [x] Setup Docker Compose for PostgreSQL, Backend, and Frontend
+
+## 2. Backend Implementation (Quarkus)
+- [x] Initialize Quarkus project (Java 21, Maven)
+- [x] Configure PostgreSQL database connection and properties
+- [x] Implement Basic Entities (`Utilisateur`, `Risque`, `Audit`, `Recommandation`, `PlanAction`, `Incident`)
+- [x] Implement `SuiviPlanAction` Entity and Link to `PlanAction`
+- [x] Add `StatutPlanAction` to `PlanAction` entity
+- [x] Add `/api/planactions/{id}/suivis` endpoint for manual comments
+- [x] Enforce Business Logic: Only ADMIN or `responsable` can edit plan progress
+- [x] Verify Action Plan progress slider and Journal updates manually
+- [x] Enforce Business Logic: Cannot be `TERMINÉ` if `tauxAvancement < 100`
+- [x] Implement Built-in Business Logic (Score calculation)
+- [x] Implement Deletion Prevention Logic (Risque, Utilisateur)
+- [x] Implement PlanAction Date Validation Logic
+- [x] Implement Audit Closure Constraints
+- [x] Implement Actions Tracking Automation Engine
+- [x] Implement Audit Log Interceptor for traceability
+- [x] Setup Security (OpenID configuration)
+- [x] Implement Notification Service (`quarkus-mailer`)
+- [x] Expose REST APIs for the Frontend
+- [x] Expose tracking history dynamically inside `PlanAction` REST payload using `JsonIgnore`
+- [x] Add `CascadeType.REMOVE` to `PlanAction.suivis` or modify delete endpoint to handle tracking log cleanup
+- [x] Ensure `POST /api/planactions` handles payload for creating plans linked to a Risk
+
+## 3. Frontend Implementation (Vue.js 3)
+- [x] Initialize Vue 3 project with Vite, TypeScript, Pinia, TailwindCSS V4
+- [x] Create UI Layout and Navigation (Glassmorphism & Dark Mode)
+- [x] Implement Risk Dashboard & Heatmap component (3x3 Matrix)
+- [x] Implement Dynamic Filters (libellé, score, owner)
+- [x] Implement Tracking Dashboard (Action Plans)
+- [x] Create `ActionPlanDetail.vue` with progress slider, status selector
+- [x] Implement backend link to fetch/edit `taux_avancement` and dates
+- [x] Create Journal comment UI and sync with `SuiviPlanAction`
+- [x] Show Visual Progress bar with color coding based on status
+- [x] Add Form Inputs with Reactive Validation
+- [x] Implement real PDF (`jspdf`) and Excel (`xlsx`) Exports from API data
+- [x] Make search fully case & accent insensitive
+- [x] Implement Pagination for Risk List on Dashboard
+- [x] Create dedicated Risk Details View and Routing
+- [x] Bind related Action Plans to the Risk Detail View
+- [x] Show Average Completion Percentage & Tracking summary Tooltip on Risk Dashboard
+- [x] Add Smart "Back" Navigation inside Action Plan Detail View
+- [x] Enhance Search Filter: Case & accent insensitive on both Name & Owner, starting at 3 chars
+- [x] Redesign Risk Heatmap UX to serve as an explicit visual filter 
+- [x] Install and configure `vue-i18n` dependency
+- [x] Create French & English locale JSON dictionaries 
+- [x] Abstract hardcoded UI strings into translation keys globally
+- [x] Create translations mapping for DB-generated Statuses (e.g OUVERT -> Open)
+- [x] Add Language switch toggle to Global Header Navigation
+- [x] Feature 1: Allow creating a new Action Plan directly from the Risk Detail view
+- [x] Feature 2: Add "Delete" Action Plan button in `ActionPlanDetail.vue` and implement store logic
+- [x] Feature 3: Fix Heatmap stretching issue on `RiskDashboard.vue` when risk list is long
+- [x] Feature 4: Implement pagination (5 per page) for Action Plans in `ActionPlanTracker.vue`
+
+## 4. Docker & Deployment
+- [x] Create Multi-stage Dockerfile for Backend (Quarkus native or JVM)
+- [x] Create Multi-stage Dockerfile for Frontend (Nginx)
+- [x] Setup `docker-compose.yml` for orchestration
+
+## 5. Verification
+- [x] Test Backend API constraints (Business Logic & Integrity)
+- [x] Test Frontend UI components (Exports and Forms)
+- [x] Test Database integrity and triggers/business logic
+- [x] Test Docker containers startup and communication
+- [x] Update DB fixtures to assign Action Plans to all Risks

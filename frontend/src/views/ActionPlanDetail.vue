@@ -10,6 +10,16 @@
       <div>
         <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 tracking-tight">{{ $t('action_plan_detail.title') }}</h2>
       </div>
+      <div class="ml-auto">
+        <button 
+          v-if="!loading"
+          @click="confirmDelete"
+          class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          {{ $t('form.delete') || 'Supprimer' }}
+        </button>
+      </div>
     </div>
 
     <div v-if="loading" class="flex justify-center py-20">
@@ -245,10 +255,19 @@ const getProgressColor = (val: number) => {
 
 const formatDateTime = (dateString: string) => {
   if (!dateString) return '';
-  const d = new Date(dateString);
-  return d.toLocaleString('fr-FR', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  return new Date(dateString).toLocaleString('fr-FR', {
+    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit'
   });
+};
+
+const confirmDelete = async () => {
+  if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce plan d'action et tout son historique ?")) {
+    try {
+      await store.deletePlan(id as string);
+      router.push('/action-plans');
+    } catch (e: any) {
+      error.value = e.message || "Erreur lors de la suppression";
+    }
+  }
 };
 </script>

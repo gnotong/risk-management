@@ -27,6 +27,24 @@ export const useRiskStore = defineStore('risk', () => {
     }
   };
 
+  const deleteRisk = async (id: string) => {
+    const res = await fetch(`/api/risques/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (!res.ok) {
+      let msg = "Impossible de supprimer ce risque.";
+      try {
+        const err = await res.json();
+        if (err.message) msg = err.message;
+      } catch (e) { }
+      throw new Error(msg);
+    }
+
+    // Remove from local list
+    risks.value = risks.value.filter(r => r.id !== id);
+  };
+
   const filteredRisks = computed(() => {
     return risks.value.filter(r => {
       const normalize = (str: string) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
@@ -61,6 +79,6 @@ export const useRiskStore = defineStore('risk', () => {
   return {
     risks, loading,
     searchQuery, minScore, ownerFilter, selectedProb, selectedGrav,
-    fetchRisques, filteredRisks, clearHeatmapFilter
+    fetchRisques, deleteRisk, filteredRisks, clearHeatmapFilter
   };
 });

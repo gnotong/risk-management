@@ -54,7 +54,18 @@
         "progress": "Avancement",
         "responsible": "Responsable:",
         "starts": "Début:",
-        "ends": "Fin:"
+        "ends": "Fin:",
+        "new_plan": "Nouveau Plan d'Action"
+    },
+    "form": {
+        "name": "Nom",
+        "name_placeholder": "Entrez le nom...",
+        "required": "Ce champ est requis",
+        "description": "Description",
+        "desc_placeholder": "Détails optionnels...",
+        "cancel": "Annuler",
+        "create": "Créer",
+        "delete": "Supprimer"
     },
     "action_plan_detail": {
         "title": "Détails du Plan d'Action",

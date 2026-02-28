@@ -135,4 +135,17 @@ public class PlanActionResource {
         suivi.persist();
         return Response.ok(suivi).status(201).build();
     }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response delete(@PathParam("id") UUID id) {
+        PlanAction entity = PlanAction.findById(id);
+        if (entity == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        
+        entity.delete();
+        return Response.noContent().build();
+    }
 }

@@ -39,6 +39,6 @@ public class PlanAction extends PanacheEntityBase {
     @Enumerated(EnumType.STRING)
     public StatutPlanAction statut;
 
-    @OneToMany(mappedBy = "planAction", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "planAction", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     public List<SuiviPlanAction> suivis;
 }

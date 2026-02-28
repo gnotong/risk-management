@@ -20,7 +20,7 @@
 
     <div v-else class="glass-card p-6 lg:p-8 space-y-6">
       <router-link 
-        v-for="plan in store.plans" 
+        v-for="plan in paginatedPlans" 
         :key="plan.id" 
         :to="`/action-plans/${plan.id}`"
         class="block p-6 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all group"
@@ -33,9 +33,19 @@
             </div>
             <p class="text-sm text-gray-400 max-w-2xl">{{ plan.description || '' }}</p>
           </div>
-          <div class="text-right">
-            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{{ $t('action_plans.responsible') }}</div>
-            <div class="font-medium text-gray-200">{{ plan.responsable?.nom || $t('dashboard.unassigned') }}</div>
+          <div class="text-right flex flex-col items-end gap-2">
+            <div>
+              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{{ $t('action_plans.responsible') }}</div>
+              <div class="font-medium text-gray-200">{{ plan.responsable?.nom || $t('dashboard.unassigned') }}</div>
+            </div>
+            <!-- Delete Button -->
+            <button 
+              @click.prevent="confirmDeletePlan(plan.id, plan.nom)"
+              class="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20 hover:border-red-500 opacity-0 group-hover:opacity-100"
+              title="Supprimer le plan d'action"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
           </div>
         </div>
 
@@ -55,15 +65,60 @@
           </div>
         </div>
       </router-link>
+
+      <!-- Pagination Controls -->
+      <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-white/5">
+        <button 
+          @click="currentPage--" 
+          :disabled="currentPage === 1"
+          class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 transition-colors"
+        >
+          Précédent
+        </button>
+        <span class="text-gray-400 text-sm">Page <span class="text-white font-bold">{{ currentPage }}</span> sur {{ totalPages }}</span>
+        <button 
+          @click="currentPage++" 
+          :disabled="currentPage === totalPages"
+          class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 transition-colors"
+        >
+          Suivant
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import { useActionPlanStore } from '../stores/actionPlanStore';
 
 const store = useActionPlanStore();
+
+const currentPage = ref(1);
+const itemsPerPage = ref(5);
+
+const totalPages = computed(() => Math.ceil(store.plans.length / itemsPerPage.value));
+
+const paginatedPlans = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return store.plans.slice(start, end);
+});
+
+// Watch plans in case they reset
+watch(() => store.plans, () => {
+  currentPage.value = 1; 
+}, { deep: true });
+
+const confirmDeletePlan = async (id: string, name: string) => {
+  if (confirm(`Êtes-vous sûr de vouloir supprimer définitivement le plan d'action "${name}" ainsi que tout son historique ?`)) {
+    try {
+      await store.deletePlan(id);
+    } catch (e: any) {
+      alert(e.message || "Erreur lors de la suppression.");
+    }
+  }
+};
 
 onMounted(() => {
   store.fetchPlans();

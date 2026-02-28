@@ -1,5 +1,5 @@
 <template>
-  <div class="glass-card p-6 lg:p-8 flex flex-col h-full relative">
+  <div class="glass-card p-6 lg:p-8 flex flex-col relative self-start h-96 lg:sticky lg:top-8">
     <div class="flex justify-between items-start mb-6">
       <div>
         <h3 class="text-2xl font-bold text-white flex items-center gap-2">

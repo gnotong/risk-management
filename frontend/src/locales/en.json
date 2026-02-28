@@ -54,7 +54,18 @@
         "progress": "Progress",
         "responsible": "Owner:",
         "starts": "Starts:",
-        "ends": "Ends:"
+        "ends": "Ends:",
+        "new_plan": "New Action Plan"
+    },
+    "form": {
+        "name": "Name",
+        "name_placeholder": "Enter the name...",
+        "required": "This field is required",
+        "description": "Description",
+        "desc_placeholder": "Optional details...",
+        "cancel": "Cancel",
+        "create": "Create",
+        "delete": "Delete"
     },
     "action_plan_detail": {
         "title": "Action Plan Details",

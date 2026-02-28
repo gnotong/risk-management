@@ -10,6 +10,16 @@
       <div>
         <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">{{ $t('risk_detail.title') }}</h2>
       </div>
+      <div class="ml-auto">
+        <button 
+          v-if="!loading && risque"
+          @click="confirmDeleteRisk"
+          class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          {{ $t('form.delete') || 'Supprimer' }}
+        </button>
+      </div>
     </div>
 
     <!-- Loading State -->
@@ -70,9 +80,18 @@
 
         <!-- Future extension: Linked Audits/Plans -->
         <div class="glass-card p-6">
-          <h4 class="font-bold text-white mb-4 flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-purple-500 rounded-full"></span> {{ $t('risk_detail.action_plans') }}
-          </h4>
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="font-bold text-white flex items-center gap-2">
+              <span class="w-1.5 h-4 bg-purple-500 rounded-full"></span> {{ $t('risk_detail.action_plans') }}
+            </h4>
+            <button 
+              v-if="!actionPlanStore.loading" 
+              @click="isActionPlanModalOpen = true"
+              class="text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 font-bold"
+            >
+              + {{ $t('action_plans.new_plan') }}
+            </button>
+          </div>
           
           <div v-if="actionPlanStore.loading" class="animate-pulse flex space-x-4">
             <div class="flex-1 space-y-4 py-1">
@@ -113,19 +132,32 @@
         </div>
       </div>
     </div>
+
+    <!-- Modals -->
+    <ActionPlanFormModal 
+      :is-open="isActionPlanModalOpen" 
+      :risk-id="id as string" 
+      @close="isActionPlanModalOpen = false" 
+      @created="onActionPlanCreated" 
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useActionPlanStore } from '../stores/actionPlanStore';
+import { useRiskStore } from '../stores/riskStore';
+import ActionPlanFormModal from '../components/ActionPlanFormModal.vue';
 
 const route = useRoute();
+const router = useRouter();
 const id = route.params.id;
 const loading = ref(true);
 const risque = ref<any>(null);
 const actionPlanStore = useActionPlanStore();
+const riskStore = useRiskStore();
+const isActionPlanModalOpen = ref(false);
 
 onMounted(async () => {
   try {
@@ -140,6 +172,10 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+const onActionPlanCreated = async () => {
+  await actionPlanStore.fetchPlans();
+};
 
 const linkedPlans = computed(() => {
   if (!actionPlanStore.plans) return [];
@@ -163,5 +199,16 @@ const formatDate = (dateString?: string) => {
   return new Date(dateString).toLocaleDateString('fr-FR', {
     day: '2-digit', month: 'long', year: 'numeric'
   });
+};
+
+const confirmDeleteRisk = async () => {
+  if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce risque ?")) {
+    try {
+      await riskStore.deleteRisk(id as string);
+      router.push('/');
+    } catch (e: any) {
+      alert(e.message || "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.");
+    }
+  }
 };
 </script>
