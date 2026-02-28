@@ -34,4 +34,7 @@ public class PlanAction extends PanacheEntityBase {
 
     @Column(name = "taux_avancement")
     public int tauxAvancement; // 0-100%
+
+    @Enumerated(EnumType.STRING)
+    public StatutPlanAction statut;
 }

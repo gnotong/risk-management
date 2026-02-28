@@ -44,9 +44,10 @@
 
         <div v-else class="space-y-3">
           <transition-group name="list">
-            <div 
-              v-for="r in store.filteredRisks" 
+            <router-link 
+              v-for="r in paginatedRisks" 
               :key="r.id" 
+              :to="`/risques/${r.id}`"
               class="flex justify-between items-center p-5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all cursor-pointer group"
             >
               <div>
@@ -63,8 +64,27 @@
                 <div class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">Score</div>
                 <div class="font-bold text-xl" :class="getScoreColor(r.score)">{{ r.score }}</div>
               </div>
-            </div>
+            </router-link>
           </transition-group>
+          
+          <!-- Pagination Controls -->
+          <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-white/5">
+            <button 
+              @click="currentPage--" 
+              :disabled="currentPage === 1"
+              class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 transition-colors"
+            >
+              Précédent
+            </button>
+            <span class="text-gray-400 text-sm">Page <span class="text-white font-bold">{{ currentPage }}</span> sur {{ totalPages }}</span>
+            <button 
+              @click="currentPage++" 
+              :disabled="currentPage === totalPages"
+              class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 transition-colors"
+            >
+              Suivant
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -74,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRiskStore } from '../stores/riskStore';
 import FilterBar from '../components/FilterBar.vue';
 import RiskHeatmap from '../components/RiskHeatmap.vue';
@@ -85,6 +105,21 @@ import * as XLSX from 'xlsx';
 
 const store = useRiskStore();
 const isModalOpen = ref(false);
+
+const currentPage = ref(1);
+const itemsPerPage = ref(5);
+
+const totalPages = computed(() => Math.ceil(store.filteredRisks.length / itemsPerPage.value));
+
+const paginatedRisks = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return store.filteredRisks.slice(start, end);
+});
+
+watch(() => store.filteredRisks, () => {
+  currentPage.value = 1; // Reset page on filter change
+}, { deep: true });
 
 onMounted(() => {
   store.fetchRisques();

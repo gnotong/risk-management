@@ -14,3 +14,10 @@ VALUES ('a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 'Vol de données internes', 'Fui
 
 INSERT INTO Risque (id, libelle, description, probabilite, gravite, score, statut, proprietaire_id, date_creation)
 VALUES ('f1e2d3c4-b5a6-9f8e-7d6c-5b4a3f2e1d0c', 'Panne serveur', 'Interruption de service prolongée', 2, 2, 4, 'EN_COURS', 'c9925e07-aa3a-4ef4-9e3f-67f781ea32a6', CURRENT_TIMESTAMP);
+
+-- Insert action plans
+INSERT INTO PlanAction (id, nom, description, date_debut, date_fin, taux_avancement, statut, responsable_id, risque_id)
+VALUES ('5a6c1e95-7d5a-4b93-8408-fb9e27c0fae3', 'Audit Sécurité Q3', 'Inspection complète des systèmes et remédiations', '2023-01-01', '2023-12-31', 45, 'EN_COURS', 'c9925e07-aa3a-4ef4-9e3f-67f781ea32a6', 'e72a8c3e-cb91-4e4b-b0b8-4c13a297fc91');
+
+INSERT INTO PlanAction (id, nom, description, date_debut, date_fin, taux_avancement, statut, responsable_id, risque_id)
+VALUES ('1ea2315b-24cf-4ca6-a517-567fce727b3b', 'Formation de sensibilisation', 'Formation obligatoire pour tous les employés (Phishing)', '2023-05-01', '2023-06-30', 100, 'TERMINE', 'b6537c35-ae53-488f-9a1d-7bb3d7f9f3ab', 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d');

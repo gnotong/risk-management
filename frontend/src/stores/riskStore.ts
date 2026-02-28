@@ -25,7 +25,8 @@ export const useRiskStore = defineStore('risk', () => {
 
   const filteredRisks = computed(() => {
     return risks.value.filter(r => {
-      const matchSearch = r.libelle.toLowerCase().includes(searchQuery.value.toLowerCase());
+      const normalize = (str: string) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
+      const matchSearch = normalize(r.libelle).includes(normalize(searchQuery.value));
       const matchScore = r.score >= minScore.value;
       const matchOwner = ownerFilter.value ? r.proprietaire?.nom === ownerFilter.value : true;
       return matchSearch && matchScore && matchOwner;
