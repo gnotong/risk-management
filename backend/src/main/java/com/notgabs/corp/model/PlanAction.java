@@ -4,6 +4,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.List;
 
 @Entity
 public class PlanAction extends PanacheEntityBase {
@@ -37,4 +38,7 @@ public class PlanAction extends PanacheEntityBase {
 
     @Enumerated(EnumType.STRING)
     public StatutPlanAction statut;
+
+    @OneToMany(mappedBy = "planAction", fetch = FetchType.EAGER)
+    public List<SuiviPlanAction> suivis;
 }

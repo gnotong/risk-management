@@ -52,15 +52,41 @@
             >
               <div>
                 <h4 class="text-lg font-bold text-gray-100 group-hover:text-blue-400 transition-colors">{{ r.libelle }}</h4>
-                <div class="text-sm text-gray-400 flex gap-4 mt-1">
+                <div class="text-sm text-gray-400 flex gap-4 mt-1 items-center">
                   <span>Opérateur: {{ r.proprietaire?.nom || 'Non assigné' }}</span>
                   <span class="flex items-center gap-1">
                     <span :class="getStatusColor(r.statut)" class="w-2 h-2 rounded-full"></span>
                     {{ r.statut }}
                   </span>
+                  
+                  <!-- Action Plan Progress -->
+                  <div v-if="getRiskPlanStats(r.id).hasPlans" class="flex items-center gap-2 ml-2 pl-4 border-l border-white/10 relative group/tooltip">
+                    <span class="text-xs text-gray-500 uppercase font-bold tracking-wider relative">
+                      Plans d'action 
+                      <span v-if="getRiskPlanStats(r.id).recentComments" class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-500/20 text-blue-400 cursor-help">i</span>
+                    </span>
+                    <div class="w-16 bg-gray-700 rounded-full h-1.5 flex overflow-hidden">
+                      <div class="bg-emerald-500 h-1.5 rounded-full" :style="`width: ${getRiskPlanStats(r.id).avgProgress}%`"></div>
+                    </div>
+                    <span class="text-xs font-bold text-gray-300">{{ getRiskPlanStats(r.id).avgProgress }}%</span>
+                    
+                    <!-- Tooltip -->
+                    <div v-if="getRiskPlanStats(r.id).recentComments" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 bg-gray-900 border border-white/10 p-3 rounded-xl shadow-2xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 pointer-events-none">
+                      <div class="text-xs text-gray-300 space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                        <div v-for="(comment, idx) in getRiskPlanStats(r.id).recentComments" :key="idx" class="border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                          <span class="text-emerald-400 font-bold block mb-0.5">{{ comment.plan }}</span>
+                          <span class="text-gray-400 italic">"{{ comment.texte }}"</span>
+                        </div>
+                      </div>
+                      <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-r border-b border-white/10 transform rotate-45"></div>
+                    </div>
+                  </div>
+                  <div v-else class="text-xs text-gray-600 italic ml-2 pl-4 border-l border-white/10">
+                    Aucun plan d'action
+                  </div>
                 </div>
               </div>
-              <div class="text-center bg-black/40 px-5 py-2.5 rounded-xl border border-white/5 shadow-inner">
+              <div class="text-center bg-black/40 px-5 py-2.5 rounded-xl border border-white/5 shadow-inner hidden sm:block">
                 <div class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">Score</div>
                 <div class="font-bold text-xl" :class="getScoreColor(r.score)">{{ r.score }}</div>
               </div>
@@ -96,6 +122,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRiskStore } from '../stores/riskStore';
+import { useActionPlanStore } from '../stores/actionPlanStore';
 import FilterBar from '../components/FilterBar.vue';
 import RiskHeatmap from '../components/RiskHeatmap.vue';
 import RiskFormModal from '../components/RiskFormModal.vue';
@@ -104,6 +131,7 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 const store = useRiskStore();
+const actionPlanStore = useActionPlanStore();
 const isModalOpen = ref(false);
 
 const currentPage = ref(1);
@@ -121,9 +149,32 @@ watch(() => store.filteredRisks, () => {
   currentPage.value = 1; // Reset page on filter change
 }, { deep: true });
 
-onMounted(() => {
+onMounted(async () => {
   store.fetchRisques();
+  await actionPlanStore.fetchPlans();
 });
+
+const getRiskPlanStats = (riskId: string) => {
+  if (!actionPlanStore.plans) return { hasPlans: false, avgProgress: 0, recentComments: null };
+  const plans = actionPlanStore.plans.filter((p: any) => p.risque?.id === riskId);
+  if (plans.length === 0) return { hasPlans: false, avgProgress: 0, recentComments: null };
+  
+  const avgProgress = Math.round(plans.reduce((sum: number, p: any) => sum + (p.tauxAvancement || 0), 0) / plans.length);
+  
+  const allComments = plans.flatMap((p: any) => 
+    (p.suivis || []).map((s: any) => ({
+      plan: p.nom,
+      texte: s.commentaire,
+      date: new Date(s.dateSuivi).getTime()
+    }))
+  ).sort((a, b) => b.date - a.date).slice(0, 3); // top 3 recent comments
+  
+  return { 
+    hasPlans: true, 
+    avgProgress, 
+    recentComments: allComments.length > 0 ? allComments : null 
+  };
+};
 
 const handleMatrixFilter = ({ probabilite, gravite }: { probabilite: number, gravite: number }) => {
   // Simplistic filter application

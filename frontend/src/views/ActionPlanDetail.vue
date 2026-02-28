@@ -2,11 +2,11 @@
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Header -->
     <div class="flex items-center gap-4">
-      <router-link to="/action-plans" class="p-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors text-white">
+      <button @click="goBack" class="p-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors text-white cursor-pointer">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-      </router-link>
+      </button>
       <div>
         <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 tracking-tight">Détails du Plan d'Action</h2>
       </div>
@@ -135,12 +135,21 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useActionPlanStore } from '../stores/actionPlanStore';
 
 const route = useRoute();
+const router = useRouter();
 const id = route.params.id as string;
 const store = useActionPlanStore();
+
+const goBack = () => {
+  if (window.history.state && window.history.state.back) {
+    router.back();
+  } else {
+    router.push('/action-plans');
+  }
+};
 
 const loading = ref(true);
 const saving = ref(false);
