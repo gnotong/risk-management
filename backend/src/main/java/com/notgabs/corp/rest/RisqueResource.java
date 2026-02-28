@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.UUID;
 import com.notgabs.corp.model.Incident;
 import com.notgabs.corp.model.PlanAction;
+import jakarta.annotation.security.RolesAllowed;
 
 @Path("/api/risques")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("USER")
 public class RisqueResource {
 
     @Inject

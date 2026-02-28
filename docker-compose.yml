@@ -39,6 +39,7 @@ services:
       QUARKUS_DATASOURCE_USERNAME: riskuser
       QUARKUS_DATASOURCE_PASSWORD: riskpassword
       QUARKUS_OIDC_AUTH_SERVER_URL: http://keycloak:8080/realms/risk-realm
+      QUARKUS_OIDC_TENANT_ENABLED: ${ENABLE_KEYCLOAK:-true}
     depends_on:
       - postgres
       - keycloak
@@ -46,6 +47,8 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        ENABLE_KEYCLOAK: ${ENABLE_KEYCLOAK:-true}
     container_name: risk-frontend
     ports:
       - "80:80"

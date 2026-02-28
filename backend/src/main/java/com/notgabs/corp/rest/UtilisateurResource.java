@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.UUID;
 import com.notgabs.corp.model.Risque;
 import com.notgabs.corp.model.PlanAction;
+import jakarta.annotation.security.RolesAllowed;
 
 @Path("/api/utilisateurs")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("USER")
 public class UtilisateurResource {
 
     @GET

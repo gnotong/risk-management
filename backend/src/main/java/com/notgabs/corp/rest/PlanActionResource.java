@@ -12,10 +12,12 @@ import com.notgabs.corp.model.SuiviPlanAction;
 import com.notgabs.corp.model.StatutPlanAction;
 import com.notgabs.corp.model.Utilisateur;
 import com.notgabs.corp.model.Role;
+import jakarta.annotation.security.RolesAllowed;
 
 @Path("/api/planactions")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("USER")
 public class PlanActionResource {
 
     @GET

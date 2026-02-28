@@ -10,10 +10,12 @@ import java.util.UUID;
 import com.notgabs.corp.model.Recommandation;
 import com.notgabs.corp.model.StatutAudit;
 import com.notgabs.corp.model.StatutRecommandation;
+import jakarta.annotation.security.RolesAllowed;
 
 @Path("/api/audits")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("USER")
 public class AuditResource {
 
     @GET

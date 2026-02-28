@@ -21,7 +21,7 @@
             {{ username.charAt(0) }}
           </div>
           <span class="text-sm font-medium text-gray-300">{{ username }}</span>
-          <button @click="logout" class="ml-2 text-xs text-red-400 hover:text-red-300 transition-colors font-semibold" :title="$t('auth.logout')">
+          <button v-if="isKeycloakEnabled" @click="logout" class="ml-2 text-xs text-red-400 hover:text-red-300 transition-colors font-semibold" :title="$t('auth.logout')">
             {{ $t('auth.logout') }}
           </button>
         </div>
@@ -56,12 +56,19 @@ const toggleLanguage = () => {
   locale.value = locale.value === 'fr' ? 'en' : 'fr';
 };
 
+const isKeycloakEnabled = computed(() => import.meta.env.VITE_ENABLE_KEYCLOAK !== 'false');
+
 const username = computed(() => {
+  if (!isKeycloakEnabled.value) {
+    return 'Utilisateur Local';
+  }
   return keycloak.tokenParsed?.preferred_username || keycloak.tokenParsed?.name || '';
 });
 
 const logout = () => {
-  keycloak.logout();
+  if (isKeycloakEnabled.value) {
+    keycloak.logout();
+  }
 };
 </script>
 

@@ -34,6 +34,9 @@
 - [x] Auto-Close Logic: Automatically set Plan to `TERMINE` and Risk to `CLOTURE` when progress hits 100%
 - [x] Enforce `proprietaire` mandatory validation in `RisqueResource` (create/update)
 - [x] Prevent updates to `Risque` if `statut == CLOTURE`
+- [x] Decorate all 6 REST resources with `@RolesAllowed("USER")`
+- [x] Bind `QUARKUS_SECURITY_AUTH_ENABLED` to the Keycloak Toggle in `docker-compose.yml`
+- [x] Fix Keycloak JWT Issuer 401 mismatch via `quarkus.oidc.token.issuer=any`
 
 ## 3. Frontend Implementation (Vue.js 3)
 - [x] Initialize Vue 3 project with Vite, TypeScript, Pinia, TailwindCSS V4
@@ -75,12 +78,15 @@
 - [x] Intercept Vue component mount in `main.ts` to enforce `onLoad: 'login-required'`
 - [x] Integrate user info profile header and Logout action in `App.vue`
 - [x] Add localization for Auth texts in Fr/En JSON dicts
+- [x] Implement Keycloak Feature Toggle via `.env` parameter in `main.ts` and `App.vue`
+- [x] Monkey-patch `window.fetch` in `main.ts` to automatically inject Keycloak Bearer Tokens
 
 ## 4. Docker & Deployment
 - [x] Create Multi-stage Dockerfile for Backend (Quarkus native or JVM)
 - [x] Create Multi-stage Dockerfile for Frontend (Nginx)
 - [x] Setup `docker-compose.yml` for orchestration
 - [x] Create `risk-realm.json` to automate Keycloak realm, clients and users on container startup
+- [x] Configure `docker-compose.yml` and `frontend/Dockerfile` to ingest `ENABLE_KEYCLOAK` from root `.env`
 
 ## 5. Documentation
 - [x] Create End-User Guide and save to `backend/docs/guide_utilisateur.md`

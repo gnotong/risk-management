@@ -7,10 +7,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
+import jakarta.annotation.security.RolesAllowed;
 
 @Path("/api/recommandations")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("USER")
 public class RecommandationResource {
 
     @GET

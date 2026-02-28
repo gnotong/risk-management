@@ -148,3 +148,25 @@ Using `npm` (Vite, TS, Pinia, Tailwind V4).
 ### Verification Plan
 - Clear the Docker stack volumes, recreate the instances. Observe Keycloak's isolated logs returning `Realm 'risk-realm' imported`.
 - Check if login screen returns `Client not found` errors anymore (should be resolved).
+
+## Keycloak Feature Toggle Configuration
+### Proposed Changes
+1. **Root Configuration**: Create a `.env` file at the root repository containing `ENABLE_KEYCLOAK=true`.
+2. **Docker Injection**: Route `${ENABLE_KEYCLOAK:-true}` to `QUARKUS_OIDC_TENANT_ENABLED` (backend) and build args (frontend) via `docker-compose.yml`.
+3. **Frontend Pipeline**: Allow `frontend/Dockerfile` to consume the Arg and expose it natively as `VITE_ENABLE_KEYCLOAK`.
+4. **Vue Overrides**: Alter `main.ts` and `App.vue`. If the Vite Env evaluates to `"false"`, bypass `keycloak.init()` permanently, directly mount the application tree, mask the logout button, and default the session profile identifier to "Utilisateur Local".
+
+### Verification Plan
+- Set `.env` to `false`, run docker build.
+- App must load immediately without Keycloak redirection, showing "Utilisateur Local".
+
+## Keycloak Token Authentication & Role Enforcement
+### Proposed Changes
+1. **Frontend Interceptor**: In `main.ts`, monkey-patch the native `window.fetch` API. If `isKeycloakEnabled` is true and the user is authenticated, automatically append `Authorization: Bearer ${keycloak.token}` to all outgoing `options.headers`.
+2. **Backend RBAC (`@RolesAllowed`)**: Apply the exact Quarkus `jakarta.annotation.security.RolesAllowed("USER")` annotation at the class level across all REST Resources (`RisqueResource`, `PlanActionResource`, `UtilisateurResource`, etc.). No `application.properties` path matching will be used.
+3. **Toggle Binding (`docker-compose.yml`)**: Under the backend specs, inject `QUARKUS_SECURITY_AUTH_ENABLED: ${ENABLE_KEYCLOAK:-true}`. This instructs Quarkus to completely discard security (and thus the `@RolesAllowed` requirement) when the toggle is natively off.
+4. **OIDC Issuer Bypass**: In `application.properties`, define `%prod.quarkus.oidc.token.issuer=any`. This prevents `401 Unauthorized` errors stemming from the JWT token resolving its issuer as `localhost:8080` while the Quarkus internal Docker listener expects `keycloak:8080`.
+
+### Verification Plan
+- With enabled Keycloak, login. Verify API calls now include Bearer Auth. Verify requests succeed.
+- Test changing to `ENABLE_KEYCLOAK=false`, confirm fetching data still works without a Bearer auth error (200 OK).

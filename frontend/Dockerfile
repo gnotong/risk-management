@@ -3,6 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+ARG ENABLE_KEYCLOAK
+ENV VITE_ENABLE_KEYCLOAK=$ENABLE_KEYCLOAK
 RUN npm run build
 
 FROM nginx:alpine
