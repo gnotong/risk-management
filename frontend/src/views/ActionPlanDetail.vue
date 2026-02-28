@@ -2,19 +2,19 @@
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Header -->
     <div class="flex flex-wrap items-center gap-3 sm:gap-4">
-      <button @click="goBack" class="p-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors text-white cursor-pointer flex-shrink-0">
+      <button @click="goBack" class="p-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-full border border-gray-200 dark:border-white/10 transition-colors text-gray-700 dark:text-white cursor-pointer flex-shrink-0 shadow-sm dark:shadow-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
       </button>
       <div class="flex-1 min-w-[200px]">
-        <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 tracking-tight break-words">{{ $t('action_plan_detail.title') }}</h2>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight break-words transition-colors">{{ $t('action_plan_detail.title') }}</h2>
       </div>
       <div class="w-full sm:w-auto sm:ml-auto flex justify-end">
         <button 
           v-if="!loading && plan && plan.statut !== 'TERMINE'"
           @click="confirmDelete"
-          class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
+          class="bg-red-600 dark:bg-red-500/20 hover:bg-red-700 dark:hover:bg-red-500/30 text-white dark:text-red-400 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-sm dark:shadow-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
           {{ $t('form.delete') || 'Supprimer' }}
@@ -37,8 +37,8 @@
         <div class="glass-card p-4 sm:p-8">
           <div class="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
             <div class="w-full sm:w-auto">
-              <h3 class="text-xl sm:text-2xl font-bold text-white mb-2 break-words">{{ plan.nom }}</h3>
-              <p class="text-sm sm:text-base text-gray-400">{{ plan.description || 'Aucune description fournie.' }}</p>
+              <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 break-words">{{ plan.nom }}</h3>
+              <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">{{ plan.description || 'Aucune description fournie.' }}</p>
             </div>
             <router-link v-if="plan.risque" :to="`/risques/${plan.risque?.id}`" class="text-xs sm:text-sm bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2 flex-shrink-0 w-full justify-center sm:w-auto">
               <span>🔗 {{ $t('action_plans.risk') }} {{ plan.risque?.libelle }}</span>
@@ -52,13 +52,13 @@
             </div>
 
             <!-- Taux Avancement Slider -->
-            <div class="p-6 rounded-2xl bg-black/40 border border-white/5 space-y-4">
+            <div class="p-6 rounded-2xl bg-white dark:bg-black/40 border border-gray-200 dark:border-white/5 space-y-4 shadow-sm dark:shadow-none">
               <div class="flex justify-between items-center">
-                <label class="block text-sm font-bold text-gray-300 uppercase tracking-wider">{{ $t('action_plan_detail.progress') }} ({{ editForm.tauxAvancement }}%)</label>
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ $t('action_plan_detail.progress') }} ({{ editForm.tauxAvancement }}%)</label>
                 <div class="flex gap-2">
-                  <button type="button" @click="editForm.tauxAvancement = 0" class="text-xs px-2 py-1 bg-white/5 rounded hover:bg-white/10 text-gray-400">0%</button>
-                  <button type="button" @click="editForm.tauxAvancement = 50" class="text-xs px-2 py-1 bg-white/5 rounded hover:bg-white/10 text-gray-400">50%</button>
-                  <button type="button" @click="editForm.tauxAvancement = 100" class="text-xs px-2 py-1 bg-white/5 rounded hover:bg-white/10 text-gray-400">100%</button>
+                  <button type="button" @click="editForm.tauxAvancement = 0" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400">0%</button>
+                  <button type="button" @click="editForm.tauxAvancement = 50" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400">50%</button>
+                  <button type="button" @click="editForm.tauxAvancement = 100" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400">100%</button>
                 </div>
               </div>
               <input 
@@ -75,8 +75,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.status') }}</label>
-                <select v-model="editForm.statut" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-emerald-500 outline-none">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.status') }}</label>
+                <select v-model="editForm.statut" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none">
                   <option value="NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
                   <option value="EN_COURS">{{ $t('status.EN_COURS') }}</option>
                   <option value="TERMINE">{{ $t('status.TERMINE') }}</option>
@@ -84,19 +84,19 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
-                <input v-model="editForm.dateDebut" type="date" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-emerald-500 outline-none" />
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
+                <input v-model="editForm.dateDebut" type="date" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none" />
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
-                <input v-model="editForm.dateFin" type="date" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-emerald-500 outline-none" />
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
+                <input v-model="editForm.dateFin" type="date" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none" />
               </div>
 
             </div>
 
             <div class="flex justify-end pt-4">
-              <button type="submit" :disabled="saving" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center gap-2">
+              <button type="submit" :disabled="saving" class="bg-emerald-600 dark:bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
                 <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
                 {{ $t('action_plan_detail.save') }}
               </button>
@@ -106,10 +106,10 @@
         
         <!-- Add manual comment -->
         <div class="glass-card p-6 border-l-4 border-l-emerald-500" v-if="plan && plan.statut !== 'TERMINE'">
-          <h4 class="font-bold text-white mb-4">{{ $t('action_plan_detail.new_comment') }}</h4>
+          <h4 class="font-bold text-gray-900 dark:text-white mb-4">{{ $t('action_plan_detail.new_comment') }}</h4>
           <form @submit.prevent="submitComment" class="flex flex-col items-end gap-3">
-            <textarea v-model="newComment" required rows="2" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-500" placeholder="..."></textarea>
-            <button type="submit" :disabled="commenting" class="px-5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors">
+            <textarea v-model="newComment" required rows="2" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-400 dark:placeholder-gray-500 shadow-sm dark:shadow-inner" placeholder="..."></textarea>
+            <button type="submit" :disabled="commenting" class="px-5 py-2 bg-emerald-600 dark:bg-white/10 hover:bg-emerald-700 dark:hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors border border-transparent shadow-sm dark:shadow-none">
               {{ $t('action_plan_detail.add_comment') }}
             </button>
           </form>
@@ -118,32 +118,32 @@
 
       <!-- Right Column: Journal -->
       <div class="space-y-6">
-        <div class="glass-card p-6 h-full border border-white/5 flex flex-col">
-          <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+        <div class="glass-card p-6 h-full border border-gray-200 dark:border-white/5 flex flex-col">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             {{ $t('action_plan_detail.journal') }}
           </h3>
           
           <div v-if="loadingSuivis" class="space-y-4">
-            <div v-for="i in 3" :key="i" class="h-16 bg-gray-800 rounded-lg animate-pulse"></div>
+            <div v-for="i in 3" :key="i" class="h-16 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse"></div>
           </div>
           <div v-else-if="suivis.length === 0" class="text-gray-500 text-center py-10 flex-1">
             {{ $t('action_plan_detail.no_comments') }}
           </div>
           <div v-else class="space-y-4 overflow-y-auto pr-2 flex-1" style="max-height: 600px;">
-            <div v-for="s in suivis" :key="s.id" class="p-4 rounded-xl bg-black/40 border border-white/5 relative group">
+            <div v-for="s in suivis" :key="s.id" class="p-4 rounded-xl bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/5 relative group shadow-sm dark:shadow-none">
               <div class="flex justify-between items-start mb-2">
-                <div class="text-xs text-emerald-400 font-mono">{{ formatDateTime(s.dateSuivi) }}</div>
+                <div class="text-xs text-emerald-600 dark:text-emerald-400 font-mono">{{ formatDateTime(s.dateSuivi) }}</div>
                 <button 
                   v-if="plan.statut !== 'TERMINE'" 
                   @click="removeSuivi(s.id)" 
-                  class="text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-red-500/10 rounded"
+                  class="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-red-50 dark:bg-red-500/10 rounded"
                   title="Supprimer le journal"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                 </button>
               </div>
-              <p class="text-sm text-gray-300 leading-relaxed">{{ s.commentaire }}</p>
+              <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{{ s.commentaire }}</p>
             </div>
           </div>
         </div>

@@ -2,17 +2,17 @@
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 sm:gap-4">
       <div class="w-full text-left min-w-0">
-        <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight leading-tight truncate">{{ $t('dashboard.title') }}</h2>
-        <p class="text-gray-400 mt-1 sm:mt-2 text-xs sm:text-sm md:text-base truncate">{{ $t('dashboard.subtitle') }}</p>
+        <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white tracking-tight leading-tight truncate transition-colors">{{ $t('dashboard.title') }}</h2>
+        <p class="text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 text-xs sm:text-sm md:text-base truncate">{{ $t('dashboard.subtitle') }}</p>
       </div>
       <div class="flex flex-wrap justify-start md:justify-end gap-2 sm:gap-3 mt-4 md:mt-0 w-full sm:w-auto">
-        <button @click="isModalOpen = true" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-semibold shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center gap-1 sm:gap-2 group cursor-pointer flex-1 sm:flex-none justify-center">
+        <button @click="isModalOpen = true" class="bg-emerald-600 dark:bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-semibold shadow-sm transition-colors flex items-center gap-1 sm:gap-2 group cursor-pointer flex-1 sm:flex-none justify-center">
           <span class="text-sm sm:text-base md:text-lg group-hover:scale-110 transition-transform leading-none">+</span> <span class="truncate">{{ $t('dashboard.new_risk') }}</span>
         </button>
-        <button @click="exportPDF" class="glass hover:bg-white/10 text-white px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2 group cursor-pointer hover:border-white/30 flex-1 sm:flex-none justify-center">
+        <button @click="exportPDF" class="bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/10 text-gray-700 dark:text-white border border-gray-200 dark:border-white/10 px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-semibold shadow-sm transition-all flex items-center gap-1 sm:gap-2 group cursor-pointer dark:hover:border-white/30 flex-1 sm:flex-none justify-center backdrop-blur-md">
           <span class="group-hover:scale-110 transition-transform">📄</span> <span class="truncate">{{ $t('dashboard.export_pdf') }}</span>
         </button>
-        <button @click="exportExcel" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-semibold shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-all flex items-center gap-1 sm:gap-2 group cursor-pointer flex-1 sm:flex-none justify-center">
+        <button @click="exportExcel" class="bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-500 text-white px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-semibold shadow-sm transition-colors flex items-center gap-1 sm:gap-2 group cursor-pointer flex-1 sm:flex-none justify-center">
           <span class="group-hover:scale-110 transition-transform">📊</span> <span class="truncate">{{ $t('dashboard.export_excel') }}</span>
         </button>
       </div>
@@ -30,7 +30,7 @@
 
       <!-- Risk List -->
       <div class="lg:col-span-2 glass-card p-4 sm:p-6 lg:p-8 w-full max-w-full overflow-hidden">
-        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-white flex items-center gap-2">
+        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white flex items-center gap-2">
           <span class="w-1.5 h-6 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></span> {{ $t('nav.risks') }}
         </h3>
         
@@ -48,52 +48,52 @@
               v-for="r in paginatedRisks" 
               :key="r.id" 
               :to="`/risques/${r.id}`"
-              class="flex justify-between items-center p-5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all cursor-pointer group"
+              class="flex justify-between items-center p-5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 hover:border-blue-400 dark:hover:border-blue-500/50 shadow-sm hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all cursor-pointer group"
             >
               <div class="min-w-0 flex-1">
-                <h4 class="text-sm sm:text-base md:text-lg font-bold text-gray-100 group-hover:text-blue-400 transition-colors truncate">{{ r.libelle }}</h4>
-                <div class="text-[10px] sm:text-xs md:text-sm text-gray-400 flex flex-wrap gap-2 sm:gap-4 mt-1 items-center">
+                <h4 class="text-sm sm:text-base md:text-lg font-bold text-gray-800 dark:text-gray-100 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors truncate">{{ r.libelle }}</h4>
+                <div class="text-[10px] sm:text-xs md:text-sm text-gray-500 dark:text-gray-400 flex flex-wrap gap-2 sm:gap-4 mt-1 items-center">
                   <span class="truncate max-w-[100px] sm:max-w-none">{{ $t('dashboard.operator') }} {{ r.proprietaire?.nom || $t('dashboard.unassigned') }}</span>
                   <span class="flex items-center gap-1">
                     <span :class="getStatusColor(r.statut)" class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full flex-shrink-0"></span>
                     {{ $t(`status.${r.statut}`) }}
                   </span>
                   
-                  <div v-if="getRiskPlanStats(r.id).hasPlans" class="flex flex-wrap items-center gap-2 ml-0 sm:ml-2 pl-0 sm:pl-4 border-l-0 sm:border-l border-white/10 relative group/tooltip mt-2 sm:mt-0 w-full sm:w-auto">
-                    <span class="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider relative flex items-center">
+                  <div v-if="getRiskPlanStats(r.id).hasPlans" class="flex flex-wrap items-center gap-2 ml-0 sm:ml-2 pl-0 sm:pl-4 border-l-0 sm:border-l border-gray-200 dark:border-white/10 relative group/tooltip mt-2 sm:mt-0 w-full sm:w-auto">
+                    <span class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-500 uppercase font-bold tracking-wider relative flex items-center">
                       PLANS
-                      <span v-if="getRiskPlanStats(r.id).recentComments" class="ml-1 inline-flex items-center justify-center w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-blue-500/20 text-blue-400 cursor-help">i</span>
+                      <span v-if="getRiskPlanStats(r.id).recentComments" class="ml-1 inline-flex items-center justify-center w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 cursor-help">i</span>
                     </span>
-                    <div class="w-12 sm:w-16 bg-gray-700 rounded-full h-1.5 flex overflow-hidden">
+                    <div class="w-12 sm:w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 flex overflow-hidden">
                       <div class="bg-emerald-500 h-1.5 rounded-full" :style="`width: ${getRiskPlanStats(r.id).avgProgress}%`"></div>
                     </div>
-                    <span class="text-[10px] sm:text-xs font-bold text-gray-300">{{ getRiskPlanStats(r.id).avgProgress }}%</span>
+                    <span class="text-[10px] sm:text-xs font-bold text-gray-700 dark:text-gray-300">{{ getRiskPlanStats(r.id).avgProgress }}%</span>
                     
                     <!-- Tooltip -->
-                    <div v-if="getRiskPlanStats(r.id).recentComments" class="absolute bottom-full left-0 sm:left-1/2 sm:-translate-x-1/2 mb-3 w-max max-w-[80vw] sm:w-72 bg-gray-900 border border-white/10 p-3 rounded-xl shadow-2xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 pointer-events-none">
-                      <div class="text-xs text-gray-300 space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
-                        <div v-for="(comment, idx) in getRiskPlanStats(r.id).recentComments" :key="idx" class="border-b border-white/5 pb-2 last:border-0 last:pb-0">
-                          <span class="text-emerald-400 font-bold block mb-0.5 truncate">{{ comment.plan }}</span>
-                          <span class="text-gray-400 italic break-words line-clamp-2">"{{ comment.texte }}"</span>
+                    <div v-if="getRiskPlanStats(r.id).recentComments" class="absolute bottom-full left-0 sm:left-1/2 sm:-translate-x-1/2 mb-3 w-max max-w-[80vw] sm:w-72 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 p-3 rounded-xl shadow-xl dark:shadow-2xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-50 pointer-events-none">
+                      <div class="text-xs text-gray-600 dark:text-gray-300 space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                        <div v-for="(comment, idx) in getRiskPlanStats(r.id).recentComments" :key="idx" class="border-b border-gray-100 dark:border-white/5 pb-2 last:border-0 last:pb-0">
+                          <span class="text-emerald-600 dark:text-emerald-400 font-bold block mb-0.5 truncate">{{ comment.plan }}</span>
+                          <span class="text-gray-500 dark:text-gray-400 italic break-words line-clamp-2">"{{ comment.texte }}"</span>
                         </div>
                       </div>
-                      <div class="absolute -bottom-2 left-4 sm:left-1/2 sm:-translate-x-1/2 w-4 h-4 bg-gray-900 border-r border-b border-white/10 transform rotate-45"></div>
+                      <div class="absolute -bottom-2 left-4 sm:left-1/2 sm:-translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-900 border-r border-b border-gray-200 dark:border-white/10 transform rotate-45"></div>
                     </div>
                   </div>
-                  <div v-else class="text-[10px] sm:text-xs text-gray-600 italic ml-0 sm:ml-2 pl-0 sm:pl-4 border-l-0 sm:border-l border-white/10 mt-2 sm:mt-0 w-full sm:w-auto">
+                  <div v-else class="text-[10px] sm:text-xs text-gray-400 dark:text-gray-600 italic ml-0 sm:ml-2 pl-0 sm:pl-4 border-l-0 sm:border-l border-gray-200 dark:border-white/10 mt-2 sm:mt-0 w-full sm:w-auto">
                     {{ $t('dashboard.no_action_plan') }}
                   </div>
                 </div>
               </div>
               <div class="flex items-center gap-4">
-                <div class="text-center bg-black/40 px-5 py-2.5 rounded-xl border border-white/5 shadow-inner hidden sm:block">
-                  <div class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">{{ $t('dashboard.score') }}</div>
+                <div class="text-center bg-gray-100 dark:bg-black/40 px-5 py-2.5 rounded-xl border border-gray-200 dark:border-white/5 shadow-inner hidden sm:block">
+                  <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-semibold mb-0.5">{{ $t('dashboard.score') }}</div>
                   <div class="font-bold text-xl" :class="getScoreColor(r.score)">{{ r.score }}</div>
                 </div>
                 <!-- Delete Button -->
                 <button 
                   @click.prevent="confirmDeleteRisk(r.id, r.libelle)"
-                  class="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20 hover:border-red-500 opacity-0 group-hover:opacity-100"
+                  class="p-2 rounded-lg bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-600 dark:hover:bg-red-500 hover:text-white dark:hover:text-white transition-colors border border-red-200 dark:border-red-500/20 hover:border-red-600 dark:hover:border-red-500 opacity-0 group-hover:opacity-100 cursor-pointer shadow-sm dark:shadow-none"
                   title="Supprimer le risque"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -103,19 +103,19 @@
           </transition-group>
           
           <!-- Pagination Controls -->
-          <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-white/5">
+          <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-gray-200 dark:border-white/5">
             <button 
               @click="currentPage--" 
               :disabled="currentPage === 1"
-              class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 transition-colors"
+              class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-700 dark:text-white"
             >
               Précédent
             </button>
-            <span class="text-gray-400 text-sm">Page <span class="text-white font-bold">{{ currentPage }}</span> sur {{ totalPages }}</span>
+            <span class="text-gray-600 dark:text-gray-400 text-sm">Page <span class="text-gray-900 dark:text-white font-bold">{{ currentPage }}</span> sur {{ totalPages }}</span>
             <button 
               @click="currentPage++" 
               :disabled="currentPage === totalPages"
-              class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 transition-colors"
+              class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-700 dark:text-white"
             >
               Suivant
             </button>

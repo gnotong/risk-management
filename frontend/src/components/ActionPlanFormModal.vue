@@ -2,60 +2,60 @@
   <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" @click.self="closeModal">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="closeModal"></div>
     
-    <div class="relative w-full max-w-2xl bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+    <div class="relative w-full max-w-2xl bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
       <div class="p-6 sm:p-8">
-        <h3 class="text-2xl font-bold text-white mb-6">{{ $t('action_plans.new_plan') }}</h3>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ $t('action_plans.new_plan') }}</h3>
         
         <form @submit.prevent="submitForm" class="space-y-6">
           <div>
-            <label class="block text-sm text-left font-medium text-gray-300 mb-2">{{ $t('form.name') }}</label>
+            <label class="block text-sm text-left font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('form.name') }}</label>
             <input 
               v-model="form.nom" 
               type="text" 
               required
-              class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500 outline-none placeholder-gray-500"
-              :class="{ 'border-red-500': v$.nom.$error }"
+              class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none placeholder-gray-400 dark:placeholder-gray-500"
+              :class="{ 'border-red-500 focus:ring-red-500 bg-red-50 dark:bg-red-500/10': v$.nom.$error }"
               :placeholder="$t('form.name_placeholder')"
             />
-            <span v-if="v$.nom.$error" class="text-red-400 text-xs mt-1 block">{{ $t('form.required') }}</span>
+            <span v-if="v$.nom.$error" class="text-red-500 dark:text-red-400 text-xs mt-1 block">{{ $t('form.required') }}</span>
           </div>
 
           <div>
-            <label class="block text-sm text-left font-medium text-gray-300 mb-2">{{ $t('form.description') }}</label>
+            <label class="block text-sm text-left font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('form.description') }}</label>
             <textarea 
               v-model="form.description"
               rows="3"
-              class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500 outline-none placeholder-gray-500"
+              class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none placeholder-gray-400 dark:placeholder-gray-500"
               :placeholder="$t('form.desc_placeholder')"
             ></textarea>
           </div>
           
           <div class="grid grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm text-left font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
+              <label class="block text-sm text-left font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
               <input 
                 v-model="form.dateDebut" 
                 type="date" 
-                class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500 outline-none"
+                class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
               />
             </div>
             <div>
-              <label class="block text-sm text-left font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
+              <label class="block text-sm text-left font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
               <input 
                 v-model="form.dateFin" 
                 type="date" 
-                class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-purple-500 outline-none"
-                :class="{ 'border-red-500': v$.dateFin.$error || dateError }"
+                class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none"
+                :class="{ 'border-red-500 bg-red-50 dark:bg-transparent': v$.dateFin.$error || dateError }"
               />
-               <span v-if="dateError" class="text-red-400 text-xs mt-1 block">La date de fin doit être après le début.</span>
+               <span v-if="dateError" class="text-red-500 dark:text-red-400 text-xs mt-1 block">La date de fin doit être après le début.</span>
             </div>
           </div>
           
-          <div class="pt-6 border-t border-white/10 flex justify-end gap-4">
-            <button type="button" @click="closeModal" class="px-6 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+          <div class="pt-6 border-t border-gray-200 dark:border-white/10 flex justify-end gap-4">
+            <button type="button" @click="closeModal" class="px-6 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
               {{ $t('form.cancel') }}
             </button>
-            <button type="submit" :disabled="loading" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-8 py-2.5 rounded-xl text-sm font-bold shadow-[0_0_20px_rgba(147,51,234,0.3)] transition-all flex items-center gap-2">
+            <button type="submit" :disabled="loading" class="bg-purple-600 dark:bg-purple-600 hover:bg-purple-700 dark:hover:bg-purple-500 text-white px-8 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center gap-2">
               <span v-if="loading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
               {{ $t('form.create') }}
             </button>

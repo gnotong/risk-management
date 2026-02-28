@@ -6,7 +6,8 @@
         "dashboard": "Tableau de bord",
         "risks": "Registre des Risques",
         "action_plans": "Plans d'Action",
-        "switch_lang": "EN"
+        "switch_lang": "EN",
+        "app_title": "Gestion des risques"
     },
     "status": {
         "NON_COMMENCE": "Non commencé",

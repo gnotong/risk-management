@@ -2,19 +2,19 @@
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Header with Back Button -->
     <div class="flex items-center gap-4">
-      <router-link to="/" class="p-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors text-white">
+      <router-link to="/" class="p-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-full border border-gray-200 dark:border-white/10 transition-colors text-gray-700 dark:text-white shadow-sm dark:shadow-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
       </router-link>
       <div>
-        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">{{ $t('risk_detail.title') }}</h2>
+        <h2 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight transition-colors">{{ $t('risk_detail.title') }}</h2>
       </div>
       <div class="ml-auto">
         <button 
           v-if="!loading && risque"
           @click="confirmDeleteRisk"
-          class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
+          class="bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
           {{ $t('form.delete') || 'Supprimer' }}
@@ -38,23 +38,23 @@
       <!-- Main Info -->
       <div class="lg:col-span-2 glass-card p-8">
         <div class="flex items-start justify-between mb-6">
-          <h3 class="text-3xl font-bold text-white">{{ risque.libelle }}</h3>
+          <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{ risque.libelle }}</h3>
           <span class="px-4 py-1.5 rounded-full text-sm font-bold shadow-lg" :class="getStatusStyle(risque.statut)">
             {{ $t(`status.${risque.statut}`) }}
           </span>
         </div>
         
         <div class="prose prose-invert max-w-none mb-8">
-          <p class="text-gray-300 text-lg leading-relaxed">{{ risque.description || 'Aucune description fournie.' }}</p>
+          <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">{{ risque.description || 'Aucune description fournie.' }}</p>
         </div>
 
-        <div class="grid grid-cols-2 gap-6 p-6 rounded-2xl bg-black/40 border border-white/5">
+        <div class="grid grid-cols-2 gap-6 p-6 rounded-2xl bg-white dark:bg-black/40 border border-gray-200 dark:border-white/5 shadow-sm dark:shadow-none">
           <div>
             <span class="block text-sm text-gray-500 uppercase font-bold mb-1">{{ $t('risk_detail.owner') }}</span>
             
             <!-- Static View (Closed Risk) -->
-            <span v-if="risque.statut === 'CLOTURE'" class="text-white text-lg flex items-center gap-2">
-              <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
+            <span v-if="risque.statut === 'CLOTURE'" class="text-gray-900 dark:text-white text-lg flex items-center gap-2">
+              <span class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
                 {{ risque.proprietaire?.nom ? risque.proprietaire.nom.charAt(0) : '?' }}
               </span>
               {{ risque.proprietaire?.nom || $t('dashboard.unassigned') }}
@@ -65,7 +65,7 @@
               <select 
                 v-model="editForm.proprietaireId"
                 @change="updateOwner"
-                class="w-full bg-blue-500/10 hover:bg-blue-500/20 text-white border border-blue-500/20 rounded-xl px-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-medium transition-colors"
+                class="w-full bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-blue-800 dark:text-white border border-blue-200 dark:border-blue-500/20 rounded-xl px-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-medium transition-colors"
                 title="Changer le propriétaire"
               >
                 <option value="" disabled>-- {{ $t('dashboard.unassigned') }} --</option>
@@ -80,7 +80,7 @@
           </div>
           <div>
             <span class="block text-sm text-gray-500 uppercase font-bold mb-1">{{ $t('risk_detail.created_at') }}</span>
-            <span class="text-white text-lg">{{ formatDate(risque.dateCreation) }}</span>
+            <span class="text-gray-900 dark:text-white text-lg">{{ formatDate(risque.dateCreation) }}</span>
           </div>
         </div>
       </div>
@@ -101,13 +101,13 @@
         <!-- Future extension: Linked Audits/Plans -->
         <div class="glass-card p-6">
           <div class="flex items-center justify-between mb-4">
-            <h4 class="font-bold text-white flex items-center gap-2">
+            <h4 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <span class="w-1.5 h-4 bg-purple-500 rounded-full"></span> {{ $t('risk_detail.action_plans') }}
             </h4>
             <button 
               v-if="!actionPlanStore.loading" 
               @click="isActionPlanModalOpen = true"
-              class="text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 font-bold"
+              class="text-xs bg-purple-50 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-transparent hover:bg-purple-100 dark:hover:bg-purple-500/30 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 font-bold shadow-sm dark:shadow-none"
             >
               + {{ $t('action_plans.new_plan') }}
             </button>
@@ -130,21 +130,21 @@
               v-for="plan in linkedPlans" 
               :key="plan.id" 
               :to="`/action-plans/${plan.id}`"
-              class="block p-4 rounded-xl bg-black/30 border border-white/5 hover:bg-white/5 transition-colors group"
+              class="block p-4 rounded-xl bg-gray-50 dark:bg-black/30 border border-gray-200 dark:border-white/5 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group shadow-sm dark:shadow-none"
             >
               <div class="flex justify-between items-start mb-2">
-                <h5 class="font-bold text-gray-200 group-hover:text-purple-400 transition-colors">{{ plan.nom }}</h5>
+                <h5 class="font-bold text-gray-800 dark:text-gray-200 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">{{ plan.nom }}</h5>
                 <span class="text-xs px-2 py-0.5 rounded font-bold" :class="plan.statut === 'TERMINE' ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'">
                   {{ $t(`status.${plan.statut || 'NON_COMMENCE'}`) }}
                 </span>
               </div>
               <div class="flex justify-between items-center mt-3 text-sm">
-                <span class="text-gray-500">Avancement</span>
+                <span class="text-gray-600 dark:text-gray-500">Avancement</span>
                 <div class="flex items-center gap-2">
-                  <div class="w-20 bg-gray-700 rounded-full h-1.5">
+                  <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
                     <div class="bg-purple-500 h-1.5 rounded-full" :style="`width: ${plan.tauxAvancement}%`"></div>
                   </div>
-                  <span class="text-gray-300">{{ plan.tauxAvancement }}%</span>
+                  <span class="text-gray-700 dark:text-gray-300">{{ plan.tauxAvancement }}%</span>
                 </div>
               </div>
             </router-link>

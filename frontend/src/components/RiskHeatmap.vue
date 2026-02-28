@@ -2,16 +2,16 @@
   <div class="glass-card w-full h-full p-4 sm:p-6 lg:p-8 flex flex-col relative self-start lg:sticky lg:top-8 overflow-hidden">
     <div class="flex flex-wrap justify-between items-start mb-4 sm:mb-6 gap-2">
       <div>
-        <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <span class="w-1.5 h-6 bg-red-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.8)]"></span> {{ $t('heatmap.title') }} 
         </h3>
-        <p class="text-xs text-gray-400 mt-1">{{ $t('heatmap.subtitle') }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('heatmap.subtitle') }}</p>
       </div>
 
       <button 
         v-if="store.selectedProb !== null" 
         @click="store.clearHeatmapFilter()"
-        class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition-colors border border-white/10 flex items-center gap-1 cursor-pointer"
+        class="text-xs bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-700 dark:text-white px-3 py-1.5 rounded-lg transition-colors border border-gray-200 dark:border-white/10 flex items-center gap-1 cursor-pointer"
       >
         <span>✕</span> {{ $t('heatmap.clear_filter') }}
       </button>
@@ -19,22 +19,22 @@
     <div class="w-full max-w-lg mx-auto">
       <div class="grid grid-cols-4 gap-1 lg:gap-2 select-none content-center">
         <!-- Empty top-left cell -->
-        <div class="flex flex-col items-center justify-center font-bold text-gray-400 uppercase text-[9px] sm:text-[10px] text-center tracking-wider">
+        <div class="flex flex-col items-center justify-center font-bold text-gray-500 dark:text-gray-400 uppercase text-[9px] sm:text-[10px] text-center tracking-wider">
           <span>{{ $t('heatmap.gravity') }}</span><span class="text-sm sm:text-base leading-none">↘</span>
         </div>
-      <div class="flex flex-col sm:flex-row items-center justify-center font-bold text-gray-500 bg-white/5 rounded-md lg:rounded-lg py-1 lg:py-2 text-[8px] sm:text-xs lg:text-sm border border-white/5 text-center leading-tight px-0.5 sm:gap-1 overflow-hidden">
+      <div class="flex flex-col sm:flex-row items-center justify-center font-bold text-gray-700 dark:text-gray-500 bg-gray-50 dark:bg-white/5 rounded-md lg:rounded-lg py-1 lg:py-2 text-[8px] sm:text-xs lg:text-sm border border-gray-200 dark:border-white/5 text-center leading-tight px-0.5 sm:gap-1 overflow-hidden">
         <span>1</span><span class="truncate opacity-70 text-[8px] sm:text-[10px] hidden sm:inline">({{ $t('heatmap.low') }})</span>
       </div>
-      <div class="flex flex-col sm:flex-row items-center justify-center font-bold text-gray-500 bg-white/5 rounded-md lg:rounded-lg py-1 lg:py-2 text-[8px] sm:text-xs lg:text-sm border border-white/5 text-center leading-tight px-0.5 sm:gap-1 overflow-hidden">
+      <div class="flex flex-col sm:flex-row items-center justify-center font-bold text-gray-700 dark:text-gray-500 bg-gray-50 dark:bg-white/5 rounded-md lg:rounded-lg py-1 lg:py-2 text-[8px] sm:text-xs lg:text-sm border border-gray-200 dark:border-white/5 text-center leading-tight px-0.5 sm:gap-1 overflow-hidden">
         <span>2</span><span class="truncate opacity-70 text-[8px] sm:text-[10px] hidden sm:inline">({{ $t('heatmap.medium') }})</span>
       </div>
-      <div class="flex flex-col sm:flex-row items-center justify-center font-bold text-gray-500 bg-white/5 rounded-md lg:rounded-lg py-1 lg:py-2 text-[8px] sm:text-xs lg:text-sm border border-white/5 text-center leading-tight px-0.5 sm:gap-1 overflow-hidden">
+      <div class="flex flex-col sm:flex-row items-center justify-center font-bold text-gray-700 dark:text-gray-500 bg-gray-50 dark:bg-white/5 rounded-md lg:rounded-lg py-1 lg:py-2 text-[8px] sm:text-xs lg:text-sm border border-gray-200 dark:border-white/5 text-center leading-tight px-0.5 sm:gap-1 overflow-hidden">
         <span>3</span><span class="truncate opacity-70 text-[8px] sm:text-[10px] hidden sm:inline">({{ $t('heatmap.high') }})</span>
       </div>
 
       <!-- Rows by Probability -->
       <template v-for="p in [3, 2, 1]" :key="'p'+p">
-        <div class="flex flex-col items-center justify-center font-bold text-gray-500 bg-white/5 rounded-md lg:rounded-lg p-0.5 lg:px-2 text-[8px] sm:text-xs lg:text-sm border border-white/5 text-center leading-tight overflow-hidden">
+        <div class="flex flex-col items-center justify-center font-bold text-gray-700 dark:text-gray-500 bg-gray-50 dark:bg-white/5 rounded-md lg:rounded-lg p-0.5 lg:px-2 text-[8px] sm:text-xs lg:text-sm border border-gray-200 dark:border-white/5 text-center leading-tight overflow-hidden">
           <span class="truncate w-full hidden sm:block">{{ $t('heatmap.probability') }}</span>
           <span class="truncate w-full sm:hidden">Prob.</span>
           <span>{{p}}</span>
@@ -80,9 +80,9 @@ const isCellSelected = (prob: number, grav: number) => {
 
 const getColorClass = (prob: number, grav: number) => {
   const score = prob * grav;
-  if (score >= 6) return 'bg-gradient-to-br from-red-500 to-red-700 shadow-[0_0_15px_rgba(239,68,68,0.3)]';
-  if (score >= 3) return 'bg-gradient-to-br from-orange-400 to-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.3)]';
-  return 'bg-gradient-to-br from-green-400 to-green-600 shadow-[0_0_15px_rgba(34,197,94,0.3)]';
+  if (score >= 6) return 'bg-red-500 border border-red-600 shadow-sm';
+  if (score >= 3) return 'bg-orange-500 border border-orange-600 shadow-sm';
+  return 'bg-emerald-500 border border-emerald-600 shadow-sm';
 };
 
 const toggleFilter = (p: number, g: number) => {

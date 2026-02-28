@@ -6,7 +6,8 @@
         "dashboard": "Dashboard",
         "risks": "Risk Register",
         "action_plans": "Action Plans",
-        "switch_lang": "FR"
+        "switch_lang": "FR",
+        "app_title": "Risk Management"
     },
     "status": {
         "NON_COMMENCE": "Not Started",

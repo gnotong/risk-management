@@ -2,7 +2,7 @@
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
       <div class="w-full text-center md:text-left">
-        <h2 class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">{{ $t('action_plans.title') }}</h2>
+        <h2 class="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight transition-colors">{{ $t('action_plans.title') }}</h2>
         <p class="text-gray-400 mt-2 text-base sm:text-lg">{{ $t('action_plans.subtitle') }}</p>
       </div>
     </div>
@@ -23,20 +23,20 @@
         v-for="plan in paginatedPlans" 
         :key="plan.id" 
         :to="`/action-plans/${plan.id}`"
-        class="block p-6 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all group"
+        class="block p-6 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10 hover:border-blue-500/30 dark:hover:border-blue-500/30 shadow-sm dark:shadow-none hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all group"
       >
         <div class="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
           <div class="w-full sm:w-auto">
             <div class="flex gap-3 items-center mb-1 flex-wrap">
-              <h3 class="font-bold text-base sm:text-lg text-white group-hover:text-blue-400 transition-colors">{{ plan.nom }}</h3>
+              <h3 class="font-bold text-base sm:text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ plan.nom }}</h3>
               <span class="px-2 py-0.5 text-[10px] sm:text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ $t(`status.${plan.statut || 'NON_COMMENCE'}`) }}</span>
             </div>
-            <p class="text-xs sm:text-sm text-gray-400 max-w-2xl">{{ plan.description || '' }}</p>
+            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 max-w-2xl">{{ plan.description || '' }}</p>
           </div>
           <div class="text-left sm:text-right flex sm:flex-col items-center sm:items-end gap-2 w-full sm:w-auto justify-between sm:justify-start">
             <div class="flex flex-col">
               <div class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5 sm:mb-1">{{ $t('action_plans.responsible') }}</div>
-              <div class="font-medium text-gray-200">{{ plan.responsable?.nom || $t('dashboard.unassigned') }}</div>
+              <div class="font-medium text-gray-900 dark:text-gray-200">{{ plan.responsable?.nom || $t('dashboard.unassigned') }}</div>
             </div>
             <!-- Delete Button -->
             <button 
@@ -52,10 +52,10 @@
 
         <div class="mt-4">
           <div class="flex justify-between text-sm mb-1 font-medium">
-            <span class="text-gray-400">{{ $t('action_plans.progress') }}</span>
-            <span :class="plan.tauxAvancement > 80 ? 'text-green-400' : 'text-blue-400'">{{ plan.tauxAvancement }}%</span>
+            <span class="text-gray-600 dark:text-gray-400">{{ $t('action_plans.progress') }}</span>
+            <span :class="plan.tauxAvancement > 80 ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400'">{{ plan.tauxAvancement }}%</span>
           </div>
-          <div class="w-full bg-gray-700/50 rounded-full h-3 backdrop-blur-sm overflow-hidden border border-gray-600">
+          <div class="w-full bg-gray-200 dark:bg-gray-700/50 rounded-full h-3 backdrop-blur-sm overflow-hidden border border-gray-300 dark:border-gray-600">
             <div 
               class="h-full rounded-full transition-all duration-1000 ease-out relative"
               :class="getProgressColor(plan.tauxAvancement)"
@@ -68,19 +68,19 @@
       </router-link>
 
       <!-- Pagination Controls -->
-      <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-white/5">
+      <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-gray-200 dark:border-white/5">
         <button 
           @click="currentPage--" 
           :disabled="currentPage === 1"
-          class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 transition-colors"
+          class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-800 dark:text-white"
         >
           Précédent
         </button>
-        <span class="text-gray-400 text-sm">Page <span class="text-white font-bold">{{ currentPage }}</span> sur {{ totalPages }}</span>
+        <span class="text-gray-600 dark:text-gray-400 text-sm">Page <span class="text-gray-900 dark:text-white font-bold">{{ currentPage }}</span> sur {{ totalPages }}</span>
         <button 
           @click="currentPage++" 
           :disabled="currentPage === totalPages"
-          class="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 disabled:opacity-30 transition-colors"
+          class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-800 dark:text-white"
         >
           Suivant
         </button>
@@ -132,8 +132,8 @@ const getStatusStyle = (statut: string) => {
 };
 
 const getProgressColor = (val: number) => {
-  if (val === 100) return 'bg-gradient-to-r from-green-500 to-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]';
-  if (val > 50) return 'bg-gradient-to-r from-blue-500 to-cyan-400 shadow-[0_0_10px_rgba(56,189,248,0.5)]';
-  return 'bg-gradient-to-r from-orange-500 to-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]';
+  if (val === 100) return 'bg-emerald-500 shadow-sm';
+  if (val > 50) return 'bg-blue-500 shadow-sm';
+  return 'bg-orange-500 shadow-sm';
 };
 </script>
