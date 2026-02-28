@@ -25,7 +25,7 @@
       
       <!-- Heatmap -->
       <div class="lg:col-span-1">
-        <RiskHeatmap @filterMatrix="handleMatrixFilter"/>
+        <RiskHeatmap />
       </div>
 
       <!-- Risk List -->
@@ -174,11 +174,6 @@ const getRiskPlanStats = (riskId: string) => {
     avgProgress, 
     recentComments: allComments.length > 0 ? allComments : null 
   };
-};
-
-const handleMatrixFilter = ({ probabilite, gravite }: { probabilite: number, gravite: number }) => {
-  // Simplistic filter application
-  store.minScore = probabilite * gravite; 
 };
 
 const getStatusColor = (statut: string) => {

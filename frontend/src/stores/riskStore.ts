@@ -10,6 +10,10 @@ export const useRiskStore = defineStore('risk', () => {
   const minScore = ref(0);
   const ownerFilter = ref('');
 
+  // Heatmap specific filter
+  const selectedProb = ref<number | null>(null);
+  const selectedGrav = ref<number | null>(null);
+
   const fetchRisques = async () => {
     loading.value = true;
     try {
@@ -41,9 +45,22 @@ export const useRiskStore = defineStore('risk', () => {
       const matchOwner = ownerFilter.value
         ? r.proprietaire?.nom && normalize(r.proprietaire.nom).includes(normalize(ownerFilter.value))
         : true;
-      return matchSearch && matchScore && matchOwner;
+
+      const matchHeatmap = (selectedProb.value === null || r.probabilite === selectedProb.value) &&
+        (selectedGrav.value === null || r.gravite === selectedGrav.value);
+
+      return matchSearch && matchScore && matchOwner && matchHeatmap;
     });
   });
 
-  return { risks, loading, searchQuery, minScore, ownerFilter, fetchRisques, filteredRisks };
+  const clearHeatmapFilter = () => {
+    selectedProb.value = null;
+    selectedGrav.value = null;
+  };
+
+  return {
+    risks, loading,
+    searchQuery, minScore, ownerFilter, selectedProb, selectedGrav,
+    fetchRisques, filteredRisks, clearHeatmapFilter
+  };
 });
