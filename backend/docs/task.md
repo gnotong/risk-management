@@ -80,6 +80,7 @@
 - [x] Add localization for Auth texts in Fr/En JSON dicts
 - [x] Implement Keycloak Feature Toggle via `.env` parameter in `main.ts` and `App.vue`
 - [x] Monkey-patch `window.fetch` in `main.ts` to automatically inject Keycloak Bearer Tokens
+- [x] Responsive Layout Overhaul (Mobile & Tablet) for Navbar, Dashboard, Filters and Heatmap
 
 ## 4. Docker & Deployment
 - [x] Create Multi-stage Dockerfile for Backend (Quarkus native or JVM)

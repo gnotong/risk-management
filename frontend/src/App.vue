@@ -1,17 +1,17 @@
 <template>
-  <div class="min-h-screen bg-[#0f1115] text-gray-100 font-sans selection:bg-blue-500 selection:text-white">
-    <nav class="sticky top-0 z-50 bg-[#161920]/80 backdrop-blur-md border-b border-gray-800 px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-500/20">
+  <div class="min-h-screen bg-[#0f1115] text-gray-100 font-sans selection:bg-blue-500 selection:text-white overflow-x-hidden w-full max-w-[100vw]">
+    <nav class="sticky w-full top-0 z-50 bg-[#161920]/80 backdrop-blur-md border-b border-gray-800 px-4 sm:px-6 py-4 flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-6 relative">
+      <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-lg sm:text-xl shadow-lg shadow-blue-500/20 whitespace-nowrap">
           GRC
         </div>
-        <h1 class="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400 whitespace-nowrap">
           Risk Management
         </h1>
       </div>
-      <div class="flex gap-6 items-center">
-        <router-link to="/" class="text-gray-400 hover:text-white transition-colors uppercase text-sm tracking-wider font-semibold">{{ $t('nav.risks') }}</router-link>
-        <router-link to="/action-plans" class="text-gray-400 hover:text-white transition-colors uppercase text-sm tracking-wider font-semibold">{{ $t('nav.action_plans') }}</router-link>
+      <div class="flex flex-wrap gap-4 sm:gap-6 items-center w-full lg:w-auto justify-center lg:justify-end">
+        <router-link to="/" class="text-gray-400 hover:text-white transition-colors uppercase text-xs sm:text-sm tracking-wider font-semibold">{{ $t('nav.risks') }}</router-link>
+        <router-link to="/action-plans" class="text-gray-400 hover:text-white transition-colors uppercase text-xs sm:text-sm tracking-wider font-semibold">{{ $t('nav.action_plans') }}</router-link>
         
         <div class="w-px h-6 bg-white/10 mx-2"></div>
         
@@ -35,7 +35,7 @@
         </button>
       </div>
     </nav>
-    <main class="max-w-7xl mx-auto p-6">
+    <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />

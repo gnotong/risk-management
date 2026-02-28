@@ -19,6 +19,7 @@ L'application demandée dans les spécifications (frontend Vue 3 + backend Quark
 - **SSO Developer Switch**: A global toggle mechanism was instrumented allowing developers to bypass Keycloak protections instantly. Altering `ENABLE_KEYCLOAK=false` within the root `.env` file fully decouples Vite routing hooks, masks the logout menu, and structurally disables the Quarkus API tenancy (`QUARKUS_SECURITY_AUTH_ENABLED`) cascading gracefully without yielding 401s during the docker recomposition (`docker compose up -d --build`).
 
 ## 6. UX Adjustmentsd (Quarkus + Java 21)
+- **Réactivité Multiplateforme (Responsiveness)** : Refonte UI complète de `App.vue`, `RiskDashboard.vue`, `RiskHeatmap.vue`, `FilterBar.vue` et `ActionPlanTracker.vue` en utilisant intensivement les modificateurs de points de rupture Tailwind (`sm:`, `md:`, `lg:`). Les vues garantissent désormais un emboîtement et un dimensionnement dynamiques des textes (`flex-wrap`, rétrécissement conditionnel) pour s'afficher nativement avec élégance sur les téléphones mobiles et les tablettes sans débordement horizontal.
 - **Modèles de données** : Création des Entités Panache (`Utilisateur`, `Risque`, `Audit`, `Recommandation`, `PlanAction`, `Incident` et `SuiviPlanAction`) avec leurs relations JPA (`@ManyToOne`, etc.). Les scores de risques sont calculés de manière automatisée (`@PrePersist`, `@PreUpdate`).
 - **Logique Métier Avancée (V3)** :
   - **Moteur d'Intégrité** : Le système empêche activement la suppression de `Risques` ou `Utilisateurs` s'ils sont liés à des plans d'action ou incidents.

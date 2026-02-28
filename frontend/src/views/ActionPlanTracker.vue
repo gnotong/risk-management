@@ -1,9 +1,9 @@
 <template>
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-    <div class="flex justify-between items-end">
-      <div>
-        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">{{ $t('action_plans.title') }}</h2>
-        <p class="text-gray-400 mt-2 text-lg">{{ $t('action_plans.subtitle') }}</p>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+      <div class="w-full text-center md:text-left">
+        <h2 class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">{{ $t('action_plans.title') }}</h2>
+        <p class="text-gray-400 mt-2 text-base sm:text-lg">{{ $t('action_plans.subtitle') }}</p>
       </div>
     </div>
 
@@ -25,17 +25,17 @@
         :to="`/action-plans/${plan.id}`"
         class="block p-6 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all group"
       >
-        <div class="flex justify-between items-start mb-4">
-          <div>
-            <div class="flex gap-3 items-center mb-1">
-              <h3 class="font-bold text-lg text-white group-hover:text-blue-400 transition-colors">{{ plan.nom }}</h3>
-              <span class="px-2 py-0.5 text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ $t(`status.${plan.statut || 'NON_COMMENCE'}`) }}</span>
+        <div class="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
+          <div class="w-full sm:w-auto">
+            <div class="flex gap-3 items-center mb-1 flex-wrap">
+              <h3 class="font-bold text-base sm:text-lg text-white group-hover:text-blue-400 transition-colors">{{ plan.nom }}</h3>
+              <span class="px-2 py-0.5 text-[10px] sm:text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ $t(`status.${plan.statut || 'NON_COMMENCE'}`) }}</span>
             </div>
-            <p class="text-sm text-gray-400 max-w-2xl">{{ plan.description || '' }}</p>
+            <p class="text-xs sm:text-sm text-gray-400 max-w-2xl">{{ plan.description || '' }}</p>
           </div>
-          <div class="text-right flex flex-col items-end gap-2">
-            <div>
-              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{{ $t('action_plans.responsible') }}</div>
+          <div class="text-left sm:text-right flex sm:flex-col items-center sm:items-end gap-2 w-full sm:w-auto justify-between sm:justify-start">
+            <div class="flex flex-col">
+              <div class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5 sm:mb-1">{{ $t('action_plans.responsible') }}</div>
               <div class="font-medium text-gray-200">{{ plan.responsable?.nom || $t('dashboard.unassigned') }}</div>
             </div>
             <!-- Delete Button -->

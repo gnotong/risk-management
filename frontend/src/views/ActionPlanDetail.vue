@@ -1,16 +1,16 @@
 <template>
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <!-- Header -->
-    <div class="flex items-center gap-4">
-      <button @click="goBack" class="p-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors text-white cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+      <button @click="goBack" class="p-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors text-white cursor-pointer flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
       </button>
-      <div>
-        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 tracking-tight">{{ $t('action_plan_detail.title') }}</h2>
+      <div class="flex-1 min-w-[200px]">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 tracking-tight break-words">{{ $t('action_plan_detail.title') }}</h2>
       </div>
-      <div class="ml-auto">
+      <div class="w-full sm:w-auto sm:ml-auto flex justify-end">
         <button 
           v-if="!loading && plan && plan.statut !== 'TERMINE'"
           @click="confirmDelete"
@@ -34,13 +34,13 @@
       
       <!-- Left Column: Edit Form & Progress -->
       <div class="lg:col-span-2 space-y-6">
-        <div class="glass-card p-8">
-          <div class="flex justify-between items-start mb-6">
-            <div>
-              <h3 class="text-2xl font-bold text-white mb-2">{{ plan.nom }}</h3>
-              <p class="text-gray-400">{{ plan.description || 'Aucune description fournie.' }}</p>
+        <div class="glass-card p-4 sm:p-8">
+          <div class="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
+            <div class="w-full sm:w-auto">
+              <h3 class="text-xl sm:text-2xl font-bold text-white mb-2 break-words">{{ plan.nom }}</h3>
+              <p class="text-sm sm:text-base text-gray-400">{{ plan.description || 'Aucune description fournie.' }}</p>
             </div>
-            <router-link v-if="plan.risque" :to="`/risques/${plan.risque?.id}`" class="text-sm bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2">
+            <router-link v-if="plan.risque" :to="`/risques/${plan.risque?.id}`" class="text-xs sm:text-sm bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2 flex-shrink-0 w-full justify-center sm:w-auto">
               <span>🔗 {{ $t('action_plans.risk') }} {{ plan.risque?.libelle }}</span>
             </router-link>
           </div>
