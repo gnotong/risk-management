@@ -2,8 +2,8 @@
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <div class="flex justify-between items-end">
       <div>
-        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">Suivi des Plans d'Action</h2>
-        <p class="text-gray-400 mt-2 text-lg">Visualisation de l'avancement global et gestion des tâches.</p>
+        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">{{ $t('action_plans.title') }}</h2>
+        <p class="text-gray-400 mt-2 text-lg">{{ $t('action_plans.subtitle') }}</p>
       </div>
     </div>
 
@@ -15,8 +15,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-6 text-gray-500 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
       </svg>
-      <h3 class="text-2xl font-bold text-white mb-3">Aucun Plan d'Action</h3>
-      <p class="text-lg">Il n'y a actuellement aucun plan d'action défini dans le système.</p>
+      <p class="text-lg">{{ $t('action_plans.empty') }}</p>
     </div>
 
     <div v-else class="glass-card p-6 lg:p-8 space-y-6">
@@ -30,19 +29,19 @@
           <div>
             <div class="flex gap-3 items-center mb-1">
               <h3 class="font-bold text-lg text-white group-hover:text-blue-400 transition-colors">{{ plan.nom }}</h3>
-              <span class="px-2 py-0.5 text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ plan.statut || 'NON_COMMENCE' }}</span>
+              <span class="px-2 py-0.5 text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ $t(`status.${plan.statut || 'NON_COMMENCE'}`) }}</span>
             </div>
-            <p class="text-sm text-gray-400 max-w-2xl">{{ plan.description || 'Aucune description' }}</p>
+            <p class="text-sm text-gray-400 max-w-2xl">{{ plan.description || '' }}</p>
           </div>
           <div class="text-right">
-            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Responsable</div>
-            <div class="font-medium text-gray-200">{{ plan.responsable?.nom || 'Non assigné' }}</div>
+            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{{ $t('action_plans.responsible') }}</div>
+            <div class="font-medium text-gray-200">{{ plan.responsable?.nom || $t('dashboard.unassigned') }}</div>
           </div>
         </div>
 
         <div class="mt-4">
           <div class="flex justify-between text-sm mb-1 font-medium">
-            <span class="text-gray-400">Avancement</span>
+            <span class="text-gray-400">{{ $t('action_plans.progress') }}</span>
             <span :class="plan.tauxAvancement > 80 ? 'text-green-400' : 'text-blue-400'">{{ plan.tauxAvancement }}%</span>
           </div>
           <div class="w-full bg-gray-700/50 rounded-full h-3 backdrop-blur-sm overflow-hidden border border-gray-600">

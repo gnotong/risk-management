@@ -1,0 +1,85 @@
+{
+    "nav": {
+        "dashboard": "Tableau de bord",
+        "risks": "Registre des Risques",
+        "action_plans": "Plans d'Action",
+        "switch_lang": "EN"
+    },
+    "status": {
+        "NON_COMMENCE": "Non commencé",
+        "EN_COURS": "En cours",
+        "TERMINE": "Terminé",
+        "OUVERT": "Ouvert",
+        "CLOS": "Clos"
+    },
+    "dashboard": {
+        "title": "Tableau de Bord des Risques",
+        "subtitle": "Vue d'ensemble et pilotage de vos risques majeurs.",
+        "export_pdf": "Exporter PDF",
+        "export_excel": "Exporter Excel",
+        "new_risk": "Nouveau Risque",
+        "operator": "Opérateur:",
+        "unassigned": "Non assigné",
+        "action_plans": "Plans d'action",
+        "no_action_plan": "Aucun plan d'action",
+        "score": "Score",
+        "filter_x_risks": "Filtrer {count} risque(s)",
+        "no_risks": "Aucun risque"
+    },
+    "heatmap": {
+        "title": "Heatmap",
+        "subtitle": "Cliquez sur une case pour filtrer les risques",
+        "clear_filter": "Effacer filtre",
+        "gravity": "Gravité",
+        "probability": "Probabilité",
+        "low": "Faible",
+        "medium": "Moyen",
+        "high": "Élevé"
+    },
+    "filter": {
+        "search_label": "Recherche (Nom ou Opérateur)",
+        "search_placeholder": "Min 3 caractères...",
+        "min_score": "Score Minimum",
+        "all_risks": "Tous les risques",
+        "score_medium": "Score >= 3 (Moyen)",
+        "score_high": "Score >= 6 (Élevé)",
+        "owner": "Propriétaire",
+        "owner_placeholder": "Nom du propriétaire..."
+    },
+    "action_plans": {
+        "title": "Suivi des Plans d'Action",
+        "subtitle": "Pilotez l'avancement et les commentaires de vos plans d'action.",
+        "empty": "Aucun plan d'action enregistré pour le moment.",
+        "risk": "Risque lié:",
+        "progress": "Avancement",
+        "responsible": "Responsable:",
+        "starts": "Début:",
+        "ends": "Fin:"
+    },
+    "action_plan_detail": {
+        "title": "Détails du Plan d'Action",
+        "save": "Enregistrer les modifications",
+        "progress": "Taux d'Avancement",
+        "progress_desc": "Faites glisser pour modifier le pourcentage",
+        "dates": "Dates de planification",
+        "start_date": "Date de début",
+        "end_date": "Date de fin",
+        "status": "Statut",
+        "select_status": "Sélectionner un statut",
+        "linked_risk": "Risque associé",
+        "risk_score": "Score",
+        "journal": "Journal de suivi",
+        "new_comment": "Nouveau commentaire",
+        "add_comment": "Ajouter ce commentaire",
+        "no_comments": "Aucun suivi pour ce plan d'action"
+    },
+    "risk_detail": {
+        "title": "Détails du Risque",
+        "overview": "Aperçu Global",
+        "prob_grav_score": "Probabilité: {prob} | Gravité: {grav} = Score: {score}",
+        "owner": "Propriétaire:",
+        "status": "Statut:",
+        "created_at": "Créé le:",
+        "action_plans": "Plans d'Action Associés"
+    }
+}

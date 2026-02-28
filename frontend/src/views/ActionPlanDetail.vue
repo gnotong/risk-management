@@ -8,7 +8,7 @@
         </svg>
       </button>
       <div>
-        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 tracking-tight">Détails du Plan d'Action</h2>
+        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 tracking-tight">{{ $t('action_plan_detail.title') }}</h2>
       </div>
     </div>
 
@@ -31,7 +31,7 @@
               <p class="text-gray-400">{{ plan.description || 'Aucune description fournie.' }}</p>
             </div>
             <router-link v-if="plan.risque" :to="`/risques/${plan.risque?.id}`" class="text-sm bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2">
-              <span>🔗 Risque: {{ plan.risque?.libelle }}</span>
+              <span>🔗 {{ $t('action_plans.risk') }} {{ plan.risque?.libelle }}</span>
             </router-link>
           </div>
 
@@ -44,7 +44,7 @@
             <!-- Taux Avancement Slider -->
             <div class="p-6 rounded-2xl bg-black/40 border border-white/5 space-y-4">
               <div class="flex justify-between items-center">
-                <label class="block text-sm font-bold text-gray-300 uppercase tracking-wider">Avancement ({{ editForm.tauxAvancement }}%)</label>
+                <label class="block text-sm font-bold text-gray-300 uppercase tracking-wider">{{ $t('action_plan_detail.progress') }} ({{ editForm.tauxAvancement }}%)</label>
                 <div class="flex gap-2">
                   <button type="button" @click="editForm.tauxAvancement = 0" class="text-xs px-2 py-1 bg-white/5 rounded hover:bg-white/10 text-gray-400">0%</button>
                   <button type="button" @click="editForm.tauxAvancement = 50" class="text-xs px-2 py-1 bg-white/5 rounded hover:bg-white/10 text-gray-400">50%</button>
@@ -65,21 +65,21 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Statut</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.status') }}</label>
                 <select v-model="editForm.statut" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-emerald-500 outline-none">
-                  <option value="NON_COMMENCE">NON COMMENCÉ</option>
-                  <option value="EN_COURS">EN COURS</option>
-                  <option value="TERMINE">TERMINÉ</option>
+                  <option value="NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
+                  <option value="EN_COURS">{{ $t('status.EN_COURS') }}</option>
+                  <option value="TERMINE">{{ $t('status.TERMINE') }}</option>
                 </select>
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Date de début</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
                 <input v-model="editForm.dateDebut" type="date" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-emerald-500 outline-none" />
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Date de fin</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
                 <input v-model="editForm.dateFin" type="date" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-emerald-500 outline-none" />
               </div>
 
@@ -88,7 +88,7 @@
             <div class="flex justify-end pt-4">
               <button type="submit" :disabled="saving" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center gap-2">
                 <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-                {{ saving ? 'Sauvegarde...' : 'Enregistrer les modifications' }}
+                {{ $t('action_plan_detail.save') }}
               </button>
             </div>
           </form>
@@ -96,11 +96,11 @@
         
         <!-- Add manual comment -->
         <div class="glass-card p-6 border-l-4 border-l-emerald-500">
-          <h4 class="font-bold text-white mb-4">Ajouter une note de suivi</h4>
+          <h4 class="font-bold text-white mb-4">{{ $t('action_plan_detail.new_comment') }}</h4>
           <form @submit.prevent="submitComment" class="flex flex-col items-end gap-3">
-            <textarea v-model="newComment" required rows="2" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-500" placeholder="Décrivez l'avancée ou le point bloquant..."></textarea>
+            <textarea v-model="newComment" required rows="2" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-500" placeholder="..."></textarea>
             <button type="submit" :disabled="commenting" class="px-5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors">
-              {{ commenting ? 'Envoi...' : 'Publier' }}
+              {{ $t('action_plan_detail.add_comment') }}
             </button>
           </form>
         </div>
@@ -111,14 +111,14 @@
         <div class="glass-card p-6 h-full border border-white/5 flex flex-col">
           <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Journal de Suivi
+            {{ $t('action_plan_detail.journal') }}
           </h3>
           
           <div v-if="loadingSuivis" class="space-y-4">
             <div v-for="i in 3" :key="i" class="h-16 bg-gray-800 rounded-lg animate-pulse"></div>
           </div>
           <div v-else-if="suivis.length === 0" class="text-gray-500 text-center py-10 flex-1">
-            Aucun historique.
+            {{ $t('action_plan_detail.no_comments') }}
           </div>
           <div v-else class="space-y-4 overflow-y-auto pr-2 flex-1" style="max-height: 600px;">
             <div v-for="s in suivis" :key="s.id" class="p-4 rounded-xl bg-black/40 border border-white/5">

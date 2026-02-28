@@ -8,7 +8,7 @@
         </svg>
       </router-link>
       <div>
-        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">Détails du Risque</h2>
+        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">{{ $t('risk_detail.title') }}</h2>
       </div>
     </div>
 
@@ -30,7 +30,7 @@
         <div class="flex items-start justify-between mb-6">
           <h3 class="text-3xl font-bold text-white">{{ risque.libelle }}</h3>
           <span class="px-4 py-1.5 rounded-full text-sm font-bold shadow-lg" :class="getStatusStyle(risque.statut)">
-            {{ risque.statut }}
+            {{ $t(`status.${risque.statut}`) }}
           </span>
         </div>
         
@@ -40,16 +40,16 @@
 
         <div class="grid grid-cols-2 gap-6 p-6 rounded-2xl bg-black/40 border border-white/5">
           <div>
-            <span class="block text-sm text-gray-500 uppercase font-bold mb-1">Responsable</span>
+            <span class="block text-sm text-gray-500 uppercase font-bold mb-1">{{ $t('risk_detail.owner') }}</span>
             <span class="text-white text-lg flex items-center gap-2">
               <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
                 {{ risque.proprietaire?.nom ? risque.proprietaire.nom.charAt(0) : '?' }}
               </span>
-              {{ risque.proprietaire?.nom || 'Non assigné' }}
+              {{ risque.proprietaire?.nom || $t('dashboard.unassigned') }}
             </span>
           </div>
           <div>
-            <span class="block text-sm text-gray-500 uppercase font-bold mb-1">Date de création</span>
+            <span class="block text-sm text-gray-500 uppercase font-bold mb-1">{{ $t('risk_detail.created_at') }}</span>
             <span class="text-white text-lg">{{ formatDate(risque.dateCreation) }}</span>
           </div>
         </div>
@@ -58,20 +58,20 @@
       <!-- Metrics side panel -->
       <div class="space-y-6">
         <div class="glass-card p-8 flex flex-col items-center justify-center text-center">
-          <span class="text-gray-400 uppercase tracking-widest font-semibold mb-2">Score de Criticité</span>
+          <span class="text-gray-400 uppercase tracking-widest font-semibold mb-2">{{ $t('dashboard.score') }}</span>
           <div class="text-6xl font-black" :class="getScoreColor(risque.score)">
             {{ risque.score }}
           </div>
           <div class="mt-4 flex gap-4 text-sm text-gray-400">
-            <div>Prob: <span class="font-bold text-white">{{ risque.probabilite }}</span>/3</div>
-            <div>Grav: <span class="font-bold text-white">{{ risque.gravite }}</span>/3</div>
+            <div>{{ $t('heatmap.probability') }}: <span class="font-bold text-white">{{ risque.probabilite }}</span>/3</div>
+            <div>{{ $t('heatmap.gravity') }}: <span class="font-bold text-white">{{ risque.gravite }}</span>/3</div>
           </div>
         </div>
 
         <!-- Future extension: Linked Audits/Plans -->
         <div class="glass-card p-6">
           <h4 class="font-bold text-white mb-4 flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-purple-500 rounded-full"></span> Plans d'action liés
+            <span class="w-1.5 h-4 bg-purple-500 rounded-full"></span> {{ $t('risk_detail.action_plans') }}
           </h4>
           
           <div v-if="actionPlanStore.loading" class="animate-pulse flex space-x-4">
@@ -84,7 +84,7 @@
             </div>
           </div>
           <div v-else-if="linkedPlans.length === 0" class="text-gray-500 text-sm italic py-2">
-            Aucun plan d'action défini pour ce risque.
+            {{ $t('dashboard.no_action_plan') }}
           </div>
           <div v-else class="space-y-4">
             <router-link 
@@ -96,7 +96,7 @@
               <div class="flex justify-between items-start mb-2">
                 <h5 class="font-bold text-gray-200 group-hover:text-purple-400 transition-colors">{{ plan.nom }}</h5>
                 <span class="text-xs px-2 py-0.5 rounded font-bold" :class="plan.statut === 'TERMINE' ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'">
-                  {{ plan.statut || 'NON_COMMENCE' }}
+                  {{ $t(`status.${plan.statut || 'NON_COMMENCE'}`) }}
                 </span>
               </div>
               <div class="flex justify-between items-center mt-3 text-sm">

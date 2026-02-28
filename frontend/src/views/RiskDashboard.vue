@@ -2,18 +2,18 @@
   <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
       <div>
-        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">Tableau de Bord des Risques</h2>
-        <p class="text-gray-400 mt-2 text-lg">Vue globale de la cartographie des risques et filtrage dynamique.</p>
+        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">{{ $t('dashboard.title') }}</h2>
+        <p class="text-gray-400 mt-2 text-lg">{{ $t('dashboard.subtitle') }}</p>
       </div>
       <div class="flex flex-wrap justify-end gap-3 mt-4 md:mt-0">
         <button @click="isModalOpen = true" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center gap-2 group cursor-pointer lg:mr-4">
-          <span class="text-lg group-hover:scale-110 transition-transform">+</span> Nouveau Risque
+          <span class="text-lg group-hover:scale-110 transition-transform">+</span> {{ $t('dashboard.new_risk') }}
         </button>
         <button @click="exportPDF" class="glass hover:bg-white/10 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 group cursor-pointer hover:border-white/30">
-          <span class="group-hover:scale-110 transition-transform">📄</span> Export PDF
+          <span class="group-hover:scale-110 transition-transform">📄</span> {{ $t('dashboard.export_pdf') }}
         </button>
         <button @click="exportExcel" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-all flex items-center gap-2 group cursor-pointer">
-          <span class="group-hover:scale-110 transition-transform">📊</span> Export Excel
+          <span class="group-hover:scale-110 transition-transform">📊</span> {{ $t('dashboard.export_excel') }}
         </button>
       </div>
     </div>
@@ -31,7 +31,7 @@
       <!-- Risk List -->
       <div class="lg:col-span-2 glass-card p-6 lg:p-8">
         <h3 class="text-2xl font-bold mb-6 text-white flex items-center gap-2">
-          <span class="w-1.5 h-6 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></span> Liste des Risques
+          <span class="w-1.5 h-6 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></span> {{ $t('nav.risks') }}
         </h3>
         
         <div v-if="store.loading" class="animate-pulse space-y-4">
@@ -39,7 +39,7 @@
         </div>
         
         <div v-else-if="store.filteredRisks.length === 0" class="text-gray-500 text-center py-10">
-          Aucun risque trouvé pour ces critères.
+          {{ $t('dashboard.no_risks') }}
         </div>
 
         <div v-else class="space-y-3">
@@ -53,16 +53,16 @@
               <div>
                 <h4 class="text-lg font-bold text-gray-100 group-hover:text-blue-400 transition-colors">{{ r.libelle }}</h4>
                 <div class="text-sm text-gray-400 flex gap-4 mt-1 items-center">
-                  <span>Opérateur: {{ r.proprietaire?.nom || 'Non assigné' }}</span>
+                  <span>{{ $t('dashboard.operator') }} {{ r.proprietaire?.nom || $t('dashboard.unassigned') }}</span>
                   <span class="flex items-center gap-1">
                     <span :class="getStatusColor(r.statut)" class="w-2 h-2 rounded-full"></span>
-                    {{ r.statut }}
+                    {{ $t(`status.${r.statut}`) }}
                   </span>
                   
                   <!-- Action Plan Progress -->
                   <div v-if="getRiskPlanStats(r.id).hasPlans" class="flex items-center gap-2 ml-2 pl-4 border-l border-white/10 relative group/tooltip">
                     <span class="text-xs text-gray-500 uppercase font-bold tracking-wider relative">
-                      Plans d'action 
+                      {{ $t('dashboard.action_plans') }} 
                       <span v-if="getRiskPlanStats(r.id).recentComments" class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-500/20 text-blue-400 cursor-help">i</span>
                     </span>
                     <div class="w-16 bg-gray-700 rounded-full h-1.5 flex overflow-hidden">
@@ -82,12 +82,12 @@
                     </div>
                   </div>
                   <div v-else class="text-xs text-gray-600 italic ml-2 pl-4 border-l border-white/10">
-                    Aucun plan d'action
+                    {{ $t('dashboard.no_action_plan') }}
                   </div>
                 </div>
               </div>
               <div class="text-center bg-black/40 px-5 py-2.5 rounded-xl border border-white/5 shadow-inner hidden sm:block">
-                <div class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">Score</div>
+                <div class="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-0.5">{{ $t('dashboard.score') }}</div>
                 <div class="font-bold text-xl" :class="getScoreColor(r.score)">{{ r.score }}</div>
               </div>
             </router-link>
@@ -129,9 +129,11 @@ import RiskFormModal from '../components/RiskFormModal.vue';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { useI18n } from 'vue-i18n';
 
 const store = useRiskStore();
 const actionPlanStore = useActionPlanStore();
+const { t } = useI18n();
 const isModalOpen = ref(false);
 
 const currentPage = ref(1);
@@ -190,17 +192,17 @@ const getScoreColor = (score: number) => {
 
 const exportPDF = () => {
   const doc = new jsPDF();
-  doc.text("Rapport des Risques", 14, 15);
+  doc.text(t('dashboard.title'), 14, 15);
   
   const tableData = store.filteredRisks.map(r => [
     r.libelle,
     r.score,
-    r.statut,
-    r.proprietaire?.nom || 'Non assigné'
+    t(`status.${r.statut}`),
+    r.proprietaire?.nom || t('dashboard.unassigned')
   ]);
 
   autoTable(doc, {
-    head: [['Libellé', 'Score', 'Statut', 'Opérateur']],
+    head: [['Libellé', t('dashboard.score'), 'Statut', t('dashboard.operator')]],
     body: tableData,
     startY: 20,
     theme: 'grid',
@@ -213,9 +215,9 @@ const exportPDF = () => {
 const exportExcel = () => {
   const wsData = store.filteredRisks.map(r => ({
     'Libellé': r.libelle,
-    'Score': r.score,
-    'Statut': r.statut,
-    'Opérateur': r.proprietaire?.nom || 'Non assigné'
+    [t('dashboard.score')]: r.score,
+    'Statut': t(`status.${r.statut}`),
+    [t('dashboard.operator')]: r.proprietaire?.nom || t('dashboard.unassigned')
   }));
   
   const ws = XLSX.utils.json_to_sheet(wsData);

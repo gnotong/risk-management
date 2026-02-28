@@ -1,0 +1,85 @@
+{
+    "nav": {
+        "dashboard": "Dashboard",
+        "risks": "Risk Register",
+        "action_plans": "Action Plans",
+        "switch_lang": "FR"
+    },
+    "status": {
+        "NON_COMMENCE": "Not Started",
+        "EN_COURS": "In Progress",
+        "TERMINE": "Done",
+        "OUVERT": "Open",
+        "CLOS": "Closed"
+    },
+    "dashboard": {
+        "title": "Risk Dashboard",
+        "subtitle": "Overview and management of your major risks.",
+        "export_pdf": "Export PDF",
+        "export_excel": "Export Excel",
+        "new_risk": "New Risk",
+        "operator": "Owner:",
+        "unassigned": "Unassigned",
+        "action_plans": "Action plans",
+        "no_action_plan": "No action plan",
+        "score": "Score",
+        "filter_x_risks": "Filter {count} risk(s)",
+        "no_risks": "No risks"
+    },
+    "heatmap": {
+        "title": "Heatmap",
+        "subtitle": "Click a cell to filter risks",
+        "clear_filter": "Clear filter",
+        "gravity": "Impact",
+        "probability": "Likelihood",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+    },
+    "filter": {
+        "search_label": "Search (Name or Owner)",
+        "search_placeholder": "Min 3 characters...",
+        "min_score": "Min Score",
+        "all_risks": "All risks",
+        "score_medium": "Score >= 3 (Medium)",
+        "score_high": "Score >= 6 (High)",
+        "owner": "Owner",
+        "owner_placeholder": "Owner name..."
+    },
+    "action_plans": {
+        "title": "Action Plans Tracking",
+        "subtitle": "Manage progress and comments for your action plans.",
+        "empty": "No action plans registered yet.",
+        "risk": "Related risk:",
+        "progress": "Progress",
+        "responsible": "Owner:",
+        "starts": "Starts:",
+        "ends": "Ends:"
+    },
+    "action_plan_detail": {
+        "title": "Action Plan Details",
+        "save": "Save changes",
+        "progress": "Progress Rate",
+        "progress_desc": "Drag to change percentage",
+        "dates": "Planning dates",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "status": "Status",
+        "select_status": "Select a status",
+        "linked_risk": "Associated risk",
+        "risk_score": "Score",
+        "journal": "Tracking Journal",
+        "new_comment": "New comment",
+        "add_comment": "Add comment",
+        "no_comments": "No tracking entries for this action plan"
+    },
+    "risk_detail": {
+        "title": "Risk Details",
+        "overview": "Overview",
+        "prob_grav_score": "Likelihood: {prob} | Impact: {grav} = Score: {score}",
+        "owner": "Owner:",
+        "status": "Status:",
+        "created_at": "Created at:",
+        "action_plans": "Associated Action Plans"
+    }
+}

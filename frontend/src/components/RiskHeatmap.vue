@@ -3,9 +3,9 @@
     <div class="flex justify-between items-start mb-6">
       <div>
         <h3 class="text-2xl font-bold text-white flex items-center gap-2">
-          <span class="w-1.5 h-6 bg-red-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.8)]"></span> Heatmap 
+          <span class="w-1.5 h-6 bg-red-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.8)]"></span> {{ $t('heatmap.title') }} 
         </h3>
-        <p class="text-xs text-gray-400 mt-1">Cliquez sur une case pour filtrer les risques</p>
+        <p class="text-xs text-gray-400 mt-1">{{ $t('heatmap.subtitle') }}</p>
       </div>
 
       <button 
@@ -13,23 +13,23 @@
         @click="store.clearHeatmapFilter()"
         class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition-colors border border-white/10 flex items-center gap-1 cursor-pointer"
       >
-        <span>✕</span> Effacer filtre
+        <span>✕</span> {{ $t('heatmap.clear_filter') }}
       </button>
     </div>
     
     <div class="grid grid-cols-4 gap-2 select-none flex-1 content-center">
       <!-- Empty top-left cell -->
       <div class="flex flex-col items-center justify-center font-bold text-gray-400 uppercase text-xs tracking-wider">
-        <span>Gravité</span><span class="text-lg leading-none">↘</span>
+        <span>{{ $t('heatmap.gravity') }}</span><span class="text-lg leading-none">↘</span>
       </div>
-      <div class="flex items-center justify-center font-bold text-gray-500 bg-white/5 rounded-lg py-2 text-sm border border-white/5">1 (Faible)</div>
-      <div class="flex items-center justify-center font-bold text-gray-500 bg-white/5 rounded-lg py-2 text-sm border border-white/5">2 (Moyen)</div>
-      <div class="flex items-center justify-center font-bold text-gray-500 bg-white/5 rounded-lg py-2 text-sm border border-white/5">3 (Élevé)</div>
+      <div class="flex items-center justify-center font-bold text-gray-500 bg-white/5 rounded-lg py-2 text-sm border border-white/5">1 ({{ $t('heatmap.low') }})</div>
+      <div class="flex items-center justify-center font-bold text-gray-500 bg-white/5 rounded-lg py-2 text-sm border border-white/5">2 ({{ $t('heatmap.medium') }})</div>
+      <div class="flex items-center justify-center font-bold text-gray-500 bg-white/5 rounded-lg py-2 text-sm border border-white/5">3 ({{ $t('heatmap.high') }})</div>
 
       <!-- Rows by Probability -->
       <template v-for="p in [3, 2, 1]" :key="'p'+p">
         <div class="flex flex-col items-center justify-center font-bold text-gray-500 bg-white/5 rounded-lg px-2 text-sm border border-white/5 text-center leading-tight">
-          Probabilité<br/>{{p}}
+          {{ $t('heatmap.probability') }}<br/>{{p}}
         </div>
         <template v-for="g in [1, 2, 3]" :key="'p'+p+'g'+g">
           <div 
@@ -41,7 +41,7 @@
                (store.selectedProb !== null && !isCellSelected(p, g)) ? 'opacity-30 grayscale-[50%]' : ''
             ]"
             @click="toggleFilter(p, g)"
-            :title="countRisks(p, g) > 0 ? `Filtrer ${countRisks(p, g)} risque(s)` : 'Aucun risque'"
+            :title="countRisks(p, g) > 0 ? $t('dashboard.filter_x_risks', { count: countRisks(p, g) }) : $t('dashboard.no_risks')"
           >
             <span class="z-10 text-white drop-shadow-md group-hover:scale-110 transition-transform" :class="isCellSelected(p, g) ? 'scale-110' : ''">
               {{ countRisks(p, g) }}
