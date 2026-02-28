@@ -21,3 +21,6 @@ VALUES ('5a6c1e95-7d5a-4b93-8408-fb9e27c0fae3', 'Audit Sécurité Q3', 'Inspecti
 
 INSERT INTO PlanAction (id, nom, description, date_debut, date_fin, taux_avancement, statut, responsable_id, risque_id)
 VALUES ('1ea2315b-24cf-4ca6-a517-567fce727b3b', 'Formation de sensibilisation', 'Formation obligatoire pour tous les employés (Phishing)', '2023-05-01', '2023-06-30', 100, 'TERMINE', 'b6537c35-ae53-488f-9a1d-7bb3d7f9f3ab', 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d');
+
+INSERT INTO PlanAction (id, nom, description, date_debut, date_fin, taux_avancement, statut, responsable_id, risque_id)
+VALUES ('9c8f7e6d-5a4b-3c2d-1e0f-9a8b7c6d5e4f', 'Migration Cloud Redondant', 'Déploiement des serveurs sur une infrastructure multi-zones', '2024-01-15', '2024-09-30', 10, 'EN_COURS', 'c9925e07-aa3a-4ef4-9e3f-67f781ea32a6', 'f1e2d3c4-b5a6-9f8e-7d6c-5b4a3f2e1d0c');

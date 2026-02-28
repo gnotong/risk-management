@@ -73,7 +73,43 @@
           <h4 class="font-bold text-white mb-4 flex items-center gap-2">
             <span class="w-1.5 h-4 bg-purple-500 rounded-full"></span> Plans d'action liés
           </h4>
-          <p class="text-sm text-gray-500 italic">Fonctionnalité à venir...</p>
+          
+          <div v-if="actionPlanStore.loading" class="animate-pulse flex space-x-4">
+            <div class="flex-1 space-y-4 py-1">
+              <div class="h-4 bg-gray-700 rounded w-3/4"></div>
+              <div class="space-y-2">
+                <div class="h-4 bg-gray-700 rounded"></div>
+                <div class="h-4 bg-gray-700 rounded w-5/6"></div>
+              </div>
+            </div>
+          </div>
+          <div v-else-if="linkedPlans.length === 0" class="text-gray-500 text-sm italic py-2">
+            Aucun plan d'action défini pour ce risque.
+          </div>
+          <div v-else class="space-y-4">
+            <router-link 
+              v-for="plan in linkedPlans" 
+              :key="plan.id" 
+              :to="`/action-plans/${plan.id}`"
+              class="block p-4 rounded-xl bg-black/30 border border-white/5 hover:bg-white/5 transition-colors group"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h5 class="font-bold text-gray-200 group-hover:text-purple-400 transition-colors">{{ plan.nom }}</h5>
+                <span class="text-xs px-2 py-0.5 rounded font-bold" :class="plan.statut === 'TERMINE' ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'">
+                  {{ plan.statut || 'NON_COMMENCE' }}
+                </span>
+              </div>
+              <div class="flex justify-between items-center mt-3 text-sm">
+                <span class="text-gray-500">Avancement</span>
+                <div class="flex items-center gap-2">
+                  <div class="w-20 bg-gray-700 rounded-full h-1.5">
+                    <div class="bg-purple-500 h-1.5 rounded-full" :style="`width: ${plan.tauxAvancement}%`"></div>
+                  </div>
+                  <span class="text-gray-300">{{ plan.tauxAvancement }}%</span>
+                </div>
+              </div>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -81,13 +117,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useActionPlanStore } from '../stores/actionPlanStore';
 
 const route = useRoute();
 const id = route.params.id;
 const loading = ref(true);
 const risque = ref<any>(null);
+const actionPlanStore = useActionPlanStore();
 
 onMounted(async () => {
   try {
@@ -95,11 +133,17 @@ onMounted(async () => {
     if (res.ok) {
       risque.value = await res.json();
     }
+    await actionPlanStore.fetchPlans();
   } catch (e) {
     console.error("Failed to load risk", e);
   } finally {
     loading.value = false;
   }
+});
+
+const linkedPlans = computed(() => {
+  if (!actionPlanStore.plans) return [];
+  return actionPlanStore.plans.filter((plan: any) => plan.risque?.id === id);
 });
 
 const getStatusStyle = (statut: string) => {
