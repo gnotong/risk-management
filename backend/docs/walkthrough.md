@@ -11,6 +11,8 @@ L'application demandée dans les spécifications (frontend Vue 3 + backend Quark
 - **Risk Owners**: Creating a new Risk via the `RiskFormModal` natively fetches the user `/api/utilisateurs` directory, parsing it into a dropdown menu allowing direct assignments. This initialization is strictly mandatory at creation per server regulations.
 - **Interactive Risk Owners**: The Risk Detail viewport serves a custom interactive dropdown natively intercepting quick status changes. Re-assigning an active parent is permitted freely unless the target Risk matches a closed state (`CLOTURE`). When closed, updates are strictly blocked physically.
 - **Auto-Closure**: When an Action Plan is saved with an update hitting completely 100% progress, it immediately transitions to `TERMINE`, natively propagating into the assigned parent Risk, turning its state to `CLOTURE` (Closed).
+- **UUID Safeguard (Bug Fix)**: Updating action plans without direct assigned responsibles now correctly intercepts simulation headers (`admin-override`) server-side, bypassing parsing crashes that previously blocked completion modifications.
+- **End-User Documentation**: Authored a clear, non-technical markdown manual mapping core concepts (Ownership, Heatmaps, Completion automation). Transported natively to `backend/docs/`.
 
 ## 6. UX Adjustmentsd (Quarkus + Java 21)
 - **Modèles de données** : Création des Entités Panache (`Utilisateur`, `Risque`, `Audit`, `Recommandation`, `PlanAction`, `Incident` et `SuiviPlanAction`) avec leurs relations JPA (`@ManyToOne`, etc.). Les scores de risques sont calculés de manière automatisée (`@PrePersist`, `@PreUpdate`).

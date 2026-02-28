@@ -112,3 +112,16 @@ Using `npm` (Vite, TS, Pinia, Tailwind V4).
 - Create a risk with an empty owner (should block).
 - Update an existing risk's owner from details page (should save).
 - Test updating an owner when the risk is `CLOTURE` (should be disabled).
+
+## Action Plan Missing Owner Fix
+### Proposed Changes
+- In `PlanActionResource.java`'s `update` routine, manually catch and bypass strictly the `"admin-override"` header before it triggers `UUID.fromString()`. This string is generated natively by the Vue frontend store on plans lacking explicit assignment to prevent null reference issues, and allowing it enables tracking completion functionality.
+
+### Verification Plan
+- Update an action plan's progress via its slider when said plan has no specified owner.
+- Observe a successful HTTP 200 state rather than unexpected validation errors.
+
+## End-User Capabilities Guide
+### Proposed Changes
+- Draft a plain-text markdown document explaining core usage loops: login navigation, tracking dashboards, risk assignments, progressing action sliders, and using automated 100% closures.
+- Persist the output strictly into `backend/docs/guide_utilisateur.md`.

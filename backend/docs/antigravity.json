@@ -39,6 +39,7 @@
         "Toujours s'assurer que le schema de la base de données est à jour et cohérent avec les entités Java.",
         "Toujours s'assurer que tous les textes utilisés dans l'application sont bien traduits en français et en anglais.",
         "Toujours mettre a jour l'Implementation Plan, le Task List et le Walkthrough apres toute nouvelle demande implementees",
-        "apres les mise ajour de  l'Implementation Plan, le Task List et le Walkthrough, tu peux telecharger une copie et la mettre dans le repertoire docs"
+        "apres les mise ajour de  l'Implementation Plan, le Task List et le Walkthrough, tu peux telecharger une copie et la mettre dans le repertoire docs",
+        "Toujours créer ou si elle existe deja, mettre a jour un guide utilisateur pour les utilisateurs finaux et le stocker dans le repertoire docs"
     ]
 }

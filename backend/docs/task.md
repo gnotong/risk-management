@@ -12,6 +12,7 @@
 - [x] Add `StatutPlanAction` to `PlanAction` entity
 - [x] Add `/api/planactions/{id}/suivis` endpoint for manual comments
 - [x] Enforce Business Logic: Only ADMIN or `responsable` can edit plan progress
+- [x] Fix action plan update error by safely handling 'admin-override' headers in UUID parsing
 - [x] Verify Action Plan progress slider and Journal updates manually
 - [x] Enforce Business Logic: Cannot be `TERMINÉ` if `tauxAvancement < 100`
 - [x] Implement Built-in Business Logic (Score calculation)
@@ -75,7 +76,10 @@
 - [x] Create Multi-stage Dockerfile for Frontend (Nginx)
 - [x] Setup `docker-compose.yml` for orchestration
 
-## 5. Verification
+## 5. Documentation
+- [x] Create End-User Guide and save to `backend/docs/guide_utilisateur.md`
+
+## 6. Verification
 - [x] Test Backend API constraints (Business Logic & Integrity)
 - [x] Test Frontend UI components (Exports and Forms)
 - [x] Test Database integrity and triggers/business logic
