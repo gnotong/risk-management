@@ -26,9 +26,21 @@ export const useRiskStore = defineStore('risk', () => {
   const filteredRisks = computed(() => {
     return risks.value.filter(r => {
       const normalize = (str: string) => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
-      const matchSearch = normalize(r.libelle).includes(normalize(searchQuery.value));
+
+      const query = normalize(searchQuery.value);
+      let matchSearch = true;
+
+      // Only apply text search if query is 3 characters or more
+      if (query.length >= 3) {
+        const titleMatch = normalize(r.libelle).includes(query);
+        const ownerMatch = r.proprietaire?.nom ? normalize(r.proprietaire.nom).includes(query) : false;
+        matchSearch = titleMatch || ownerMatch;
+      }
+
       const matchScore = r.score >= minScore.value;
-      const matchOwner = ownerFilter.value ? r.proprietaire?.nom === ownerFilter.value : true;
+      const matchOwner = ownerFilter.value
+        ? r.proprietaire?.nom && normalize(r.proprietaire.nom).includes(normalize(ownerFilter.value))
+        : true;
       return matchSearch && matchScore && matchOwner;
     });
   });
