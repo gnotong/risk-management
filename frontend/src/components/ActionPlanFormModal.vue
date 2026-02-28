@@ -8,7 +8,7 @@
         
         <form @submit.prevent="submitForm" class="space-y-6">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('form.name') }}</label>
+            <label class="block text-sm text-left font-medium text-gray-300 mb-2">{{ $t('form.name') }}</label>
             <input 
               v-model="form.nom" 
               type="text" 
@@ -21,7 +21,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('form.description') }}</label>
+            <label class="block text-sm text-left font-medium text-gray-300 mb-2">{{ $t('form.description') }}</label>
             <textarea 
               v-model="form.description"
               rows="3"
@@ -32,7 +32,7 @@
           
           <div class="grid grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
+              <label class="block text-sm text-left font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
               <input 
                 v-model="form.dateDebut" 
                 type="date" 
@@ -40,7 +40,7 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
+              <label class="block text-sm text-left font-medium text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
               <input 
                 v-model="form.dateFin" 
                 type="date" 

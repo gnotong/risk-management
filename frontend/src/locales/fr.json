@@ -10,7 +10,8 @@
         "EN_COURS": "En cours",
         "TERMINE": "Terminé",
         "OUVERT": "Ouvert",
-        "CLOS": "Clos"
+        "CLOS": "Clos",
+        "CLOTURE": "Clôturé"
     },
     "dashboard": {
         "title": "Tableau de Bord des Risques",

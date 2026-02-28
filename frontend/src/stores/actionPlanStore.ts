@@ -69,5 +69,19 @@ export const useActionPlanStore = defineStore('actionPlan', () => {
         return await res.json();
     };
 
-    return { plans, loading, fetchPlans, getPlanById, updatePlan, deletePlan, fetchSuivis, addSuivi };
+    const deleteSuivi = async (planId: string, suiviId: string) => {
+        const res = await fetch(`/api/planactions/${planId}/suivis/${suiviId}`, {
+            method: 'DELETE'
+        });
+        if (!res.ok) {
+            let msg = "Impossible de supprimer ce suivi.";
+            try {
+                const err = await res.json();
+                if (err.message) msg = err.message;
+            } catch (e) { }
+            throw new Error(msg);
+        }
+    };
+
+    return { plans, loading, fetchPlans, getPlanById, updatePlan, deletePlan, fetchSuivis, addSuivi, deleteSuivi };
 });

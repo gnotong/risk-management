@@ -12,7 +12,7 @@
       </div>
       <div class="ml-auto">
         <button 
-          v-if="!loading"
+          v-if="!loading && plan && plan.statut !== 'TERMINE'"
           @click="confirmDelete"
           class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
         >
@@ -105,7 +105,7 @@
         </div>
         
         <!-- Add manual comment -->
-        <div class="glass-card p-6 border-l-4 border-l-emerald-500">
+        <div class="glass-card p-6 border-l-4 border-l-emerald-500" v-if="plan && plan.statut !== 'TERMINE'">
           <h4 class="font-bold text-white mb-4">{{ $t('action_plan_detail.new_comment') }}</h4>
           <form @submit.prevent="submitComment" class="flex flex-col items-end gap-3">
             <textarea v-model="newComment" required rows="2" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-500" placeholder="..."></textarea>
@@ -131,8 +131,18 @@
             {{ $t('action_plan_detail.no_comments') }}
           </div>
           <div v-else class="space-y-4 overflow-y-auto pr-2 flex-1" style="max-height: 600px;">
-            <div v-for="s in suivis" :key="s.id" class="p-4 rounded-xl bg-black/40 border border-white/5">
-              <div class="text-xs text-emerald-400 font-mono mb-2">{{ formatDateTime(s.dateSuivi) }}</div>
+            <div v-for="s in suivis" :key="s.id" class="p-4 rounded-xl bg-black/40 border border-white/5 relative group">
+              <div class="flex justify-between items-start mb-2">
+                <div class="text-xs text-emerald-400 font-mono">{{ formatDateTime(s.dateSuivi) }}</div>
+                <button 
+                  v-if="plan.statut !== 'TERMINE'" 
+                  @click="removeSuivi(s.id)" 
+                  class="text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-red-500/10 rounded"
+                  title="Supprimer le journal"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+              </div>
               <p class="text-sm text-gray-300 leading-relaxed">{{ s.commentaire }}</p>
             </div>
           </div>
@@ -244,6 +254,17 @@ const submitComment = async () => {
     error.value = "Erreur lors de l'ajout du commentaire.";
   } finally {
     commenting.value = false;
+  }
+};
+
+const removeSuivi = async (suiviId: string) => {
+  if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce commentaire ?")) {
+    try {
+      await store.deleteSuivi(id, suiviId);
+      await loadSuivis();
+    } catch (e: any) {
+      error.value = e.message || "Erreur lors de la suppression du commentaire.";
+    }
   }
 };
 

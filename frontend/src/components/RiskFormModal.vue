@@ -13,7 +13,7 @@
       <form @submit.prevent="submitForm" class="space-y-5">
         
         <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Libellé <span class="text-red-500">*</span></label>
+          <label class="block text-sm text-left font-medium text-gray-300 mb-1">Libellé <span class="text-red-500">*</span></label>
           <input 
             v-model="form.libelle" 
             @blur="v$.libelle.$touch()"
@@ -26,7 +26,7 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Description</label>
+          <label class="block text-sm text-left font-medium text-gray-300 mb-1">Description</label>
           <textarea 
             v-model="form.description" 
             rows="3"
@@ -37,7 +37,7 @@
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Probabilité (1-3) <span class="text-red-500">*</span></label>
+            <label class="block text-sm text-left font-medium text-gray-300 mb-1">Probabilité (1-3) <span class="text-red-500">*</span></label>
             <input 
               v-model.number="form.probabilite" 
               @blur="v$.probabilite.$touch()"
@@ -49,7 +49,7 @@
             <div v-if="v$.probabilite.$error" class="text-red-400 text-xs mt-1">Valeur entre 1 et 3.</div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Gravité (1-3) <span class="text-red-500">*</span></label>
+            <label class="block text-sm text-left font-medium text-gray-300 mb-1">Gravité (1-3) <span class="text-red-500">*</span></label>
             <input 
               v-model.number="form.gravite" 
               @blur="v$.gravite.$touch()"
@@ -60,6 +60,17 @@
             />
             <div v-if="v$.gravite.$error" class="text-red-400 text-xs mt-1">Valeur entre 1 et 3.</div>
           </div>
+        </div>
+
+        <div>
+          <label class="block text-sm text-left font-medium text-gray-300 mb-1">Propriétaire</label>
+          <select 
+            v-model="form.proprietaire"
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none" 
+          >
+            <option :value="null">Non assigné</option>
+            <option v-for="user in users" :key="user.id" :value="{ id: user.id }">{{ user.nom }} ({{ user.role }})</option>
+          </select>
         </div>
 
         <div class="pt-4 flex justify-end gap-3">
@@ -77,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, minValue, maxValue } from '@vuelidate/validators';
 import { useRiskStore } from '../stores/riskStore';
@@ -90,13 +101,26 @@ const emit = defineEmits(['close']);
 const store = useRiskStore();
 
 const loading = ref(false);
+const users = ref<any[]>([]);
+
+onMounted(async () => {
+  try {
+    const response = await fetch('/api/utilisateurs');
+    if (response.ok) {
+      users.value = await response.json();
+    }
+  } catch (error) {
+    console.error("Failed to load users", error);
+  }
+});
 
 const form = reactive({
   libelle: '',
   description: '',
   probabilite: 1,
   gravite: 1,
-  statut: 'OUVERT'
+  statut: 'OUVERT',
+  proprietaire: null as any
 });
 
 const rules = {
@@ -113,6 +137,7 @@ const close = () => {
   form.description = '';
   form.probabilite = 1;
   form.gravite = 1;
+  form.proprietaire = null;
   emit('close');
 };
 

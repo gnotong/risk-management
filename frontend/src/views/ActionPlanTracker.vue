@@ -40,6 +40,7 @@
             </div>
             <!-- Delete Button -->
             <button 
+              v-if="plan.statut !== 'TERMINE'"
               @click.prevent="confirmDeletePlan(plan.id, plan.nom)"
               class="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20 hover:border-red-500 opacity-0 group-hover:opacity-100"
               title="Supprimer le plan d'action"

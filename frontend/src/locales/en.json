@@ -10,7 +10,8 @@
         "EN_COURS": "In Progress",
         "TERMINE": "Done",
         "OUVERT": "Open",
-        "CLOS": "Closed"
+        "CLOS": "Closed",
+        "CLOTURE": "Closed"
     },
     "dashboard": {
         "title": "Risk Dashboard",

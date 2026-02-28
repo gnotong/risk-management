@@ -81,6 +81,15 @@ public class PlanActionResource {
             throw new WebApplicationException("Clôture interdite : L'avancement doit être à 100% pour terminer le plan.", Response.Status.BAD_REQUEST);
         }
         
+        // Auto-close logic on 100%
+        if (planAction.tauxAvancement == 100) {
+            planAction.statut = StatutPlanAction.TERMINE;
+            if (entity.risque != null) {
+                entity.risque.statut = com.notgabs.corp.model.StatutRisque.CLOTURE;
+                entity.risque.persist();
+            }
+        }
+        
         // Tracking changes
         boolean changedAvancement = false;
         StringBuilder changes = new StringBuilder("Mise à jour: ");
@@ -145,7 +154,32 @@ public class PlanActionResource {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         
+        if (entity.statut == StatutPlanAction.TERMINE) {
+            throw new WebApplicationException("Suppression interdite : Impossible de supprimer un plan d'action terminé.", Response.Status.BAD_REQUEST);
+        }
+        
         entity.delete();
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{id}/suivis/{suiviId}")
+    @Transactional
+    public Response deleteSuivi(@PathParam("id") UUID id, @PathParam("suiviId") UUID suiviId) {
+        PlanAction plan = PlanAction.findById(id);
+        if (plan == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        if (plan.statut == StatutPlanAction.TERMINE) {
+            throw new WebApplicationException("Suppression interdite : Impossible de supprimer les journaux d'un plan d'action terminé.", Response.Status.BAD_REQUEST);
+        }
+        
+        SuiviPlanAction suivi = SuiviPlanAction.findById(suiviId);
+        if (suivi == null || !suivi.planAction.id.equals(id)) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        
+        suivi.delete();
         return Response.noContent().build();
     }
 }
