@@ -89,9 +89,10 @@
         "title": "Détails du Risque",
         "overview": "Aperçu Global",
         "prob_grav_score": "Probabilité: {prob} | Gravité: {grav} = Score: {score}",
-        "owner": "Propriétaire:",
+        "owner": "Propriétaire",
         "status": "Statut:",
-        "created_at": "Créé le:",
-        "action_plans": "Plans d'Action Associés"
+        "created_at": "Créé le",
+        "action_plans": "Plans d'Action",
+        "update_owner": "Changer le propriétaire"
     }
 }

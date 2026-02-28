@@ -1,29 +1,37 @@
 # Walkthrough : Application de Gestion des Risques (GRC)
 
-L'application demandée dans les spécifications (frontend Vue 3 + backend Quarkus + Docker) a été entièrement générée avec l'architecture cible spécifiée dans [antigravity.json](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/antigravity.json).
+L'application demandée dans les spécifications (frontend Vue 3 + backend Quarkus + Docker) a été entièrement générée avec l'architecture cible spécifiée dans `antigravity.json`.
 
-## Changements réalisés
+## Risk Management Framework Walkthrough
 
-### 1. Backend (Quarkus + Java 21)
-- **Modèles de données** : Création des Entités Panache ([Utilisateur](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/Utilisateur.java#8-34), [Risque](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/Risque.java#8-44), [Audit](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/Audit.java#8-32), [Recommandation](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/Recommandation.java#7-27), [PlanAction](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/PlanAction.java#9-45), [Incident](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/Incident.java#8-30) et [SuiviPlanAction](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/SuiviPlanAction.java#9-27)) avec leurs relations JPA (`@ManyToOne`, etc.). Les scores de risques sont calculés de manière automatisée (`@PrePersist`, `@PreUpdate`).
+## Latest Polish and Feature Adds
+- **Form UI Fixes**: Form labels across modales are now aligned securely to the left (`text-left`) to improve visual readability.
+- **Log Deletions**: Individual tracking comments can now be deleted using a newly-introduced API endpoint (`DELETE /api/planactions/{id}/suivis/{suiviId}`). This was matched with a Pinia store action and an inline hover delete button.
+- **Finished State Constraints**: If a Plan's status is officially `TERMINE` (Finished), the system completely rejects backend API deletion requests for the Plan itself and its log comments. The deletion buttons in the frontend UI are automatically shielded. Additionally, the system already rigorously prohibits the deletion of any Risks containing active or finished action plans.
+- **Risk Owners**: Creating a new Risk via the `RiskFormModal` natively fetches the user `/api/utilisateurs` directory, parsing it into a dropdown menu allowing direct assignments. This initialization is strictly mandatory at creation per server regulations.
+- **Interactive Risk Owners**: The Risk Detail viewport serves a custom interactive dropdown natively intercepting quick status changes. Re-assigning an active parent is permitted freely unless the target Risk matches a closed state (`CLOTURE`). When closed, updates are strictly blocked physically.
+- **Auto-Closure**: When an Action Plan is saved with an update hitting completely 100% progress, it immediately transitions to `TERMINE`, natively propagating into the assigned parent Risk, turning its state to `CLOTURE` (Closed).
+
+## 6. UX Adjustmentsd (Quarkus + Java 21)
+- **Modèles de données** : Création des Entités Panache (`Utilisateur`, `Risque`, `Audit`, `Recommandation`, `PlanAction`, `Incident` et `SuiviPlanAction`) avec leurs relations JPA (`@ManyToOne`, etc.). Les scores de risques sont calculés de manière automatisée (`@PrePersist`, `@PreUpdate`).
 - **Logique Métier Avancée (V3)** :
-  - **Moteur d'Intégrité** : Le système empêche activement la suppression de [Risques](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/frontend/src/stores/riskStore.ts#17-29) ou `Utilisateurs` s'ils sont liés à des plans d'action ou incidents.
+  - **Moteur d'Intégrité** : Le système empêche activement la suppression de `Risques` ou `Utilisateurs` s'ils sont liés à des plans d'action ou incidents.
   - **Validation d'Audit** : Impossible de clôturer un Audit si les recommandations associées ne sont pas traitées.
-  - **Automatisations des Plans d'action** : Chaque modification d'un Plan d'action par un utilisateur génère automatiquement un historique tracer dans [SuiviPlanAction](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/SuiviPlanAction.java#9-27).
+  - **Automatisations des Plans d'action** : Chaque modification d'un Plan d'action par un utilisateur génère automatiquement un historique tracer dans `SuiviPlanAction`.
   - **Vérification temporelle** : La durée des plans d'action est évaluée (DateFin > DateDebut).
   - **Contraintes de Clôture de Plan** : Un plan d'action ne peut passer au statut "TERMINÉ" que si son avancement a strictement atteint les 100%.
   - **Vérification d'Accès** : Seul l'Administrateur ou le responsable assigné au plan peut modifier le taux d'avancement du Plan d'action.
 - **Audit Log & Alerte** : Un intercepteur Hibernate 6 (`AuditLogInterceptor` implémentant `Interceptor`) trace silencieusement (C, U, D) toutes les entités. Envoi simulé via `quarkus-mailer` pour un "Risque Très Élevé".
 - **REST API** : Ajout des ressources JAX-RS pour exposer le CRUD de chaque entité. Des endpoints dédiés ont été créés pour `/api/planactions/{id}/suivis`.
 - **Refactoring des Packages** : L'artifactId maven est défini à `backend` et l'ensemble de l'arborescence Java est localisée sous le package `com.notgabs.corp` (anciennement `com.sfeir.agy`).
-- **Initialisation DB** : Un fichier [import.sql](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/resources/import.sql) contient des données de test de base (Utilisateurs et Risques) prêtes au déploiement.
+- **Initialisation DB** : Un fichier `import.sql` contient des données de test de base (Utilisateurs et Risques) prêtes au déploiement.
 
 ### 2. Frontend (Vue.js 3 + Pinia + Tailwind V4)
 - L'arborescence Vue a été structurée autour de `components` et `views`.
 - **UI "Cutting Edge"** : L'interface utilise TailwindCSS V4 pour fournir un thème sombre profond ("dark mode"), des effets de **glassmorphism** (transparence `backdrop-blur` et ombres `shadow-2xl`), des textes avec gradient (Text-gradient), et des micro-animations interactives sur les éléments.
-- **Tableau de Bord** : [RiskDashboard.vue](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/frontend/src/views/RiskDashboard.vue) incluant le composant complexe **Heatmap des Risques** (matrice de criticité 3x3) interagissant avec un store Pinia.
+- **Tableau de Bord** : `RiskDashboard.vue` incluant le composant complexe **Heatmap des Risques** (matrice de criticité 3x3) interagissant avec un store Pinia.
 - **Vue Plan d'Action (V3)** : 
-  - Une nouvelle route [ActionPlanDetail.vue](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/frontend/src/views/ActionPlanDetail.vue) permet le pilotage interactif d'un plan d'action (Routage dynamique paramétré par ID).
+  - Une nouvelle route `ActionPlanDetail.vue` permet le pilotage interactif d'un plan d'action (Routage dynamique paramétré par ID).
   - Possibilité de **Créer un Plan d'action** directement depuis les détails d'un Risque ne possédant aucun plan lié.
   - Possibilité de **Supprimer un Plan d'action** de manière définitive (avec purge en cascade du journal via le conteneur Backend).
   - Ajout d'une **Pagination intelligente (5 éléments max page)** sur la liste de suivi global.
@@ -38,8 +46,8 @@ L'application demandée dans les spécifications (frontend Vue 3 + backend Quark
 
 ### 3. Dockerisation & Orchestration
 - **Backend Dockerfile** : Utilisation d'un Dockerfile multi-stage `maven/eclipse-temurin` pour construire puis exécuter le backend de manière optimale sous la forme d'un **uber-jar**.
-- **Frontend Dockerfile** : Conteneur multi-stage utilisant Node pour le build npm, puis copiant le `dist/` sur l'image `nginx:alpine`. Un fichier `default.conf` personnalisé de NGINX va exposer l'application VueJS et rediriger les requêtes envoyées à `/api/` vers le conteneur `backend:8081`. Un fichier [.dockerignore](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/.dockerignore) prévient l'écrasement des `node_modules`.
-- **Orchestrateur** : [docker-compose.yml](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/docker-compose.yml) finalisé intégrant PostgreSQL (port 5432), Keycloak (port 8080), le Backend (port 8081, rendu transparent via NGINX), et le Frontend (port 80) en respectant les dépendances de démarrage et le port forwarding.
+- **Frontend Dockerfile** : Conteneur multi-stage utilisant Node pour le build npm, puis copiant le `dist/` sur l'image `nginx:alpine`. Un fichier `default.conf` personnalisé de NGINX va exposer l'application VueJS et rediriger les requêtes envoyées à `/api/` vers le conteneur `backend:8081`. Un fichier `.dockerignore` prévient l'écrasement des `node_modules`.
+- **Orchestrateur** : `docker-compose.yml` finalisé intégrant PostgreSQL (port 5432), Keycloak (port 8080), le Backend (port 8081, rendu transparent via NGINX), et le Frontend (port 80) en respectant les dépendances de démarrage et le port forwarding.
 
 ## Outils de Validation
 

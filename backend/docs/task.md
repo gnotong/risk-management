@@ -26,6 +26,13 @@
 - [x] Expose tracking history dynamically inside `PlanAction` REST payload using `JsonIgnore`
 - [x] Add `CascadeType.REMOVE` to `PlanAction.suivis` or modify delete endpoint to handle tracking log cleanup
 - [x] Ensure `POST /api/planactions` handles payload for creating plans linked to a Risk
+- [x] Add `DELETE /api/planactions/{planId}/suivis/{suiviId}` endpoint for tracking logs
+- [x] Prevent `PlanAction` deletion if `statut == TERMINE`
+- [x] Prevent `SuiviPlanAction` deletion if linked `PlanAction.statut == TERMINE`
+- [x] Review `Risque` deletion to block if any linked `PlanAction` is `TERMINE`
+- [x] Auto-Close Logic: Automatically set Plan to `TERMINE` and Risk to `CLOTURE` when progress hits 100%
+- [x] Enforce `proprietaire` mandatory validation in `RisqueResource` (create/update)
+- [x] Prevent updates to `Risque` if `statut == CLOTURE`
 
 ## 3. Frontend Implementation (Vue.js 3)
 - [x] Initialize Vue 3 project with Vite, TypeScript, Pinia, TailwindCSS V4
@@ -56,6 +63,12 @@
 - [x] Feature 2: Add "Delete" Action Plan button in `ActionPlanDetail.vue` and implement store logic
 - [x] Feature 3: Fix Heatmap stretching issue on `RiskDashboard.vue` when risk list is long
 - [x] Feature 4: Implement pagination (5 per page) for Action Plans in `ActionPlanTracker.vue`
+- [x] Feature 5: Align all form labels to the left (`text-left`)
+- [x] Feature 6: Add log deletion button in UI and `actionPlanStore`
+- [x] Feature 7: Hide/Disable delete buttons for Risk/Plan/Logs if Plan is `TERMINE`
+- [x] Feature 8: Add Owner (Propriétaire) assignment dropdown in `RiskFormModal`
+- [x] Make `proprietaire` mandatory in `RiskFormModal` (Vuelidate)
+- [x] Add inline owner update dropdown in `RiskDetail.vue` (disabled if `CLOTURE`)
 
 ## 4. Docker & Deployment
 - [x] Create Multi-stage Dockerfile for Backend (Quarkus native or JVM)

@@ -1,6 +1,6 @@
 # Implementation Plan: Risk Management Application
 
-This document outlines the proposed architecture and implementation steps for the GRC (Governance, Risk & Compliance) application based on [antigravity.json](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/antigravity.json) and [specs_risk.md](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/specs_risk.md).
+This document outlines the proposed architecture and implementation steps for the GRC (Governance, Risk & Compliance) application based on `antigravity.json` and `specs_risk.md`.
 
 ## User Review Required
 Before proceeding to execution, please review the newly added business rules:
@@ -9,7 +9,7 @@ Before proceeding to execution, please review the newly added business rules:
 > - **[NEW] Form Validations**: Adding robust validation for the frontend forms.
 > - **[NEW] Real Exports**: Using actual libraries (`jspdf`, `xlsx`) instead of simulated alerts in the frontend.
 > - **[NEW] Backend constraints**: Adding deletion preventions and business state validations (e.g. Audit closure checks) prior to persistence.
-> - **[NEW] Action Plan Tracking**: Enhancing [PlanAction](file://wsl.localhost/Ubuntu-24.04/home/notong/workspace/risk-management/backend/src/main/java/com/notgabs/corp/model/PlanAction.java#9-45) with interactive UI, Status (NON COMMENCÉ, EN COURS, TERMINÉ), progress slider, history journal, and restricted access to progress updates.
+> - **[NEW] Action Plan Tracking**: Enhancing `PlanAction` with interactive UI, Status (NON COMMENCÉ, EN COURS, TERMINÉ), progress slider, history journal, and restricted access to progress updates.
 
 ## Proposed Changes
 
@@ -87,3 +87,28 @@ Using `npm` (Vite, TS, Pinia, Tailwind V4).
 ### Manual Verification
 - Testing the Frontend UI (Exports, Form validation).
 - Verifying the Nginx reverse proxy end-to-end interactions via Docker Compose.
+
+### Automated Tests
+- Validating business constraints using REST tools.
+
+### Manual Verification
+- Deploy containers using `docker compose up -d --build`.
+- Verify UI and validations manually through the browser interface.
+- Complete an Action Plan to 100% and watch the parent Risk switch to `CLOTURE`.
+
+## Plan for Mandatory Risk Owners
+### Proposed Changes
+1. **Quarkus `RisqueResource.java`**:
+   - `create()` / `update()`: Add validation `if (risque.proprietaire == null) throw ...`
+   - `update()`: Add validation `if(entity.statut == StatutRisque.CLOTURE) throw ...` to prevent updating closed risks.
+2. **Vue `RiskFormModal.vue`**:
+   - Add Vuelidate rule `proprietaire: { required }`.
+   - Update select option to force a choice.
+3. **Vue `RiskDetail.vue`**:
+   - Fetch users (`/api/utilisateurs`).
+   - Show an inline `<select>` for the owner if `risque.statut !== 'CLOTURE'`. When changed, dispatch PUT request to update the risk's owner via `riskStore` or direct API call.
+
+### Verification Plan
+- Create a risk with an empty owner (should block).
+- Update an existing risk's owner from details page (should save).
+- Test updating an owner when the risk is `CLOTURE` (should be disabled).

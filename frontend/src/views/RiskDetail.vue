@@ -51,12 +51,32 @@
         <div class="grid grid-cols-2 gap-6 p-6 rounded-2xl bg-black/40 border border-white/5">
           <div>
             <span class="block text-sm text-gray-500 uppercase font-bold mb-1">{{ $t('risk_detail.owner') }}</span>
-            <span class="text-white text-lg flex items-center gap-2">
+            
+            <!-- Static View (Closed Risk) -->
+            <span v-if="risque.statut === 'CLOTURE'" class="text-white text-lg flex items-center gap-2">
               <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
                 {{ risque.proprietaire?.nom ? risque.proprietaire.nom.charAt(0) : '?' }}
               </span>
               {{ risque.proprietaire?.nom || $t('dashboard.unassigned') }}
             </span>
+            
+            <!-- Editable View (Open/InProgress Risk) -->
+            <div v-else class="relative max-w-xs cursor-pointer group">
+              <select 
+                v-model="editForm.proprietaireId"
+                @change="updateOwner"
+                class="w-full bg-blue-500/10 hover:bg-blue-500/20 text-white border border-blue-500/20 rounded-xl px-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer font-medium transition-colors"
+                title="Changer le propriétaire"
+              >
+                <option value="" disabled>-- {{ $t('dashboard.unassigned') }} --</option>
+                <option v-for="user in users" :key="user.id" :value="user.id">{{ user.nom }} ({{ user.role }})</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-blue-400">
+                <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+              </div>
+            </div>
+            
+            <div v-if="updateError" class="text-red-400 text-xs mt-2">{{ updateError }}</div>
           </div>
           <div>
             <span class="block text-sm text-gray-500 uppercase font-bold mb-1">{{ $t('risk_detail.created_at') }}</span>
@@ -158,14 +178,27 @@ const risque = ref<any>(null);
 const actionPlanStore = useActionPlanStore();
 const riskStore = useRiskStore();
 const isActionPlanModalOpen = ref(false);
+const users = ref<any[]>([]);
+const updateError = ref('');
+
+const editForm = ref({
+  proprietaireId: ''
+});
 
 onMounted(async () => {
   try {
     const res = await fetch(`/api/risques/${id}`);
     if (res.ok) {
       risque.value = await res.json();
+      editForm.value.proprietaireId = risque.value.proprietaire?.id || '';
     }
     await actionPlanStore.fetchPlans();
+    
+    // Load users for owner update dropdown
+    const usersRes = await fetch('/api/utilisateurs');
+    if (usersRes.ok) {
+      users.value = await usersRes.json();
+    }
   } catch (e) {
     console.error("Failed to load risk", e);
   } finally {
@@ -209,6 +242,39 @@ const confirmDeleteRisk = async () => {
     } catch (e: any) {
       alert(e.message || "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.");
     }
+  }
+};
+
+const updateOwner = async () => {
+  if (!editForm.value.proprietaireId) return;
+  
+  updateError.value = '';
+  
+  try {
+    const payload = {
+      ...risque.value,
+      proprietaire: { id: editForm.value.proprietaireId }
+    };
+    
+    // API Call
+    const res = await fetch(`/api/risques/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Erreur lors de la mise à jour du propriétaire.');
+    }
+    
+    risque.value = await res.json(); // refresh local model
+  } catch (e: any) {
+    updateError.value = e.message;
+    // Revert locally on fail
+    editForm.value.proprietaireId = risque.value.proprietaire?.id || '';
   }
 };
 </script>

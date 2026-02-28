@@ -41,6 +41,9 @@ public class RisqueResource {
         if (risque.id != null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
+        if (risque.proprietaire == null || risque.proprietaire.id == null) {
+            throw new WebApplicationException("La définition d'un propriétaire est obligatoire lors de la création d'un risque.", Response.Status.BAD_REQUEST);
+        }
         risque.persist();
         notificationService.notifsNouveauRisqueTresEleve(risque);
         return Response.ok(risque).status(201).build();
@@ -53,6 +56,12 @@ public class RisqueResource {
         Risque entity = Risque.findById(id);
         if (entity == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        if (entity.statut == com.notgabs.corp.model.StatutRisque.CLOTURE) {
+            throw new WebApplicationException("Modification interdite : Impossible de modifier un risque clôturé.", Response.Status.BAD_REQUEST);
+        }
+        if (risque.proprietaire == null || risque.proprietaire.id == null) {
+            throw new WebApplicationException("La définition d'un propriétaire est obligatoire.", Response.Status.BAD_REQUEST);
         }
         entity.libelle = risque.libelle;
         entity.description = risque.description;

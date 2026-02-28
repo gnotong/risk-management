@@ -63,14 +63,17 @@
         </div>
 
         <div>
-          <label class="block text-sm text-left font-medium text-gray-300 mb-1">Propriétaire</label>
+          <label class="block text-sm text-left font-medium text-gray-300 mb-1">{{ $t('risk_detail.owner') }} <span class="text-red-500">*</span></label>
           <select 
             v-model="form.proprietaire"
+            @blur="v$.proprietaire.$touch()"
+            :class="{'border-red-500 focus:ring-red-500 bg-red-500/10': v$.proprietaire.$error}"
             class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none" 
           >
-            <option :value="null">Non assigné</option>
+            <option :value="null" disabled>-- {{ $t('dashboard.unassigned') }} --</option>
             <option v-for="user in users" :key="user.id" :value="{ id: user.id }">{{ user.nom }} ({{ user.role }})</option>
           </select>
+          <div v-if="v$.proprietaire.$error" class="text-red-400 text-xs mt-1 text-left">{{ $t('form.required') }}</div>
         </div>
 
         <div class="pt-4 flex justify-end gap-3">
@@ -126,7 +129,8 @@ const form = reactive({
 const rules = {
   libelle: { required, minLength: minLength(3) },
   probabilite: { required, minValue: minValue(1), maxValue: maxValue(3) },
-  gravite: { required, minValue: minValue(1), maxValue: maxValue(3) }
+  gravite: { required, minValue: minValue(1), maxValue: maxValue(3) },
+  proprietaire: { required }
 };
 
 const v$ = useVuelidate(rules, form);

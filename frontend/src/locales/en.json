@@ -89,9 +89,10 @@
         "title": "Risk Details",
         "overview": "Overview",
         "prob_grav_score": "Likelihood: {prob} | Impact: {grav} = Score: {score}",
-        "owner": "Owner:",
+        "owner": "Owner",
         "status": "Status:",
-        "created_at": "Created at:",
-        "action_plans": "Associated Action Plans"
+        "created_at": "Created on",
+        "action_plans": "Action Plans",
+        "update_owner": "Change owner"
     }
 }
