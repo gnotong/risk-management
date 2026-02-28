@@ -125,3 +125,26 @@ Using `npm` (Vite, TS, Pinia, Tailwind V4).
 ### Proposed Changes
 - Draft a plain-text markdown document explaining core usage loops: login navigation, tracking dashboards, risk assignments, progressing action sliders, and using automated 100% closures.
 - Persist the output strictly into `backend/docs/guide_utilisateur.md`.
+
+## Frontend Keycloak Authentication Integration
+### Proposed Changes
+1. **Dependency**: Add `keycloak-js` to the frontend package.
+2. **Keycloak Plugin**: Create `src/plugins/keycloak.ts` to initialize the `keycloak-js` client pointing to `http://localhost:8080/` for the realm `risk-realm` and client `risk-frontend` (or public client).
+3. **Bootstrapping**: Modify `main.ts` to strictly evaluate `keycloak.init({ onLoad: 'login-required' })` before mounting Vue.
+4. **Header Identity**: Update `App.vue` to show the decoded user token identity (Name/Role) instead of generic elements, alongside a localized "Logout" button triggering `keycloak.logout()`.
+5. **Translations**: Update `fr.json` and `en.json` for "Logout", "Connected as".
+
+### Verification Plan
+- Load the frontend application: verify it redirects directly to the Keycloak login screen.
+- Log in and verify identity tokens securely appear in the `App.vue` header navigation.
+- Use the Logout button and confirm the Keycloak session ends.
+
+## Keycloak Automated Realm Initialization
+### Proposed Changes
+- Produce a `risk-realm.json` configuration holding the `risk-realm` space, the explicit `risk-frontend` and `risk-backend` clients mapped precisely to the applications.
+- Store default users `admin` (Role: ADMIN) and `user` (Role: USER) natively in the config with their respective cleartext passwords for automatic hydration.
+- Inject `--import-realm` into the Keycloak `docker-compose.yml` command definition mapping the aforementioned JSON as a volume internally to `/opt/keycloak/data/import/`.
+
+### Verification Plan
+- Clear the Docker stack volumes, recreate the instances. Observe Keycloak's isolated logs returning `Realm 'risk-realm' imported`.
+- Check if login screen returns `Client not found` errors anymore (should be resolved).

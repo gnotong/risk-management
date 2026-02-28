@@ -1,4 +1,7 @@
 {
+    "auth": {
+        "logout": "Logout"
+    },
     "nav": {
         "dashboard": "Dashboard",
         "risks": "Risk Register",

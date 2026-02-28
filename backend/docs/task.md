@@ -70,11 +70,17 @@
 - [x] Feature 8: Add Owner (Propriétaire) assignment dropdown in `RiskFormModal`
 - [x] Make `proprietaire` mandatory in `RiskFormModal` (Vuelidate)
 - [x] Add inline owner update dropdown in `RiskDetail.vue` (disabled if `CLOTURE`)
+- [x] Install `keycloak-js` in the frontend
+- [x] Implement Keycloak initialization wrapper (`plugins/keycloak.ts`)
+- [x] Intercept Vue component mount in `main.ts` to enforce `onLoad: 'login-required'`
+- [x] Integrate user info profile header and Logout action in `App.vue`
+- [x] Add localization for Auth texts in Fr/En JSON dicts
 
 ## 4. Docker & Deployment
 - [x] Create Multi-stage Dockerfile for Backend (Quarkus native or JVM)
 - [x] Create Multi-stage Dockerfile for Frontend (Nginx)
 - [x] Setup `docker-compose.yml` for orchestration
+- [x] Create `risk-realm.json` to automate Keycloak realm, clients and users on container startup
 
 ## 5. Documentation
 - [x] Create End-User Guide and save to `backend/docs/guide_utilisateur.md`

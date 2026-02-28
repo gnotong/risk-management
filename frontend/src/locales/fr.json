@@ -1,4 +1,7 @@
 {
+    "auth": {
+        "logout": "Déconnexion"
+    },
     "nav": {
         "dashboard": "Tableau de bord",
         "risks": "Registre des Risques",

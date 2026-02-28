@@ -15,6 +15,19 @@
         
         <div class="w-px h-6 bg-white/10 mx-2"></div>
         
+        <!-- User Info Panel -->
+        <div v-if="username" class="flex items-center gap-3 bg-white/5 pl-2 pr-4 py-1.5 rounded-full border border-white/5">
+          <div class="w-7 h-7 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center font-bold text-xs uppercase">
+            {{ username.charAt(0) }}
+          </div>
+          <span class="text-sm font-medium text-gray-300">{{ username }}</span>
+          <button @click="logout" class="ml-2 text-xs text-red-400 hover:text-red-300 transition-colors font-semibold" :title="$t('auth.logout')">
+            {{ $t('auth.logout') }}
+          </button>
+        </div>
+        
+        <div class="w-px h-6 bg-white/10 mx-2"></div>
+
         <button @click="toggleLanguage" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold tracking-widest text-white cursor-pointer select-none">
           <span :class="{ 'text-blue-400': locale === 'fr', 'text-gray-500': locale !== 'fr' }">FR</span>
           <span class="text-gray-600">/</span>
@@ -34,11 +47,21 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
+import keycloak from './plugins/keycloak';
 
 const { locale } = useI18n();
 
 const toggleLanguage = () => {
   locale.value = locale.value === 'fr' ? 'en' : 'fr';
+};
+
+const username = computed(() => {
+  return keycloak.tokenParsed?.preferred_username || keycloak.tokenParsed?.name || '';
+});
+
+const logout = () => {
+  keycloak.logout();
 };
 </script>
 

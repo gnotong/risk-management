@@ -13,6 +13,8 @@ L'application demandée dans les spécifications (frontend Vue 3 + backend Quark
 - **Auto-Closure**: When an Action Plan is saved with an update hitting completely 100% progress, it immediately transitions to `TERMINE`, natively propagating into the assigned parent Risk, turning its state to `CLOTURE` (Closed).
 - **UUID Safeguard (Bug Fix)**: Updating action plans without direct assigned responsibles now correctly intercepts simulation headers (`admin-override`) server-side, bypassing parsing crashes that previously blocked completion modifications.
 - **End-User Documentation**: Authored a clear, non-technical markdown manual mapping core concepts (Ownership, Heatmaps, Completion automation). Transported natively to `backend/docs/`.
+- **Keycloak Identity Management**: The client application is now tightly wrapped by the official `keycloak-js` adapter. Routing intercepts and forces a login prior to app mounting. Additionally, the logged-in user's token is decrypted automatically and mapped into the top navigation bar alongside a standard session logout control.
+- **Keycloak Realm Automation**: The global docker stack now natively handles SSO bootstrapping. A robust `risk-realm.json` definitions file orchestrates the backend and frontend client assignments on-the-fly, pre-populating safe test user credentials natively (`admin`/`admin` and `user`/`user`).
 
 ## 6. UX Adjustmentsd (Quarkus + Java 21)
 - **Modèles de données** : Création des Entités Panache (`Utilisateur`, `Risque`, `Audit`, `Recommandation`, `PlanAction`, `Incident` et `SuiviPlanAction`) avec leurs relations JPA (`@ManyToOne`, etc.). Les scores de risques sont calculés de manière automatisée (`@PrePersist`, `@PreUpdate`).

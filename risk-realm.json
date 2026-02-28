@@ -1,0 +1,72 @@
+{
+    "realm": "risk-realm",
+    "enabled": true,
+    "users": [
+        {
+            "username": "admin",
+            "enabled": true,
+            "email": "admin@example.com",
+            "firstName": "Admin",
+            "lastName": "User",
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "admin"
+                }
+            ],
+            "realmRoles": [
+                "ADMIN"
+            ]
+        },
+        {
+            "username": "user",
+            "enabled": true,
+            "email": "user@example.com",
+            "firstName": "Standard",
+            "lastName": "User",
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "user"
+                }
+            ],
+            "realmRoles": [
+                "USER"
+            ]
+        }
+    ],
+    "roles": {
+        "realm": [
+            {
+                "name": "ADMIN",
+                "description": "Administrator role"
+            },
+            {
+                "name": "USER",
+                "description": "Standard user role"
+            }
+        ]
+    },
+    "clients": [
+        {
+            "clientId": "risk-frontend",
+            "enabled": true,
+            "publicClient": true,
+            "directAccessGrantsEnabled": true,
+            "standardFlowEnabled": true,
+            "redirectUris": [
+                "*"
+            ],
+            "webOrigins": [
+                "*"
+            ],
+            "frontchannelLogout": true
+        },
+        {
+            "clientId": "risk-backend",
+            "enabled": true,
+            "bearerOnly": true,
+            "secret": "secret"
+        }
+    ]
+}
