@@ -71,7 +71,7 @@
             class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none" 
           >
             <option :value="null" disabled>-- {{ $t('dashboard.unassigned') }} --</option>
-            <option v-for="user in users" :key="user.id" :value="{ id: user.id }">{{ user.nom }} ({{ user.role }})</option>
+            <option v-for="user in userStore.users" :key="user.id" :value="{ id: user.id }">{{ user.nom }} ({{ user.roles?.join(', ') || '' }})</option>
           </select>
           <div v-if="v$.proprietaire.$error" class="text-red-500 dark:text-red-400 text-xs mt-1 text-left">{{ $t('form.required') }}</div>
         </div>
@@ -95,6 +95,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, minValue, maxValue } from '@vuelidate/validators';
 import { useRiskStore } from '../stores/riskStore';
+import { useUserStore } from '../stores/userStore';
 
 const props = defineProps<{
   isOpen: boolean
@@ -102,19 +103,12 @@ const props = defineProps<{
 
 const emit = defineEmits(['close']);
 const store = useRiskStore();
+const userStore = useUserStore();
 
 const loading = ref(false);
-const users = ref<any[]>([]);
 
 onMounted(async () => {
-  try {
-    const response = await fetch('/api/utilisateurs');
-    if (response.ok) {
-      users.value = await response.json();
-    }
-  } catch (error) {
-    console.error("Failed to load users", error);
-  }
+  await userStore.fetchUsers();
 });
 
 const form = reactive({
@@ -151,16 +145,7 @@ const submitForm = async () => {
 
   loading.value = true;
   try {
-    const response = await fetch('/api/risques', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(form)
-    });
-
-    if (!response.ok) throw new Error("Erreur de sauvegarde");
-
+    await store.createRisk(form);
     await store.fetchRisques(); // Refresh list
     close();
   } catch (error) {

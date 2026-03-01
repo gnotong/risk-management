@@ -17,20 +17,6 @@ app.config.globalProperties.$keycloak = keycloak;
 const enableKeycloak = import.meta.env.VITE_ENABLE_KEYCLOAK !== 'false';
 
 if (enableKeycloak) {
-    // Monkey-patch fetch to automatically append Keycloak Bearer token
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-        let [resource, config] = args;
-        if (keycloak.token) {
-            config = config || {};
-            config.headers = {
-                ...config.headers,
-                Authorization: `Bearer ${keycloak.token}`
-            };
-        }
-        return originalFetch(resource, config);
-    };
-
     keycloak.init({ onLoad: 'login-required', checkLoginIframe: false }).then((authenticated) => {
         if (authenticated) {
             app.mount('#app');

@@ -70,6 +70,9 @@
 import { ref, reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { useActionPlanStore } from '../stores/actionPlanStore';
+
+const actionPlanStore = useActionPlanStore();
 
 const props = defineProps<{
   isOpen: boolean;
@@ -129,17 +132,12 @@ const submitForm = async () => {
       statut: 'NON_COMMENCE'
     };
 
-    const response = await fetch('/api/planactions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (response.ok) {
+    try {
+      await actionPlanStore.createPlan(payload);
       emit('created');
       closeModal();
-    } else {
-      console.error("Failed to create action plan");
+    } catch (e: any) {
+      console.error("Failed to create action plan", e);
     }
   } catch (error) {
     console.error("Error creating action plan:", error);
