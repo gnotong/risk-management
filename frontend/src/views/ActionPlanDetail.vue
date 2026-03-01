@@ -263,7 +263,34 @@ const savePlan = async () => {
 };
 
 const reopenPlan = async () => {
-  if (!window.confirm("Voulez-vous vraiment rouvrir ce plan d'action ? L'avancement sera repassé à 99%.")) return;
+  let confirmMessage = "Voulez-vous vraiment rouvrir ce plan d'action ? L'avancement sera repassé à 99%.";
+  let newDateDebut = plan.value.dateDebut;
+  let newDateFin = plan.value.dateFin;
+  let hasDateChanges = false;
+
+  if (plan.value.risque && plan.value.risque.dateCreation && newDateDebut) {
+    const riskCreationDateStr = plan.value.risque.dateCreation.split('T')[0];
+    if (newDateDebut < riskCreationDateStr) {
+       newDateDebut = riskCreationDateStr;
+       hasDateChanges = true;
+       const dCreation = new Date(newDateDebut);
+       confirmMessage += `\n\nAttention : La date de début était antérieure à la création du risque. Elle sera automatiquement corrigée au ${dCreation.toLocaleDateString('fr-FR')}.`;
+    }
+  }
+
+  if (newDateDebut && newDateFin) {
+    const dDebut = new Date(newDateDebut);
+    const dFin = new Date(newDateFin);
+    if (dDebut >= dFin) {
+      dDebut.setDate(dDebut.getDate() + 1);
+      newDateFin = dDebut.toISOString().split('T')[0];
+      hasDateChanges = true;
+      confirmMessage += `\n\nDe plus, la date de début étant supérieure ou égale à la date de fin, la date de fin sera repoussée au ${dDebut.toLocaleDateString('fr-FR')}.`;
+    }
+  }
+
+  if (!window.confirm(confirmMessage)) return;
+  
   saving.value = true;
   error.value = '';
   try {
@@ -273,6 +300,11 @@ const reopenPlan = async () => {
       statut: 'EN_COURS',
       commentaireUpdate: "🔓 Réouverture exceptionnelle du plan d'action."
     };
+    if (hasDateChanges) {
+      if (newDateDebut) updated.dateDebut = newDateDebut;
+      if (newDateFin) updated.dateFin = newDateFin;
+    }
+    
     await store.updatePlan(id, updated);
     await loadData();
   } catch (e: any) {
