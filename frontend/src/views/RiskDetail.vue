@@ -17,7 +17,7 @@
           class="bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-          {{ $t('form.delete') || 'Supprimer' }}
+          {{ $t('form.delete') }}
         </button>
       </div>
     </div>
@@ -25,7 +25,7 @@
     <ConfirmationModal
       :isOpen="deleteModal.isOpen"
       :title="$t('form.delete') + ' le risque'"
-      :message="`Êtes-vous sûr de vouloir supprimer définitivement ce risque ?`"
+      :message="$t('risk_detail.delete_risk_msg_detail')"
       type="danger"
       :loading="deleteModal.loading"
       @confirm="executeDeleteRisk"
@@ -33,7 +33,7 @@
     />
     <ConfirmationModal
       :isOpen="errorModal.isOpen"
-      title="Erreur de suppression"
+      :title="$t('risk_detail.delete_error_title')"
       :message="errorModal.message"
       type="danger"
       confirmText="Fermer"
@@ -48,8 +48,8 @@
 
     <!-- Not Found -->
     <div v-else-if="!risque" class="glass-card p-10 text-center text-gray-400">
-      <p class="text-xl">Risque introuvable.</p>
-      <router-link to="/" class="mt-4 inline-block text-blue-400 hover:text-blue-300 underline">Retour au tableau de bord</router-link>
+      <p class="text-xl">{{ $t('risk_detail.risk_not_found') }}</p>
+      <router-link to="/" class="mt-4 inline-block text-blue-400 hover:text-blue-300 underline">{{ $t('risk_detail.back_to_dashboard') }}</router-link>
     </div>
 
     <!-- Content -->
@@ -64,7 +64,7 @@
         </div>
         
         <div class="prose prose-invert max-w-none mb-8">
-          <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">{{ risque.description || 'Aucune description fournie.' }}</p>
+          <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">{{ risque.description || $t('risk_detail.no_description') }}</p>
         </div>
 
         <div class="grid grid-cols-2 gap-6 p-6 rounded-2xl bg-white dark:bg-black/40 border border-gray-200 dark:border-white/5 shadow-sm dark:shadow-none">
@@ -189,10 +189,13 @@ import { useActionPlanStore } from '../stores/actionPlanStore';
 import { useRiskStore } from '../stores/riskStore';
 import { useUserStore } from '../stores/userStore';
 import ActionPlanFormModal from '../components/ActionPlanFormModal.vue';
+import ConfirmationModal from '../components/ConfirmationModal.vue';
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
 const router = useRouter();
 const id = route.params.id;
+const { t } = useI18n();
 const loading = ref(true);
 const risque = ref<any>(null);
 const actionPlanStore = useActionPlanStore();
@@ -273,7 +276,7 @@ const executeDeleteRisk = async () => {
     router.push('/');
   } catch (e: any) {
     closeDeleteModal();
-    errorModal.value.message = e.message || "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.";
+    errorModal.value.message = e.message || t('risk_detail.delete_risk_error_msg');
     errorModal.value.isOpen = true;
   } finally {
     deleteModal.value.loading = false;

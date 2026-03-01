@@ -71,7 +71,7 @@
               v-if="plan.statut !== 'TERMINE'"
               @click.prevent="openDeleteModal(plan.id, plan.nom)"
               class="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20 hover:border-red-500 opacity-0 group-hover:opacity-100"
-              title="Supprimer le plan d'action"
+              :title="$t('action_plans.delete_plan_title')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
             </button>
@@ -139,7 +139,7 @@
     <ConfirmationModal
       :isOpen="deleteModal.isOpen"
       :title="$t('form.delete') + ' ' + (deleteModal.itemName || '')"
-      :message="`Êtes-vous sûr de vouloir supprimer définitivement le plan d'action \&quot;${deleteModal.itemName}\&quot; ainsi que tout son historique ?`"
+      :message="$t('action_plans.delete_plan_msg_tracker', { name: deleteModal.itemName })"
       type="danger"
       :loading="deleteModal.loading"
       @confirm="executeDeletePlan"
@@ -147,7 +147,7 @@
     />
     <ConfirmationModal
       :isOpen="errorModal.isOpen"
-      title="Erreur de suppression"
+      :title="$t('risk_detail.delete_error_title')"
       :message="errorModal.message"
       type="danger"
       confirmText="Fermer"
@@ -161,8 +161,10 @@
 import { onMounted, ref, computed, watch } from 'vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useActionPlanStore } from '../stores/actionPlanStore';
+import { useI18n } from 'vue-i18n';
 
 const store = useActionPlanStore();
+const { t } = useI18n();
 
 const searchQuery = ref('');
 const searchStatus = ref('');
@@ -234,7 +236,7 @@ const executeDeletePlan = async () => {
     closeDeleteModal();
   } catch (e: any) {
     closeDeleteModal();
-    errorModal.value.message = e.message || "Erreur lors de la suppression.";
+    errorModal.value.message = e.message || t('action_plans.delete_plan_error');
     errorModal.value.isOpen = true;
   } finally {
     deleteModal.value.loading = false;

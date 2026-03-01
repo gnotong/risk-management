@@ -12,6 +12,7 @@
     "status": {
         "NON_COMMENCE": "Non commencé",
         "EN_COURS": "En cours",
+        "EN_RETARD": "En retard",
         "TERMINE": "Terminé",
         "OUVERT": "Ouvert",
         "CLOS": "Clos",
@@ -60,7 +61,12 @@
         "responsible": "Responsable:",
         "starts": "Début:",
         "ends": "Fin:",
-        "new_plan": "Nouveau Plan d'Action"
+        "new_plan": "Nouveau Plan d'Action",
+        "delete_plan_title": "Supprimer le plan d'action",
+        "delete_plan_msg_tracker": "Êtes-vous sûr de vouloir supprimer définitivement le plan d'action '{name}' ainsi que tout son historique ?",
+        "delete_plan_error": "Erreur lors de la suppression.",
+        "delete_disabled_title": "Impossible de supprimer un plan ayant un avancement > 0%",
+        "delete_log_title": "Supprimer le journal"
     },
     "form": {
         "name": "Nom",
@@ -87,7 +93,26 @@
         "journal": "Journal de suivi",
         "new_comment": "Nouveau commentaire",
         "add_comment": "Ajouter ce commentaire",
-        "no_comments": "Aucun suivi pour ce plan d'action"
+        "no_comments": "Aucun suivi pour ce plan d'action",
+        "not_found": "Plan d'action introuvable.",
+        "no_description": "Aucune description fournie.",
+        "update_comment_mandatory": "Commentaire de mise à jour (Obligatoire)",
+        "update_comment_placeholder": "Décrivez les actions menées, les raisons du retard, ou la preuve de réalisation...",
+        "reopen_plan": "Rouvrir le plan",
+        "reopen_plan_title": "Rouvrir le plan d'action",
+        "reopen_plan_confirm": "Oui, rouvrir",
+        "delete_comment_title": "Supprimer le commentaire",
+        "delete_comment_msg": "Êtes-vous sûr de vouloir supprimer définitivement ce commentaire ?",
+        "delete_plan_title": "Supprimer le plan d'action",
+        "delete_plan_msg": "Êtes-vous sûr de vouloir supprimer définitivement ce plan d'action et tout son historique ?",
+        "error_load": "Impossible de charger le plan d'action.",
+        "error_close_comment": "Un commentaire de clôture est exigé pour terminer le plan d'action.",
+        "reopen_confirm_base": "Voulez-vous vraiment rouvrir ce plan d'action ? L'avancement sera repassé à 99%.",
+        "reopen_confirm_date_debut": "\n\nAttention : La date de début était antérieure à la création du risque. Elle sera automatiquement corrigée au {date}.",
+        "reopen_confirm_date_fin": "\n\nDe plus, la date de début étant supérieure ou égale à la date de fin, la date de fin sera repoussée au {date}.",
+        "reopen_success_comment": "🔓 Réouverture exceptionnelle du plan d'action.",
+        "error_delete_comment": "Erreur lors de la suppression du commentaire.",
+        "error_delete_plan": "Erreur lors de la suppression"
     },
     "risk_detail": {
         "title": "Détails du Risque",
@@ -97,6 +122,14 @@
         "status": "Statut:",
         "created_at": "Créé le",
         "action_plans": "Plans d'Action",
-        "update_owner": "Changer le propriétaire"
+        "update_owner": "Changer le propriétaire",
+        "delete_risk_title": "Supprimer le risque",
+        "delete_risk_msg": "Êtes-vous sûr de vouloir supprimer définitivement le risque '{name}' ?",
+        "delete_risk_msg_detail": "Êtes-vous sûr de vouloir supprimer définitivement ce risque ?",
+        "delete_error_title": "Erreur de suppression",
+        "delete_risk_error_msg": "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.",
+        "risk_not_found": "Risque introuvable.",
+        "back_to_dashboard": "Retour au tableau de bord",
+        "no_description": "Aucune description fournie."
     }
 }

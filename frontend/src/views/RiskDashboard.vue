@@ -148,8 +148,8 @@
     <RiskFormModal :isOpen="isModalOpen" @close="isModalOpen = false" />
     <ConfirmationModal
       :isOpen="deleteModal.isOpen"
-      :title="$t('form.delete') + ' ' + (deleteModal.itemName || '')"
-      :message="`Êtes-vous sûr de vouloir supprimer définitivement le risque \&quot;${deleteModal.itemName}\&quot; ?`"
+      :title="$t('risk_detail.delete_risk_title')"
+      :message="$t('risk_detail.delete_risk_msg', { name: deleteModal.itemName })"
       type="danger"
       :loading="deleteModal.loading"
       @confirm="executeDeleteRisk"
@@ -157,7 +157,7 @@
     />
     <ConfirmationModal
       :isOpen="errorModal.isOpen"
-      title="Erreur de suppression"
+      :title="$t('risk_detail.delete_error_title')"
       :message="errorModal.message"
       type="danger"
       confirmText="Fermer"
@@ -233,7 +233,7 @@ const executeDeleteRisk = async () => {
     closeDeleteModal();
   } catch (e: any) {
     closeDeleteModal();
-    errorModal.value.message = e.message || "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.";
+    errorModal.value.message = e.message || t('risk_detail.delete_risk_error_msg');
     errorModal.value.isOpen = true;
   } finally {
     deleteModal.value.loading = false;

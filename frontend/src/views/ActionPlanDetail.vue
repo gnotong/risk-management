@@ -29,7 +29,7 @@
     </div>
 
     <div v-else-if="!plan" class="glass-card p-10 text-center text-gray-400">
-      <p class="text-xl">Plan d'action introuvable.</p>
+      <p class="text-xl">{{ $t('action_plan_detail.not_found') }}</p>
     </div>
 
     <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -40,7 +40,7 @@
           <div class="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
             <div class="w-full sm:w-auto">
               <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 break-words">{{ plan.nom }}</h3>
-              <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">{{ plan.description || 'Aucune description fournie.' }}</p>
+              <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">{{ plan.description || $t('action_plan_detail.no_description') }}</p>
             </div>
             <router-link v-if="plan.risque" :to="`/risques/${plan.risque?.id}`" class="text-xs sm:text-sm bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2 flex-shrink-0 w-full justify-center sm:w-auto">
               <span>🔗 {{ $t('action_plans.risk') }} {{ plan.risque?.libelle }}</span>
@@ -82,7 +82,7 @@
                 <select v-model="editForm.statut" :disabled="plan.statut === 'TERMINE'" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed">
                   <option value="NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
                   <option value="EN_COURS">{{ $t('status.EN_COURS') }}</option>
-                  <option value="EN_RETARD">En_Retard</option>
+                  <option value="EN_RETARD">{{ $t('status.EN_RETARD') }}</option>
                   <option value="TERMINE">{{ $t('status.TERMINE') }}</option>
                 </select>
               </div>
@@ -100,14 +100,14 @@
             </div>
 
             <div class="pt-4 border-t border-gray-200 dark:border-white/10" v-if="plan.statut !== 'TERMINE'">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Commentaire de mise à jour (Obligatoire) <span class="text-red-500">*</span></label>
-              <textarea v-model="editForm.commentaire" required rows="3" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-400 dark:placeholder-gray-500 shadow-sm dark:shadow-inner" placeholder="Décrivez les actions menées, les raisons du retard, ou la preuve de réalisation..."></textarea>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.update_comment_mandatory') }} <span class="text-red-500">*</span></label>
+              <textarea v-model="editForm.commentaire" required rows="3" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-400 dark:placeholder-gray-500 shadow-sm dark:shadow-inner" :placeholder="$t('action_plan_detail.update_comment_placeholder')"></textarea>
             </div>
 
             <div class="flex justify-end pt-4 gap-4">
               <button v-if="plan.statut === 'TERMINE'" type="button" @click="openReopenModal" :disabled="saving" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
                 <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-                Rouvrir le plan
+                {{ $t('action_plan_detail.reopen_plan') }}
               </button>
               <button v-if="plan.statut !== 'TERMINE'" type="submit" :disabled="saving" class="bg-emerald-600 dark:bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
                 <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
@@ -154,18 +154,18 @@
     
     <ConfirmationModal
       :isOpen="reopenModal.isOpen"
-      title="Rouvrir le plan d'action"
+      :title="$t('action_plan_detail.reopen_plan_title')"
       :message="reopenModal.message"
       type="warning"
       :loading="reopenModal.loading"
-      confirmText="Oui, rouvrir"
+      :confirmText="$t('action_plan_detail.reopen_plan_confirm')"
       @confirm="executeReopenPlan"
       @cancel="reopenModal.isOpen = false"
     />
     <ConfirmationModal
       :isOpen="deleteSuiviModal.isOpen"
-      title="Supprimer le commentaire"
-      message="Êtes-vous sûr de vouloir supprimer définitivement ce commentaire ?"
+      :title="$t('action_plan_detail.delete_comment_title')"
+      :message="$t('action_plan_detail.delete_comment_msg')"
       type="danger"
       :loading="deleteSuiviModal.loading"
       @confirm="executeRemoveSuivi"
@@ -173,8 +173,8 @@
     />
     <ConfirmationModal
       :isOpen="deletePlanModal.isOpen"
-      title="Supprimer le plan d'action"
-      message="Êtes-vous sûr de vouloir supprimer définitivement ce plan d'action et tout son historique ?"
+      :title="$t('action_plan_detail.delete_plan_title')"
+      :message="$t('action_plan_detail.delete_plan_msg')"
       type="danger"
       :loading="deletePlanModal.loading"
       @confirm="executeDeletePlan"
@@ -188,12 +188,14 @@
 import { ref, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useActionPlanStore } from '../stores/actionPlanStore';
+import { useI18n } from 'vue-i18n';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 
 const route = useRoute();
 const router = useRouter();
 const id = route.params.id as string;
 const store = useActionPlanStore();
+const { t } = useI18n();
 
 const goBack = () => {
   if (window.history.state && window.history.state.back) {
@@ -232,7 +234,7 @@ const loadData = async () => {
 
     loadSuivis();
   } catch (e) {
-    error.value = "Impossible de charger le plan d'action.";
+    error.value = t('action_plan_detail.error_load');
   } finally {
     loading.value = false;
   }
@@ -254,7 +256,7 @@ onMounted(() => {
 const savePlan = async () => {
   if (editForm.tauxAvancement === 100 && plan.value?.tauxAvancement !== 100) {
     if (!editForm.commentaire || editForm.commentaire.trim() === '') {
-      error.value = "Un commentaire de clôture est exigé pour terminer le plan d'action.";
+      error.value = t('action_plan_detail.error_close_comment');
       return;
     }
   }
@@ -312,7 +314,7 @@ const deletePlanModal = ref({
 });
 
 const openReopenModal = () => {
-  let confirmMessage = "Voulez-vous vraiment rouvrir ce plan d'action ? L'avancement sera repassé à 99%.";
+  let confirmMessage = t('action_plan_detail.reopen_confirm_base');
   let newDateDebut = plan.value.dateDebut;
   let newDateFin = plan.value.dateFin;
   let hasDateChanges = false;
@@ -323,7 +325,7 @@ const openReopenModal = () => {
        newDateDebut = riskCreationDateStr;
        hasDateChanges = true;
        const dCreation = new Date(newDateDebut);
-       confirmMessage += `\n\nAttention : La date de début était antérieure à la création du risque. Elle sera automatiquement corrigée au ${dCreation.toLocaleDateString('fr-FR')}.`;
+       confirmMessage += t('action_plan_detail.reopen_confirm_date_debut', { date: dCreation.toLocaleDateString(navigator.language || 'fr-FR') });
     }
   }
 
@@ -334,7 +336,7 @@ const openReopenModal = () => {
       dDebut.setDate(dDebut.getDate() + 1);
       newDateFin = dDebut.toISOString().split('T')[0];
       hasDateChanges = true;
-      confirmMessage += `\n\nDe plus, la date de début étant supérieure ou égale à la date de fin, la date de fin sera repoussée au ${dDebut.toLocaleDateString('fr-FR')}.`;
+      confirmMessage += t('action_plan_detail.reopen_confirm_date_fin', { date: dDebut.toLocaleDateString(navigator.language || 'fr-FR') });
     }
   }
 
@@ -354,7 +356,7 @@ const executeReopenPlan = async () => {
       ...plan.value,
       tauxAvancement: 99,
       statut: 'EN_COURS',
-      commentaireUpdate: "🔓 Réouverture exceptionnelle du plan d'action."
+      commentaireUpdate: t('action_plan_detail.reopen_success_comment')
     };
     if (reopenModal.value.hasDateChanges) {
       if (reopenModal.value.newDateDebut) updated.dateDebut = reopenModal.value.newDateDebut;
@@ -386,7 +388,7 @@ const executeRemoveSuivi = async () => {
     await loadSuivis();
     deleteSuiviModal.value.isOpen = false;
   } catch (e: any) {
-    error.value = e.message || "Erreur lors de la suppression du commentaire.";
+    error.value = e.message || t('action_plan_detail.error_delete_comment');
   } finally {
     deleteSuiviModal.value.loading = false;
   }
@@ -412,7 +414,7 @@ const executeDeletePlan = async () => {
     deletePlanModal.value.isOpen = false;
     router.push('/action-plans');
   } catch (e: any) {
-    error.value = e.message || "Erreur lors de la suppression";
+    error.value = e.message || t('action_plan_detail.error_delete_plan');
     deletePlanModal.value.isOpen = false;
   } finally {
     deletePlanModal.value.loading = false;

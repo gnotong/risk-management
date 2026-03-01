@@ -12,6 +12,7 @@
     "status": {
         "NON_COMMENCE": "Not Started",
         "EN_COURS": "In Progress",
+        "EN_RETARD": "Overdue",
         "TERMINE": "Done",
         "OUVERT": "Open",
         "CLOS": "Closed",
@@ -60,7 +61,12 @@
         "responsible": "Owner:",
         "starts": "Starts:",
         "ends": "Ends:",
-        "new_plan": "New Action Plan"
+        "new_plan": "New Action Plan",
+        "delete_plan_title": "Delete action plan",
+        "delete_plan_msg_tracker": "Are you sure you want to permanently delete the action plan '{name}' and all its history?",
+        "delete_plan_error": "Error during deletion.",
+        "delete_disabled_title": "Cannot delete an action plan with progress > 0%",
+        "delete_log_title": "Delete journal"
     },
     "form": {
         "name": "Name",
@@ -87,7 +93,26 @@
         "journal": "Tracking Journal",
         "new_comment": "New comment",
         "add_comment": "Add comment",
-        "no_comments": "No tracking entries for this action plan"
+        "no_comments": "No tracking entries for this action plan",
+        "not_found": "Action plan not found.",
+        "no_description": "No description provided.",
+        "update_comment_mandatory": "Update comment (Required)",
+        "update_comment_placeholder": "Describe actions taken, reasons for delay, or proof of completion...",
+        "reopen_plan": "Reopen plan",
+        "reopen_plan_title": "Reopen Action Plan",
+        "reopen_plan_confirm": "Yes, reopen",
+        "delete_comment_title": "Delete comment",
+        "delete_comment_msg": "Are you sure you want to permanently delete this comment?",
+        "delete_plan_title": "Delete action plan",
+        "delete_plan_msg": "Are you sure you want to permanently delete this action plan and all its history?",
+        "error_load": "Unable to load action plan.",
+        "error_close_comment": "A closing comment is required to finish the action plan.",
+        "reopen_confirm_base": "Do you really want to reopen this action plan? Progress will be reset to 99%.",
+        "reopen_confirm_date_debut": "\n\nWarning: The start date was before the risk creation. It will be automatically corrected to {date}.",
+        "reopen_confirm_date_fin": "\n\nAdditionally, since the start date is greater than or equal to the end date, the end date will be pushed to {date}.",
+        "reopen_success_comment": "🔓 Exceptional action plan reopening.",
+        "error_delete_comment": "Error deleting comment.",
+        "error_delete_plan": "Error deleting action plan"
     },
     "risk_detail": {
         "title": "Risk Details",
@@ -97,6 +122,14 @@
         "status": "Status:",
         "created_at": "Created on",
         "action_plans": "Action Plans",
-        "update_owner": "Change owner"
+        "update_owner": "Change owner",
+        "delete_risk_title": "Delete risk",
+        "delete_risk_msg": "Are you sure you want to permanently delete the risk '{name}'?",
+        "delete_risk_msg_detail": "Are you sure you want to permanently delete this risk?",
+        "delete_error_title": "Deletion error",
+        "delete_risk_error_msg": "Deletion error. This risk likely has related action plans or incidents.",
+        "risk_not_found": "Risk not found.",
+        "back_to_dashboard": "Back to dashboard",
+        "no_description": "No description provided."
     }
 }
