@@ -14,7 +14,10 @@
         <button 
           v-if="!loading && plan && plan.statut !== 'TERMINE'"
           @click="confirmDelete"
-          class="bg-red-600 dark:bg-red-500/20 hover:bg-red-700 dark:hover:bg-red-500/30 text-white dark:text-red-400 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-sm dark:shadow-none"
+          :disabled="plan.tauxAvancement > 0"
+          :class="plan.tauxAvancement > 0 ? 'opacity-50 cursor-not-allowed bg-gray-400 dark:bg-gray-600 text-white' : 'bg-red-600 dark:bg-red-500/20 hover:bg-red-700 dark:hover:bg-red-500/30 text-white dark:text-red-400'"
+          class="px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-sm dark:shadow-none"
+          :title="plan.tauxAvancement > 0 ? 'Impossible de supprimer un plan ayant un avancement > 0%' : ''"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
           {{ $t('form.delete') || 'Supprimer' }}
@@ -55,16 +58,17 @@
             <div class="p-6 rounded-2xl bg-white dark:bg-black/40 border border-gray-200 dark:border-white/5 space-y-4 shadow-sm dark:shadow-none">
               <div class="flex justify-between items-center">
                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ $t('action_plan_detail.progress') }} ({{ editForm.tauxAvancement }}%)</label>
-                <div class="flex gap-2">
-                  <button type="button" @click="editForm.tauxAvancement = 0" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400">0%</button>
-                  <button type="button" @click="editForm.tauxAvancement = 50" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400">50%</button>
-                  <button type="button" @click="editForm.tauxAvancement = 100" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400">100%</button>
+                <div class="flex gap-2" v-if="plan.statut !== 'TERMINE'">
+                  <button type="button" @click="editForm.tauxAvancement = 0" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 transition-colors">0%</button>
+                  <button type="button" @click="editForm.tauxAvancement = 50" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 transition-colors">50%</button>
+                  <button type="button" @click="editForm.tauxAvancement = 100" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 transition-colors">100%</button>
                 </div>
               </div>
               <input 
                 v-model.number="editForm.tauxAvancement" 
                 type="range" min="0" max="100" 
-                class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                :disabled="plan.statut === 'TERMINE'"
+                class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <div class="w-full bg-gray-800 rounded-full h-1.5 mt-2">
                 <div class="h-full rounded-full transition-all duration-300" :class="getProgressColor(editForm.tauxAvancement)" :style="`width: ${editForm.tauxAvancement}%`"></div>
@@ -76,42 +80,41 @@
               
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.status') }}</label>
-                <select v-model="editForm.statut" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none">
+                <select v-model="editForm.statut" :disabled="plan.statut === 'TERMINE'" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed">
                   <option value="NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
                   <option value="EN_COURS">{{ $t('status.EN_COURS') }}</option>
+                  <option value="EN_RETARD">En_Retard</option>
                   <option value="TERMINE">{{ $t('status.TERMINE') }}</option>
                 </select>
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
-                <input v-model="editForm.dateDebut" type="date" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none" />
+                <input v-model="editForm.dateDebut" type="date" :disabled="plan.statut === 'TERMINE'" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
-                <input v-model="editForm.dateFin" type="date" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none" />
+                <input v-model="editForm.dateFin" type="date" :min="editForm.dateDebut" :disabled="plan.statut === 'TERMINE'" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
               </div>
 
             </div>
 
-            <div class="flex justify-end pt-4">
-              <button type="submit" :disabled="saving" class="bg-emerald-600 dark:bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
+            <div class="pt-4 border-t border-gray-200 dark:border-white/10" v-if="plan.statut !== 'TERMINE'">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Commentaire de mise à jour (Obligatoire) <span class="text-red-500">*</span></label>
+              <textarea v-model="editForm.commentaire" required rows="3" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-400 dark:placeholder-gray-500 shadow-sm dark:shadow-inner" placeholder="Décrivez les actions menées, les raisons du retard, ou la preuve de réalisation..."></textarea>
+            </div>
+
+            <div class="flex justify-end pt-4 gap-4">
+              <button v-if="plan.statut === 'TERMINE'" type="button" @click="reopenPlan" :disabled="saving" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
+                <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                Rouvrir le plan
+              </button>
+              <button v-if="plan.statut !== 'TERMINE'" type="submit" :disabled="saving" class="bg-emerald-600 dark:bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
                 <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
                 {{ $t('action_plan_detail.save') }}
               </button>
             </div>
-          </form>
-        </div>
-        
-        <!-- Add manual comment -->
-        <div class="glass-card p-6 border-l-4 border-l-emerald-500" v-if="plan && plan.statut !== 'TERMINE'">
-          <h4 class="font-bold text-gray-900 dark:text-white mb-4">{{ $t('action_plan_detail.new_comment') }}</h4>
-          <form @submit.prevent="submitComment" class="flex flex-col items-end gap-3">
-            <textarea v-model="newComment" required rows="2" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-400 dark:placeholder-gray-500 shadow-sm dark:shadow-inner" placeholder="..."></textarea>
-            <button type="submit" :disabled="commenting" class="px-5 py-2 bg-emerald-600 dark:bg-white/10 hover:bg-emerald-700 dark:hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors border border-transparent shadow-sm dark:shadow-none">
-              {{ $t('action_plan_detail.add_comment') }}
-            </button>
           </form>
         </div>
       </div>
@@ -178,14 +181,13 @@ const error = ref('');
 
 const suivis = ref<any[]>([]);
 const loadingSuivis = ref(false);
-const newComment = ref('');
-const commenting = ref(false);
 
 const editForm = reactive({
   tauxAvancement: 0,
   statut: 'NON_COMMENCE',
   dateDebut: '',
-  dateFin: ''
+  dateFin: '',
+  commentaire: ''
 });
 
 const loadData = async () => {
@@ -221,10 +223,17 @@ onMounted(() => {
 });
 
 const savePlan = async () => {
+  if (editForm.tauxAvancement === 100 && plan.value?.tauxAvancement !== 100) {
+    if (!editForm.commentaire || editForm.commentaire.trim() === '') {
+      error.value = "Un commentaire de clôture est exigé pour terminer le plan d'action.";
+      return;
+    }
+  }
+
   saving.value = true;
   error.value = '';
   try {
-    const updated = {
+    const updated: any = {
       ...plan.value,
       tauxAvancement: editForm.tauxAvancement,
       statut: editForm.statut,
@@ -232,7 +241,17 @@ const savePlan = async () => {
       dateFin: editForm.dateFin ? editForm.dateFin : null
     };
     
+    // Unify tracking comment into the same network request
+    if (editForm.commentaire.trim()) {
+      let prefix = "";
+      if (editForm.tauxAvancement === 100 && plan.value?.tauxAvancement !== 100) {
+        prefix = "✅ Preuve de réalisation : ";
+      }
+      updated.commentaireUpdate = prefix + editForm.commentaire.trim();
+    }
+    
     await store.updatePlan(id, updated);
+    editForm.commentaire = ''; // clear upon success
     
     // Reload full data to refresh journal if any auto-logs were created
     await loadData();
@@ -243,17 +262,23 @@ const savePlan = async () => {
   }
 };
 
-const submitComment = async () => {
-  if (!newComment.value.trim()) return;
-  commenting.value = true;
+const reopenPlan = async () => {
+  if (!window.confirm("Voulez-vous vraiment rouvrir ce plan d'action ? L'avancement sera repassé à 99%.")) return;
+  saving.value = true;
+  error.value = '';
   try {
-    await store.addSuivi(id, newComment.value);
-    newComment.value = '';
-    await loadSuivis();
+    const updated: any = {
+      ...plan.value,
+      tauxAvancement: 99,
+      statut: 'EN_COURS',
+      commentaireUpdate: "🔓 Réouverture exceptionnelle du plan d'action."
+    };
+    await store.updatePlan(id, updated);
+    await loadData();
   } catch (e: any) {
-    error.value = "Erreur lors de l'ajout du commentaire.";
+    error.value = e.message;
   } finally {
-    commenting.value = false;
+    saving.value = false;
   }
 };
 

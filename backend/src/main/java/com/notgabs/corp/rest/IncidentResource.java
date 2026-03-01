@@ -1,7 +1,8 @@
 package com.notgabs.corp.rest;
 
 import com.notgabs.corp.model.Incident;
-import jakarta.transaction.Transactional;
+import com.notgabs.corp.service.IncidentService;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -15,28 +16,23 @@ import jakarta.annotation.security.RolesAllowed;
 @RolesAllowed("USER")
 public class IncidentResource {
 
+    @Inject
+    IncidentService incidentService;
+
     @GET
     public List<Incident> listAll() {
-        return Incident.listAll();
+        return incidentService.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Incident getById(@PathParam("id") UUID id) {
-        Incident entity = Incident.findById(id);
-        if (entity == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        return entity;
+        return incidentService.getById(id);
     }
 
     @POST
-    @Transactional
     public Response create(Incident ent) {
-        if (ent.id != null) {
-            throw new WebApplicationException("Id was invalidly set on request.", 422);
-        }
-        ent.persist();
-        return Response.ok(ent).status(201).build();
+        Incident created = incidentService.create(ent);
+        return Response.ok(created).status(Response.Status.CREATED).build();
     }
 }

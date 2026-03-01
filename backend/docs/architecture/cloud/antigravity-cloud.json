@@ -1,0 +1,183 @@
+{
+    "project_name": "project-name",
+    "structure": "monorepo",
+    "stack": {
+        "backend": {
+            "framework": "Quarkus",
+            "language": "Java 21",
+            "orm": "Hibernate with Panache",
+            "build_tool": "Maven",
+            "port": 8080
+        },
+        "frontend": {
+            "framework": "Vue.js 3",
+            "typescript": "strict",
+            "state_management": "Pinia"
+        }
+    },
+    "architecture": {
+        "style": "hexagonal",
+        "approach": [
+            "Clean Architecture",
+            "Domain Driven Design",
+            "Event Driven",
+            "Cloud Native",
+            "Microservices ready"
+        ],
+        "principles": [
+            "SOLID",
+            "Separation of concerns",
+            "Testability",
+            "Resilience",
+            "Scalability"
+        ]
+    },
+    "layers": {
+        "domain": [
+            "Entities",
+            "Value objects",
+            "Enums",
+            "Domain services",
+            "Domain events",
+            "Business rules"
+        ],
+        "application": [
+            "Use cases",
+            "Transactions",
+            "Orchestration",
+            "Security coordination"
+        ],
+        "infrastructure": [
+            "Persistence",
+            "Messaging",
+            "External APIs",
+            "Adapters"
+        ],
+        "interfaces": [
+            "REST",
+            "Messaging",
+            "Batch",
+            "Scheduled jobs"
+        ]
+    },
+    "patterns": {
+        "mandatory": [
+            "AOP interceptors",
+            "Global exception handling",
+            "Centralized validation",
+            "Audit and logging",
+            "Retry and resilience",
+            "Circuit breaker",
+            "Observability"
+        ],
+        "optional": [
+            "CQRS",
+            "Saga",
+            "Event sourcing"
+        ]
+    },
+    "event_driven": {
+        "messaging": "Kafka",
+        "rules": [
+            "Use domain events",
+            "Decouple services",
+            "Ensure idempotency",
+            "Use eventual consistency",
+            "Avoid distributed transactions"
+        ]
+    },
+    "resilience": {
+        "strategies": [
+            "Retry",
+            "Timeout",
+            "Fallback",
+            "Circuit breaker"
+        ],
+        "framework": "SmallRye Fault Tolerance"
+    },
+    "validation": {
+        "simple": "Jakarta Bean Validation",
+        "complex": "AOP interceptors"
+    },
+    "error_handling": {
+        "strategy": "Domain exceptions",
+        "mapping": "Global exception mapper",
+        "standard_error_format": {
+            "code": "ERROR_CODE",
+            "message": "Human readable message",
+            "timestamp": "ISO_DATE"
+        }
+    },
+    "security": {
+        "identity": "Keycloak",
+        "rules": [
+            "JWT based authentication",
+            "Role-based access",
+            "Interceptor-based authorization"
+        ]
+    },
+    "observability": {
+        "logging": "structured",
+        "tracing": "OpenTelemetry",
+        "metrics": "Prometheus",
+        "dashboards": "Grafana"
+    },
+    "cloud_native": {
+        "platform": "Kubernetes",
+        "requirements": [
+            "Health checks",
+            "Readiness probes",
+            "Liveness probes",
+            "Horizontal scaling",
+            "Graceful shutdown"
+        ]
+    },
+    "deployment": {
+        "local": "docker-compose",
+        "cloud": "Kubernetes",
+        "containers": [
+            "Backend",
+            "Frontend",
+            "PostgreSQL",
+            "Kafka"
+        ]
+    },
+    "testing": {
+        "unit": [
+            "Domain",
+            "Services",
+            "Interceptors"
+        ],
+        "integration": [
+            "REST",
+            "Messaging",
+            "Persistence"
+        ],
+        "contract": [
+            "Consumer-driven tests"
+        ]
+    },
+    "migration_strategy": {
+        "approach": "strangler pattern",
+        "rules": [
+            "Refactor module by module",
+            "Introduce events progressively",
+            "Extract bounded contexts",
+            "Split monolith gradually"
+        ]
+    },
+    "agent_policies": {
+        "execution_env": "wsl_ubuntu",
+        "shell": "zsh",
+        "allow_terminal_commands": "ask_always",
+        "preferred_model": "gemini-3-pro"
+    },
+    "documentation": {
+        "mandatory": [
+            "Implementation Plan",
+            "Task List",
+            "Walkthrough",
+            "User guide"
+        ]
+    }
+}

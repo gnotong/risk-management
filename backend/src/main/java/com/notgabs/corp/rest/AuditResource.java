@@ -1,15 +1,13 @@
 package com.notgabs.corp.rest;
 
 import com.notgabs.corp.model.Audit;
-import jakarta.transaction.Transactional;
+import com.notgabs.corp.service.AuditService;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
-import com.notgabs.corp.model.Recommandation;
-import com.notgabs.corp.model.StatutAudit;
-import com.notgabs.corp.model.StatutRecommandation;
 import jakarta.annotation.security.RolesAllowed;
 
 @Path("/api/audits")
@@ -18,64 +16,36 @@ import jakarta.annotation.security.RolesAllowed;
 @RolesAllowed("USER")
 public class AuditResource {
 
+    @Inject
+    AuditService auditService;
+
     @GET
     public List<Audit> listAll() {
-        return Audit.listAll();
+        return auditService.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Audit getById(@PathParam("id") UUID id) {
-        Audit audit = Audit.findById(id);
-        if (audit == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        return audit;
+        return auditService.getById(id);
     }
 
     @POST
-    @Transactional
     public Response create(Audit audit) {
-        if (audit.id != null) {
-            throw new WebApplicationException("Id was invalidly set on request.", 422);
-        }
-        audit.persist();
-        return Response.ok(audit).status(201).build();
+        Audit created = auditService.create(audit);
+        return Response.ok(created).status(Response.Status.CREATED).build();
     }
 
     @PUT
     @Path("/{id}")
-    @Transactional
     public Audit update(@PathParam("id") UUID id, Audit audit) {
-        Audit entity = Audit.findById(id);
-        if (entity == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        
-        if (audit.statutAudit == StatutAudit.TERMINE && entity.statutAudit != StatutAudit.TERMINE) {
-            long openRecs = Recommandation.count("audit = ?1 and statut != ?2", entity, StatutRecommandation.TERMINE);
-            if (openRecs > 0) {
-                throw new WebApplicationException("Clôture interdite : L'audit a des recommandations non terminées.", Response.Status.BAD_REQUEST);
-            }
-        }
-
-        entity.nom = audit.nom;
-        entity.description = audit.description;
-        entity.dateRealisation = audit.dateRealisation;
-        entity.auditeur = audit.auditeur;
-        entity.statutAudit = audit.statutAudit;
-        return entity;
+        return auditService.update(id, audit);
     }
 
     @DELETE
     @Path("/{id}")
-    @Transactional
     public Response delete(@PathParam("id") UUID id) {
-        Audit entity = Audit.findById(id);
-        if (entity == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        entity.delete();
-        return Response.status(204).build();
+        auditService.delete(id);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

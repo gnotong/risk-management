@@ -33,12 +33,19 @@ export const useRiskStore = defineStore('risk', () => {
     });
 
     if (!res.ok) {
-      let msg = "Impossible de supprimer ce risque.";
+      let errorMsg = "Impossible de supprimer ce risque.";
       try {
-        const err = await res.json();
-        if (err.message) msg = err.message;
+        const text = await res.text();
+        if (text) {
+          try {
+            const json = JSON.parse(text);
+            if (json.message) errorMsg = json.message;
+          } catch {
+            errorMsg = text;
+          }
+        }
       } catch (e) { }
-      throw new Error(msg);
+      throw new Error(errorMsg);
     }
 
     // Remove from local list

@@ -1,7 +1,8 @@
 package com.notgabs.corp.rest;
 
 import com.notgabs.corp.model.Recommandation;
-import jakarta.transaction.Transactional;
+import com.notgabs.corp.service.RecommandationService;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -15,28 +16,23 @@ import jakarta.annotation.security.RolesAllowed;
 @RolesAllowed("USER")
 public class RecommandationResource {
 
+    @Inject
+    RecommandationService recommandationService;
+
     @GET
     public List<Recommandation> listAll() {
-        return Recommandation.listAll();
+        return recommandationService.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Recommandation getById(@PathParam("id") UUID id) {
-        Recommandation entity = Recommandation.findById(id);
-        if (entity == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        return entity;
+        return recommandationService.getById(id);
     }
 
     @POST
-    @Transactional
     public Response create(Recommandation ent) {
-        if (ent.id != null) {
-            throw new WebApplicationException("Id was invalidly set on request.", 422);
-        }
-        ent.persist();
-        return Response.ok(ent).status(201).build();
+        Recommandation created = recommandationService.create(ent);
+        return Response.ok(created).status(Response.Status.CREATED).build();
     }
 }

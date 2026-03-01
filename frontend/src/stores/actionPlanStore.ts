@@ -36,8 +36,19 @@ export const useActionPlanStore = defineStore('actionPlan', () => {
         });
 
         if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.message || "Erreur de validation. Vérifiez les règles métier.");
+            let errorMsg = "Erreur de validation. Vérifiez les règles métier.";
+            try {
+                const text = await res.text();
+                if (text) {
+                    try {
+                        const json = JSON.parse(text);
+                        if (json.message) errorMsg = json.message;
+                    } catch {
+                        errorMsg = text;
+                    }
+                }
+            } catch (e) { }
+            throw new Error(errorMsg);
         }
         return await res.json();
     };
