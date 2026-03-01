@@ -17,3 +17,5 @@ Preserve business behavior.
 Ensure the system builds and runs after each refactoring step.
 
 Provide a roadmap and summary after each module.
+
+Donnot add build or test logs in the code repository.

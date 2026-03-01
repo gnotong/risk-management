@@ -14,3 +14,7 @@ Ensure:
 - Successful build and runtime after each step.
 
 Provide summaries after each module.
+
+Preserve business behavior.
+
+Donnot add build or test logs in the code repository.

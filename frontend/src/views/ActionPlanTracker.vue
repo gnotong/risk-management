@@ -7,11 +7,39 @@
       </div>
     </div>
 
+    <!-- Search Filter -->
+    <div class="mt-4 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white dark:bg-white/5 p-4 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+      <div class="relative w-full sm:w-1/2">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <input 
+          v-model="searchQuery" 
+          type="text" 
+          class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" 
+          placeholder="Rechercher par nom ou description..." 
+        />
+      </div>
+      <div class="w-full sm:w-1/3">
+        <select 
+          v-model="searchStatus"
+          class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+        >
+          <option value="">Tous les statuts</option>
+          <option value="NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
+          <option value="EN_COURS">{{ $t('status.EN_COURS') }}</option>
+          <option value="TERMINE">{{ $t('status.TERMINE') }}</option>
+        </select>
+      </div>
+    </div>
+
     <div v-if="store.loading" class="flex justify-center py-20">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>
     
-    <div v-else-if="store.plans.length === 0" class="glass-card p-12 mt-6 text-center text-gray-400 flex flex-col items-center justify-center">
+    <div v-else-if="filteredPlans.length === 0" class="glass-card p-12 mt-6 text-center text-gray-400 flex flex-col items-center justify-center">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-6 text-gray-500 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
       </svg>
@@ -70,7 +98,7 @@
       <!-- Pagination Controls -->
       <div v-if="totalPages > 1" class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200 dark:border-white/5">
         <div class="text-sm text-gray-500 dark:text-gray-400">
-          Total: <span class="font-bold text-gray-900 dark:text-white">{{ store.plans.length }}</span> {{ $t('nav.action_plans').toLowerCase() }}
+          Total: <span class="font-bold text-gray-900 dark:text-white">{{ filteredPlans.length }}</span> {{ $t('nav.action_plans').toLowerCase() }}
         </div>
         <div class="flex justify-center items-center gap-2 sm:gap-4">
           <button 
@@ -116,19 +144,40 @@ import { useActionPlanStore } from '../stores/actionPlanStore';
 
 const store = useActionPlanStore();
 
+const searchQuery = ref('');
+const searchStatus = ref('');
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
 
-const totalPages = computed(() => Math.ceil(store.plans.length / itemsPerPage.value));
+const filteredPlans = computed(() => {
+  let result = store.plans;
+  
+  if (searchStatus.value) {
+    result = result.filter(plan => (plan.statut || 'NON_COMMENCE') === searchStatus.value);
+  }
+
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase();
+    result = result.filter(plan => {
+      const n = plan.nom?.toLowerCase() || '';
+      const d = plan.description?.toLowerCase() || '';
+      return n.includes(q) || d.includes(q);
+    });
+  }
+
+  return result;
+});
+
+const totalPages = computed(() => Math.ceil(filteredPlans.value.length / itemsPerPage.value));
 
 const paginatedPlans = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return store.plans.slice(start, end);
+  return filteredPlans.value.slice(start, end);
 });
 
-// Watch plans in case they reset
-watch(() => store.plans, () => {
+// Watch plans or search query in case they change
+watch([() => store.plans, searchQuery, searchStatus], () => {
   currentPage.value = 1; 
 }, { deep: true });
 
