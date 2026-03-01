@@ -69,7 +69,7 @@
             <!-- Delete Button -->
             <button 
               v-if="plan.statut !== 'TERMINE'"
-              @click.prevent="confirmDeletePlan(plan.id, plan.nom)"
+              @click.prevent="openDeleteModal(plan.id, plan.nom)"
               class="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20 hover:border-red-500 opacity-0 group-hover:opacity-100"
               title="Supprimer le plan d'action"
             >
@@ -135,11 +135,31 @@
         </div>
       </div>
     </div>
+    
+    <ConfirmationModal
+      :isOpen="deleteModal.isOpen"
+      :title="$t('form.delete') + ' ' + (deleteModal.itemName || '')"
+      :message="`Êtes-vous sûr de vouloir supprimer définitivement le plan d'action \&quot;${deleteModal.itemName}\&quot; ainsi que tout son historique ?`"
+      type="danger"
+      :loading="deleteModal.loading"
+      @confirm="executeDeletePlan"
+      @cancel="closeDeleteModal"
+    />
+    <ConfirmationModal
+      :isOpen="errorModal.isOpen"
+      title="Erreur de suppression"
+      :message="errorModal.message"
+      type="danger"
+      confirmText="Fermer"
+      @confirm="errorModal.isOpen = false"
+      @cancel="errorModal.isOpen = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, computed, watch } from 'vue';
+import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useActionPlanStore } from '../stores/actionPlanStore';
 
 const store = useActionPlanStore();
@@ -181,13 +201,43 @@ watch([() => store.plans, searchQuery, searchStatus], () => {
   currentPage.value = 1; 
 }, { deep: true });
 
-const confirmDeletePlan = async (id: string, name: string) => {
-  if (confirm(`Êtes-vous sûr de vouloir supprimer définitivement le plan d'action "${name}" ainsi que tout son historique ?`)) {
-    try {
-      await store.deletePlan(id);
-    } catch (e: any) {
-      alert(e.message || "Erreur lors de la suppression.");
-    }
+const deleteModal = ref({
+  isOpen: false,
+  itemId: '',
+  itemName: '',
+  loading: false
+});
+
+const errorModal = ref({
+  isOpen: false,
+  message: ''
+});
+
+const openDeleteModal = (id: string, name: string) => {
+  deleteModal.value.itemId = id;
+  deleteModal.value.itemName = name;
+  deleteModal.value.isOpen = true;
+};
+
+const closeDeleteModal = () => {
+  deleteModal.value.isOpen = false;
+  deleteModal.value.itemId = '';
+  deleteModal.value.itemName = '';
+};
+
+const executeDeletePlan = async () => {
+  if (!deleteModal.value.itemId) return;
+  
+  deleteModal.value.loading = true;
+  try {
+    await store.deletePlan(deleteModal.value.itemId);
+    closeDeleteModal();
+  } catch (e: any) {
+    closeDeleteModal();
+    errorModal.value.message = e.message || "Erreur lors de la suppression.";
+    errorModal.value.isOpen = true;
+  } finally {
+    deleteModal.value.loading = false;
   }
 };
 

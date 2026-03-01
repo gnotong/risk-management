@@ -12,8 +12,7 @@
       </div>
       <div class="w-full sm:w-auto sm:ml-auto flex justify-end">
         <button 
-          v-if="!loading && plan && plan.statut !== 'TERMINE'"
-          @click="confirmDelete"
+          @click="deletePlanModal.isOpen = true"
           :disabled="plan.tauxAvancement > 0"
           :class="plan.tauxAvancement > 0 ? 'opacity-50 cursor-not-allowed bg-gray-400 dark:bg-gray-600 text-white' : 'bg-red-600 dark:bg-red-500/20 hover:bg-red-700 dark:hover:bg-red-500/30 text-white dark:text-red-400'"
           class="px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-sm dark:shadow-none"
@@ -106,7 +105,7 @@
             </div>
 
             <div class="flex justify-end pt-4 gap-4">
-              <button v-if="plan.statut === 'TERMINE'" type="button" @click="reopenPlan" :disabled="saving" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
+              <button v-if="plan.statut === 'TERMINE'" type="button" @click="openReopenModal" :disabled="saving" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
                 <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
                 Rouvrir le plan
               </button>
@@ -138,8 +137,7 @@
               <div class="flex justify-between items-start mb-2">
                 <div class="text-xs text-emerald-600 dark:text-emerald-400 font-mono">{{ formatDateTime(s.dateSuivi) }}</div>
                 <button 
-                  v-if="plan.statut !== 'TERMINE'" 
-                  @click="removeSuivi(s.id)" 
+                  @click="openDeleteSuiviModal(s.id)"
                   class="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-red-50 dark:bg-red-500/10 rounded"
                   title="Supprimer le journal"
                 >
@@ -153,6 +151,36 @@
       </div>
 
     </div>
+    
+    <ConfirmationModal
+      :isOpen="reopenModal.isOpen"
+      title="Rouvrir le plan d'action"
+      :message="reopenModal.message"
+      type="warning"
+      :loading="reopenModal.loading"
+      confirmText="Oui, rouvrir"
+      @confirm="executeReopenPlan"
+      @cancel="reopenModal.isOpen = false"
+    />
+    <ConfirmationModal
+      :isOpen="deleteSuiviModal.isOpen"
+      title="Supprimer le commentaire"
+      message="Êtes-vous sûr de vouloir supprimer définitivement ce commentaire ?"
+      type="danger"
+      :loading="deleteSuiviModal.loading"
+      @confirm="executeRemoveSuivi"
+      @cancel="deleteSuiviModal.isOpen = false"
+    />
+    <ConfirmationModal
+      :isOpen="deletePlanModal.isOpen"
+      title="Supprimer le plan d'action"
+      message="Êtes-vous sûr de vouloir supprimer définitivement ce plan d'action et tout son historique ?"
+      type="danger"
+      :loading="deletePlanModal.loading"
+      @confirm="executeDeletePlan"
+      @cancel="deletePlanModal.isOpen = false"
+    />
+
   </div>
 </template>
 
@@ -160,6 +188,7 @@
 import { ref, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useActionPlanStore } from '../stores/actionPlanStore';
+import ConfirmationModal from '../components/ConfirmationModal.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -262,7 +291,27 @@ const savePlan = async () => {
   }
 };
 
-const reopenPlan = async () => {
+const reopenModal = ref({
+  isOpen: false,
+  message: '',
+  newDateDebut: '' as string | null | undefined,
+  newDateFin: '' as string | null | undefined,
+  hasDateChanges: false,
+  loading: false
+});
+
+const deleteSuiviModal = ref({
+  isOpen: false,
+  suiviId: '',
+  loading: false
+});
+
+const deletePlanModal = ref({
+  isOpen: false,
+  loading: false
+});
+
+const openReopenModal = () => {
   let confirmMessage = "Voulez-vous vraiment rouvrir ce plan d'action ? L'avancement sera repassé à 99%.";
   let newDateDebut = plan.value.dateDebut;
   let newDateFin = plan.value.dateFin;
@@ -289,8 +338,15 @@ const reopenPlan = async () => {
     }
   }
 
-  if (!window.confirm(confirmMessage)) return;
-  
+  reopenModal.value.message = confirmMessage;
+  reopenModal.value.newDateDebut = newDateDebut;
+  reopenModal.value.newDateFin = newDateFin;
+  reopenModal.value.hasDateChanges = hasDateChanges;
+  reopenModal.value.isOpen = true;
+};
+
+const executeReopenPlan = async () => {
+  reopenModal.value.loading = true;
   saving.value = true;
   error.value = '';
   try {
@@ -300,28 +356,39 @@ const reopenPlan = async () => {
       statut: 'EN_COURS',
       commentaireUpdate: "🔓 Réouverture exceptionnelle du plan d'action."
     };
-    if (hasDateChanges) {
-      if (newDateDebut) updated.dateDebut = newDateDebut;
-      if (newDateFin) updated.dateFin = newDateFin;
+    if (reopenModal.value.hasDateChanges) {
+      if (reopenModal.value.newDateDebut) updated.dateDebut = reopenModal.value.newDateDebut;
+      if (reopenModal.value.newDateFin) updated.dateFin = reopenModal.value.newDateFin;
     }
     
     await store.updatePlan(id, updated);
     await loadData();
+    reopenModal.value.isOpen = false;
   } catch (e: any) {
     error.value = e.message;
   } finally {
     saving.value = false;
+    reopenModal.value.loading = false;
   }
 };
 
-const removeSuivi = async (suiviId: string) => {
-  if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce commentaire ?")) {
-    try {
-      await store.deleteSuivi(id, suiviId);
-      await loadSuivis();
-    } catch (e: any) {
-      error.value = e.message || "Erreur lors de la suppression du commentaire.";
-    }
+const openDeleteSuiviModal = (suiviId: string) => {
+  deleteSuiviModal.value.suiviId = suiviId;
+  deleteSuiviModal.value.isOpen = true;
+};
+
+const executeRemoveSuivi = async () => {
+  if (!deleteSuiviModal.value.suiviId) return;
+  
+  deleteSuiviModal.value.loading = true;
+  try {
+    await store.deleteSuivi(id, deleteSuiviModal.value.suiviId);
+    await loadSuivis();
+    deleteSuiviModal.value.isOpen = false;
+  } catch (e: any) {
+    error.value = e.message || "Erreur lors de la suppression du commentaire.";
+  } finally {
+    deleteSuiviModal.value.loading = false;
   }
 };
 
@@ -338,14 +405,17 @@ const formatDateTime = (dateString: string) => {
   });
 };
 
-const confirmDelete = async () => {
-  if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce plan d'action et tout son historique ?")) {
-    try {
-      await store.deletePlan(id as string);
-      router.push('/action-plans');
-    } catch (e: any) {
-      error.value = e.message || "Erreur lors de la suppression";
-    }
+const executeDeletePlan = async () => {
+  deletePlanModal.value.loading = true;
+  try {
+    await store.deletePlan(id as string);
+    deletePlanModal.value.isOpen = false;
+    router.push('/action-plans');
+  } catch (e: any) {
+    error.value = e.message || "Erreur lors de la suppression";
+    deletePlanModal.value.isOpen = false;
+  } finally {
+    deletePlanModal.value.loading = false;
   }
 };
 </script>

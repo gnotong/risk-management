@@ -146,6 +146,24 @@
     </div>
     
     <RiskFormModal :isOpen="isModalOpen" @close="isModalOpen = false" />
+    <ConfirmationModal
+      :isOpen="deleteModal.isOpen"
+      :title="$t('form.delete') + ' ' + (deleteModal.itemName || '')"
+      :message="`Êtes-vous sûr de vouloir supprimer définitivement le risque \&quot;${deleteModal.itemName}\&quot; ?`"
+      type="danger"
+      :loading="deleteModal.loading"
+      @confirm="executeDeleteRisk"
+      @cancel="closeDeleteModal"
+    />
+    <ConfirmationModal
+      :isOpen="errorModal.isOpen"
+      title="Erreur de suppression"
+      :message="errorModal.message"
+      type="danger"
+      confirmText="Fermer"
+      @confirm="errorModal.isOpen = false"
+      @cancel="errorModal.isOpen = false"
+    />
   </div>
 </template>
 
@@ -156,6 +174,7 @@ import { useActionPlanStore } from '../stores/actionPlanStore';
 import FilterBar from '../components/FilterBar.vue';
 import RiskHeatmap from '../components/RiskHeatmap.vue';
 import RiskFormModal from '../components/RiskFormModal.vue';
+import ConfirmationModal from '../components/ConfirmationModal.vue';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -181,13 +200,43 @@ watch(() => store.filteredRisks, () => {
   currentPage.value = 1; // Reset page on filter change
 }, { deep: true });
 
-const confirmDeleteRisk = async (id: string, name: string) => {
-  if (confirm(`Êtes-vous sûr de vouloir supprimer définitivement le risque "${name}" ?`)) {
-    try {
-      await store.deleteRisk(id);
-    } catch (e: any) {
-      alert(e.message || "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.");
-    }
+const deleteModal = ref({
+  isOpen: false,
+  itemId: '',
+  itemName: '',
+  loading: false
+});
+
+const errorModal = ref({
+  isOpen: false,
+  message: ''
+});
+
+const confirmDeleteRisk = (id: string, name: string) => {
+  deleteModal.value.itemId = id;
+  deleteModal.value.itemName = name;
+  deleteModal.value.isOpen = true;
+};
+
+const closeDeleteModal = () => {
+  deleteModal.value.isOpen = false;
+  deleteModal.value.itemId = '';
+  deleteModal.value.itemName = '';
+};
+
+const executeDeleteRisk = async () => {
+  if (!deleteModal.value.itemId) return;
+  
+  deleteModal.value.loading = true;
+  try {
+    await store.deleteRisk(deleteModal.value.itemId);
+    closeDeleteModal();
+  } catch (e: any) {
+    closeDeleteModal();
+    errorModal.value.message = e.message || "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.";
+    errorModal.value.isOpen = true;
+  } finally {
+    deleteModal.value.loading = false;
   }
 };
 

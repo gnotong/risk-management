@@ -13,7 +13,7 @@
       <div class="ml-auto">
         <button 
           v-if="!loading && risque"
-          @click="confirmDeleteRisk"
+          @click="openDeleteModal"
           class="bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -21,6 +21,25 @@
         </button>
       </div>
     </div>
+    
+    <ConfirmationModal
+      :isOpen="deleteModal.isOpen"
+      :title="$t('form.delete') + ' le risque'"
+      :message="`Êtes-vous sûr de vouloir supprimer définitivement ce risque ?`"
+      type="danger"
+      :loading="deleteModal.loading"
+      @confirm="executeDeleteRisk"
+      @cancel="closeDeleteModal"
+    />
+    <ConfirmationModal
+      :isOpen="errorModal.isOpen"
+      title="Erreur de suppression"
+      :message="errorModal.message"
+      type="danger"
+      confirmText="Fermer"
+      @confirm="errorModal.isOpen = false"
+      @cancel="errorModal.isOpen = false"
+    />
 
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-20">
@@ -228,14 +247,36 @@ const formatDate = (dateString?: string) => {
   });
 };
 
-const confirmDeleteRisk = async () => {
-  if (confirm("Êtes-vous sûr de vouloir supprimer définitivement ce risque ?")) {
-    try {
-      await riskStore.deleteRisk(id as string);
-      router.push('/');
-    } catch (e: any) {
-      alert(e.message || "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.");
-    }
+const deleteModal = ref({
+  isOpen: false,
+  loading: false
+});
+
+const errorModal = ref({
+  isOpen: false,
+  message: ''
+});
+
+const openDeleteModal = () => {
+  deleteModal.value.isOpen = true;
+};
+
+const closeDeleteModal = () => {
+  deleteModal.value.isOpen = false;
+};
+
+const executeDeleteRisk = async () => {
+  deleteModal.value.loading = true;
+  try {
+    await riskStore.deleteRisk(id as string);
+    closeDeleteModal();
+    router.push('/');
+  } catch (e: any) {
+    closeDeleteModal();
+    errorModal.value.message = e.message || "Erreur lors de la suppression. Ce risque a probablement des plans d'action ou incidents liés.";
+    errorModal.value.isOpen = true;
+  } finally {
+    deleteModal.value.loading = false;
   }
 };
 
