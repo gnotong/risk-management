@@ -103,22 +103,43 @@
           </transition-group>
           
           <!-- Pagination Controls -->
-          <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-gray-200 dark:border-white/5">
-            <button 
-              @click="currentPage--" 
-              :disabled="currentPage === 1"
-              class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-700 dark:text-white"
-            >
-              Précédent
-            </button>
-            <span class="text-gray-600 dark:text-gray-400 text-sm">Page <span class="text-gray-900 dark:text-white font-bold">{{ currentPage }}</span> sur {{ totalPages }}</span>
-            <button 
-              @click="currentPage++" 
-              :disabled="currentPage === totalPages"
-              class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-700 dark:text-white"
-            >
-              Suivant
-            </button>
+          <div v-if="totalPages > 1" class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200 dark:border-white/5">
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              Total: <span class="font-bold text-gray-900 dark:text-white">{{ store.filteredRisks.length }}</span> {{ $t('nav.risks').toLowerCase() }}
+            </div>
+            <div class="flex justify-center items-center gap-2 sm:gap-4">
+              <button 
+                @click="currentPage = 1" 
+                :disabled="currentPage === 1"
+                class="px-2 sm:px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-700 dark:text-white text-sm"
+                title="Première page"
+              >
+                &laquo;&laquo;
+              </button>
+              <button 
+                @click="currentPage--" 
+                :disabled="currentPage === 1"
+                class="px-2 sm:px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-700 dark:text-white text-sm"
+              >
+                Précédent
+              </button>
+              <span class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Page <span class="text-gray-900 dark:text-white font-bold">{{ currentPage }}</span> sur {{ totalPages }}</span>
+              <button 
+                @click="currentPage++" 
+                :disabled="currentPage === totalPages"
+                class="px-2 sm:px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-700 dark:text-white text-sm"
+              >
+                Suivant
+              </button>
+              <button 
+                @click="currentPage = totalPages" 
+                :disabled="currentPage === totalPages"
+                class="px-2 sm:px-3 py-1 rounded-lg bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-gray-700 dark:text-white text-sm"
+                title="Dernière page"
+              >
+                &raquo;&raquo;
+              </button>
+            </div>
           </div>
         </div>
       </div>

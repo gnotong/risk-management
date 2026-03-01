@@ -1,6 +1,6 @@
-Use the configuration defined in @cloud/antigravity-cloud.json.
+Use the configuration defined in @backend/cloud/antigravity-cloud.json.
 
-Transform the current monolithic architecture into a cloud-native, hexagonal, and event-driven architecture progressively and apply the architectural and refactoring guidelines described in @docs/architecture/template/*.md files.
+Transform the current monolithic architecture into a cloud-native, hexagonal, and event-driven architecture progressively and apply the architectural and refactoring guidelines described in @backend/template/*.md files.
 
 Apply:
 - AOP interceptors

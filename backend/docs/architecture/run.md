@@ -1,6 +1,6 @@
-Use the global project configuration defined in @antigravity.json.
+Use the global project configuration defined in @backend/   antigravity.json.
 
-Then apply the architectural and refactoring guidelines described in the documentation(*.md files) in @docs/architecture/template.
+Then apply the architectural and refactoring guidelines described in the documentation(*.md files) in @backend/template.
 
 Refactor the backend progressively, module by module.
 

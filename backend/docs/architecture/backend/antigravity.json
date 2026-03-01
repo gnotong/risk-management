@@ -15,6 +15,22 @@
             "state_management": "Pinia",
             "package_manager": "npm",
             "port": 5173
+        },
+        "frontend_architecture": {
+            "style": "clean-architecture",
+            "layers": [
+                "presentation",
+                "application",
+                "domain",
+                "infrastructure"
+            ],
+            "rules": [
+                "No API calls in components",
+                "Use cases mandatory",
+                "Strict TypeScript",
+                "Repository pattern",
+                "Centralized HTTP interceptors"
+            ]
         }
     },
     "deployment": {
