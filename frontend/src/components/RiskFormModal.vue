@@ -96,6 +96,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, minValue, maxValue } from '@vuelidate/validators';
 import { useRiskStore } from '../stores/riskStore';
 import { useUserStore } from '../stores/userStore';
+import { StatutRisque } from '../domain/entities/Risk';
 
 const props = defineProps<{
   isOpen: boolean
@@ -116,7 +117,7 @@ const form = reactive({
   description: '',
   probabilite: 1,
   gravite: 1,
-  statut: 'OUVERT',
+  statut: StatutRisque.OUVERT,
   proprietaire: null as any
 });
 

@@ -27,7 +27,15 @@ public class Utilisateur extends PanacheEntityBase {
     @Column(name = "is_active")
     public boolean isActive;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "keycloak_sync_status", length = 50)
+    public KeycloakSyncStatus keycloakSyncStatus = KeycloakSyncStatus.SYNCED;
+
     public static Utilisateur findByUsername(String username) {
         return find("username", username).firstResult();
+    }
+    
+    public static java.util.List<Utilisateur> findPendingSync() {
+        return find("keycloakSyncStatus != ?1", KeycloakSyncStatus.SYNCED).list();
     }
 }

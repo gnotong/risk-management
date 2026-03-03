@@ -4,6 +4,7 @@ import com.notgabs.corp.dto.CreateUserRequest;
 import com.notgabs.corp.dto.UpdateUserRequest;
 import com.notgabs.corp.exception.BusinessException;
 import com.notgabs.corp.exception.NotFoundException;
+import com.notgabs.corp.model.KeycloakSyncStatus;
 import com.notgabs.corp.model.PlanAction;
 import com.notgabs.corp.model.Risque;
 import com.notgabs.corp.model.Utilisateur;
@@ -77,18 +78,7 @@ public class UtilisateurService {
             throw new BusinessException("User with username '" + request.username + "' already exists");
         }
 
-        try {
-            // Create user in Keycloak first
-            String keycloakUserId = keycloakAdminService.createUser(
-                    request.username,
-                    request.password,
-                    request.firstName,
-                    request.lastName,
-                    request.email,
-                    request.role.toString()
-            );
-
-            // Create user in database
+            // Create user in database first
             Utilisateur user = new Utilisateur();
             user.username = request.username;
             user.nom = request.lastName;
@@ -97,14 +87,25 @@ public class UtilisateurService {
             user.role = request.role;
             user.isActive = true;
 
-            user.persist();
-            
+        try {
+            // Create user in Keycloak
+            String keycloakUserId = keycloakAdminService.createUser(
+                    request.username,
+                    request.password,
+                    request.firstName,
+                    request.lastName,
+                    request.email,
+                    request.role.toString()
+            );
+            user.keycloakSyncStatus = KeycloakSyncStatus.SYNCED;
             Log.info("User " + request.username + " created successfully in both Keycloak and database");
-            return user;
         } catch (Exception e) {
-            Log.error("Error creating user with Keycloak", e);
-            throw new BusinessException("Failed to create user: " + e.getMessage());
+            Log.warn("Error creating user with Keycloak, marking as PENDING_CREATE", e);
+            user.keycloakSyncStatus = KeycloakSyncStatus.PENDING_CREATE;
         }
+        
+        user.persist();
+        return user;
     }
 
     @Transactional
@@ -131,11 +132,30 @@ public class UtilisateurService {
             }
         }
 
+        existing.username = request.username;
+        existing.nom = request.lastName;
+        existing.prenom = request.firstName;
+        existing.email = request.email;
+        existing.role = request.role;
+        if (request.isActive != null) {
+            existing.isActive = request.isActive;
+        }
+
         try {
             String keycloakUserId = keycloakAdminService.getKeycloakUserId(existing.username);
             
             if (keycloakUserId == null) {
-                Log.warn("User " + existing.username + " not found in Keycloak. Database update will continue but Keycloak won't be modified.");
+                // Si l'utilisateur n'existe pas dans Keycloak (ex: échec création précédente)
+                // On peut soit essayer de le créer, soit logguer un avertissement.
+                // Par souci de simplicité pour le scheduler, on déclenche une création.
+                keycloakAdminService.createUser(
+                    existing.username,
+                    request.password != null ? request.password : UUID.randomUUID().toString(),
+                    existing.prenom,
+                    existing.nom,
+                    existing.email,
+                    existing.role.toString()
+                );
             } else {
                 boolean isEnabled = request.isActive != null ? request.isActive : existing.isActive;
                 keycloakAdminService.updateUser(
@@ -149,22 +169,16 @@ public class UtilisateurService {
                         isEnabled
                 );
             }
-
-            existing.username = request.username;
-            existing.nom = request.lastName;
-            existing.prenom = request.firstName;
-            existing.email = request.email;
-            existing.role = request.role;
-            if (request.isActive != null) {
-                existing.isActive = request.isActive;
-            }
-            
-            Log.info("User " + existing.username + " updated successfully");
-            return existing;
+            existing.keycloakSyncStatus = KeycloakSyncStatus.SYNCED;
+            Log.info("User " + existing.username + " updated successfully in Keycloak");
         } catch (Exception e) {
-            Log.error("Error updating user with Keycloak", e);
-            throw new BusinessException("Failed to update user: " + e.getMessage());
+            Log.warn("Error updating user with Keycloak, marking as PENDING_UPDATE", e);
+            if (existing.keycloakSyncStatus != KeycloakSyncStatus.PENDING_CREATE) {
+                existing.keycloakSyncStatus = KeycloakSyncStatus.PENDING_UPDATE;
+            }
         }
+        
+        return existing;
     }
 
     @Transactional
@@ -186,11 +200,61 @@ public class UtilisateurService {
             } else {
                 Log.warn("User " + entity.username + " not found in Keycloak during deletion");
             }
+            entity.delete(); // Delete locally if Keycloak sync was successful or user not found
         } catch (Exception e) {
-            Log.error("Failed to delete user from Keycloak", e);
-            throw new BusinessException("Failed to delete user from Keycloak: " + e.getMessage());
+            Log.warn("Failed to delete user from Keycloak, marking as PENDING_DELETE", e);
+            entity.keycloakSyncStatus = KeycloakSyncStatus.PENDING_DELETE;
+            entity.isActive = false; // Disable so it doesn't show up in normal lists
         }
-
-        entity.delete();
+    }
+    
+    @Transactional
+    public void syncUserWithKeycloak(UUID id) {
+        Utilisateur user = getById(id);
+        
+        if (user.keycloakSyncStatus == KeycloakSyncStatus.SYNCED) {
+            return;
+        }
+        
+        try {
+            if (user.keycloakSyncStatus == KeycloakSyncStatus.PENDING_CREATE) {
+                String keycloakUserId = keycloakAdminService.getKeycloakUserId(user.username);
+                if (keycloakUserId == null) {
+                    keycloakAdminService.createUser(
+                        user.username,
+                        UUID.randomUUID().toString(), // Admin will have to reset it or user uses 'forgot password'
+                        user.prenom,
+                        user.nom,
+                        user.email,
+                        user.role.toString()
+                    );
+                }
+                user.keycloakSyncStatus = KeycloakSyncStatus.SYNCED;
+            } else if (user.keycloakSyncStatus == KeycloakSyncStatus.PENDING_UPDATE) {
+                String keycloakUserId = keycloakAdminService.getKeycloakUserId(user.username);
+                if (keycloakUserId != null) {
+                    keycloakAdminService.updateUser(
+                        keycloakUserId,
+                        user.username,
+                        user.prenom,
+                        user.nom,
+                        user.email,
+                        user.role.toString(),
+                        null,
+                        user.isActive
+                    );
+                }
+                user.keycloakSyncStatus = KeycloakSyncStatus.SYNCED;
+            } else if (user.keycloakSyncStatus == KeycloakSyncStatus.PENDING_DELETE) {
+                String keycloakUserId = keycloakAdminService.getKeycloakUserId(user.username);
+                if (keycloakUserId != null) {
+                    keycloakAdminService.deleteUser(keycloakUserId);
+                }
+                user.delete();
+            }
+        } catch (Exception e) {
+            Log.error("Failed to sync user with Keycloak during manual sync: " + user.username, e);
+            throw new BusinessException("Failed to synchronize with Keycloak: " + e.getMessage());
+        }
     }
 }

@@ -28,9 +28,9 @@
           class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
         >
           <option value="">Tous les statuts</option>
-          <option value="NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
-          <option value="EN_COURS">{{ $t('status.EN_COURS') }}</option>
-          <option value="TERMINE">{{ $t('status.TERMINE') }}</option>
+          <option :value="StatutPlanAction.A_FAIRE">{{ $t('status.A_FAIRE') }}</option>
+          <option :value="StatutPlanAction.EN_COURS">{{ $t('status.EN_COURS') }}</option>
+          <option :value="StatutPlanAction.TERMINE">{{ $t('status.TERMINE') }}</option>
         </select>
       </div>
     </div>
@@ -57,7 +57,7 @@
           <div class="w-full sm:w-auto">
             <div class="flex gap-3 items-center mb-1 flex-wrap">
               <h3 class="font-bold text-base sm:text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ plan.nom }}</h3>
-              <span class="px-2 py-0.5 text-[10px] sm:text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ $t(`status.${plan.statut || 'NON_COMMENCE'}`) }}</span>
+              <span class="px-2 py-0.5 text-[10px] sm:text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ $t(`status.${plan.statut || StatutPlanAction.A_FAIRE}`) }}</span>
             </div>
             <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 max-w-2xl">{{ plan.description || '' }}</p>
           </div>
@@ -68,7 +68,7 @@
             </div>
             <!-- Delete Button -->
             <button 
-              v-if="plan.statut !== 'TERMINE'"
+              v-if="plan.statut !== StatutPlanAction.TERMINE"
               @click.prevent="openDeleteModal(plan.id, plan.nom)"
               class="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20 hover:border-red-500 opacity-0 group-hover:opacity-100"
               :title="$t('action_plans.delete_plan_title')"
@@ -162,6 +162,7 @@ import { onMounted, ref, computed, watch } from 'vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useActionPlanStore } from '../stores/actionPlanStore';
 import { useI18n } from 'vue-i18n';
+import { StatutPlanAction } from '../domain/entities/Risk';
 
 const store = useActionPlanStore();
 const { t } = useI18n();
@@ -175,7 +176,7 @@ const filteredPlans = computed(() => {
   let result = store.plans;
   
   if (searchStatus.value) {
-    result = result.filter(plan => (plan.statut || 'NON_COMMENCE') === searchStatus.value);
+    result = result.filter(plan => (plan.statut || StatutPlanAction.A_FAIRE) === searchStatus.value);
   }
 
   if (searchQuery.value) {
@@ -247,9 +248,9 @@ onMounted(() => {
   store.fetchPlans();
 });
 
-const getStatusStyle = (statut: string) => {
-  if (statut === 'TERMINE') return 'bg-green-500/20 text-green-400';
-  if (statut === 'EN_COURS') return 'bg-orange-500/20 text-orange-400';
+const getStatusStyle = (statut: StatutPlanAction) => {
+  if (statut === StatutPlanAction.TERMINE) return 'bg-green-500/20 text-green-400';
+  if (statut === StatutPlanAction.EN_COURS) return 'bg-orange-500/20 text-orange-400';
   return 'bg-gray-500/20 text-gray-400';
 };
 

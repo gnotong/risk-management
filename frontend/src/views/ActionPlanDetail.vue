@@ -57,7 +57,7 @@
             <div class="p-6 rounded-2xl bg-white dark:bg-black/40 border border-gray-200 dark:border-white/5 space-y-4 shadow-sm dark:shadow-none">
               <div class="flex justify-between items-center">
                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{{ $t('action_plan_detail.progress') }} ({{ editForm.tauxAvancement }}%)</label>
-                <div class="flex gap-2" v-if="plan.statut !== 'TERMINE'">
+                <div class="flex gap-2" v-if="plan.statut !== StatutPlanAction.TERMINE">
                   <button type="button" @click="editForm.tauxAvancement = 0" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 transition-colors">0%</button>
                   <button type="button" @click="editForm.tauxAvancement = 50" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 transition-colors">50%</button>
                   <button type="button" @click="editForm.tauxAvancement = 100" class="text-xs px-2 py-1 bg-gray-100 dark:bg-white/5 rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 transition-colors">100%</button>
@@ -66,7 +66,7 @@
               <input 
                 v-model.number="editForm.tauxAvancement" 
                 type="range" min="0" max="100" 
-                :disabled="plan.statut === 'TERMINE'"
+                :disabled="plan.statut === StatutPlanAction.TERMINE"
                 class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <div class="w-full bg-gray-800 rounded-full h-1.5 mt-2">
@@ -79,37 +79,37 @@
               
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.status') }}</label>
-                <select v-model="editForm.statut" :disabled="plan.statut === 'TERMINE'" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed">
-                  <option value="NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
-                  <option value="EN_COURS">{{ $t('status.EN_COURS') }}</option>
-                  <option value="EN_RETARD">{{ $t('status.EN_RETARD') }}</option>
-                  <option value="TERMINE">{{ $t('status.TERMINE') }}</option>
+                <select v-model="editForm.statut" :disabled="plan.statut === StatutPlanAction.TERMINE" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed">
+                  <option :value="StatutPlanAction.A_FAIRE">{{ $t('status.A_FAIRE') }}</option>
+                  <option :value="StatutPlanAction.EN_COURS">{{ $t('status.EN_COURS') }}</option>
+                  <option :value="StatutPlanAction.RETARD">{{ $t('status.EN_RETARD') }}</option>
+                  <option :value="StatutPlanAction.TERMINE">{{ $t('status.TERMINE') }}</option>
                 </select>
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.start_date') }}</label>
-                <input v-model="editForm.dateDebut" type="date" :disabled="plan.statut === 'TERMINE'" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
+                <input v-model="editForm.dateDebut" type="date" :disabled="plan.statut === StatutPlanAction.TERMINE" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.end_date') }}</label>
-                <input v-model="editForm.dateFin" type="date" :min="editForm.dateDebut" :disabled="plan.statut === 'TERMINE'" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
+                <input v-model="editForm.dateFin" type="date" :min="editForm.dateDebut" :disabled="plan.statut === StatutPlanAction.TERMINE" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
               </div>
 
             </div>
 
-            <div class="pt-4 border-t border-gray-200 dark:border-white/10" v-if="plan.statut !== 'TERMINE'">
+            <div class="pt-4 border-t border-gray-200 dark:border-white/10" v-if="plan.statut !== StatutPlanAction.TERMINE">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.update_comment_mandatory') }} <span class="text-red-500">*</span></label>
               <textarea v-model="editForm.commentaire" required rows="3" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder-gray-400 dark:placeholder-gray-500 shadow-sm dark:shadow-inner" :placeholder="$t('action_plan_detail.update_comment_placeholder')"></textarea>
             </div>
 
             <div class="flex justify-end pt-4 gap-4">
-              <button v-if="plan.statut === 'TERMINE'" type="button" @click="openReopenModal" :disabled="saving" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
+              <button v-if="plan.statut === StatutPlanAction.TERMINE" type="button" @click="openReopenModal" :disabled="saving" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
                 <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
                 {{ $t('action_plan_detail.reopen_plan') }}
               </button>
-              <button v-if="plan.statut !== 'TERMINE'" type="submit" :disabled="saving" class="bg-emerald-600 dark:bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
+              <button v-if="plan.statut !== StatutPlanAction.TERMINE" type="submit" :disabled="saving" class="bg-emerald-600 dark:bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
                 <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
                 {{ $t('action_plan_detail.save') }}
               </button>
@@ -190,6 +190,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useActionPlanStore } from '../stores/actionPlanStore';
 import { useI18n } from 'vue-i18n';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
+import { StatutPlanAction } from '../domain/entities/Risk';
 
 const route = useRoute();
 const router = useRouter();
@@ -215,7 +216,7 @@ const loadingSuivis = ref(false);
 
 const editForm = reactive({
   tauxAvancement: 0,
-  statut: 'NON_COMMENCE',
+  statut: StatutPlanAction.A_FAIRE,
   dateDebut: '',
   dateFin: '',
   commentaire: ''
@@ -228,7 +229,7 @@ const loadData = async () => {
     const data = await store.getPlanById(id);
     plan.value = data;
     editForm.tauxAvancement = data.tauxAvancement || 0;
-    editForm.statut = data.statut || 'NON_COMMENCE';
+    editForm.statut = data.statut || StatutPlanAction.A_FAIRE;
     editForm.dateDebut = data.dateDebut || '';
     editForm.dateFin = data.dateFin || '';
 
@@ -355,7 +356,7 @@ const executeReopenPlan = async () => {
     const updated: any = {
       ...plan.value,
       tauxAvancement: 99,
-      statut: 'EN_COURS',
+      statut: StatutPlanAction.EN_COURS,
       commentaireUpdate: t('action_plan_detail.reopen_success_comment')
     };
     if (reopenModal.value.hasDateChanges) {

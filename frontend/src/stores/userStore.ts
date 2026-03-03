@@ -5,12 +5,14 @@ import { GetUsersUseCase } from '../application/usecases/user/GetUsersUseCase';
 import { CreateUserUseCase } from '../application/usecases/user/CreateUserUseCase';
 import { UpdateUserUseCase } from '../application/usecases/user/UpdateUserUseCase';
 import { DeleteUserUseCase } from '../application/usecases/user/DeleteUserUseCase';
+import { SyncUserUseCase } from '../application/usecases/user/SyncUserUseCase';
 import type { CreateUserRequest, UpdateUserRequest } from '../domain/entities/Risk';
 
 const getUsersUseCase = new GetUsersUseCase(apiUserRepository);
 const createUserUseCase = new CreateUserUseCase(apiUserRepository);
 const updateUserUseCase = new UpdateUserUseCase(apiUserRepository);
 const deleteUserUseCase = new DeleteUserUseCase(apiUserRepository);
+const syncUserUseCase = new SyncUserUseCase(apiUserRepository);
 
 export const useUserStore = defineStore('user', () => {
     const users = ref<any[]>([]);
@@ -49,6 +51,10 @@ export const useUserStore = defineStore('user', () => {
         return await deleteUserUseCase.execute(id);
     };
 
+    const syncUser = async (id: string) => {
+        return await syncUserUseCase.execute(id);
+    };
+
     const isAdmin = computed(() => userRole.value === 'ADMIN');
 
     return {
@@ -58,6 +64,7 @@ export const useUserStore = defineStore('user', () => {
         createUser,
         updateUser,
         deleteUser,
+        syncUser,
         userRole,
         setUserRole,
         username,

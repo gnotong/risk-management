@@ -72,7 +72,7 @@
             <span class="block text-sm text-gray-500 uppercase font-bold mb-1">{{ $t('risk_detail.owner') }}</span>
             
             <!-- Static View (Closed Risk) -->
-            <span v-if="risque.statut === 'CLOTURE'" class="text-gray-900 dark:text-white text-lg flex items-center gap-2">
+            <span v-if="risque.statut === StatutRisque.CLOTURE" class="text-gray-900 dark:text-white text-lg flex items-center gap-2">
               <span class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
                 {{ risque.proprietaire?.nom ? risque.proprietaire.nom.charAt(0) : '?' }}
               </span>
@@ -153,8 +153,8 @@
             >
               <div class="flex justify-between items-start mb-2">
                 <h5 class="font-bold text-gray-800 dark:text-gray-200 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">{{ plan.nom }}</h5>
-                <span class="text-xs px-2 py-0.5 rounded font-bold" :class="plan.statut === 'TERMINE' ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'">
-                  {{ $t(`status.${plan.statut || 'NON_COMMENCE'}`) }}
+                <span class="text-xs px-2 py-0.5 rounded font-bold" :class="plan.statut === StatutPlanAction.TERMINE ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'">
+                  {{ $t(`status.${plan.statut || StatutPlanAction.A_FAIRE}`) }}
                 </span>
               </div>
               <div class="flex justify-between items-center mt-3 text-sm">
@@ -191,6 +191,7 @@ import { useUserStore } from '../stores/userStore';
 import ActionPlanFormModal from '../components/ActionPlanFormModal.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useI18n } from 'vue-i18n';
+import { StatutRisque, StatutPlanAction } from '../domain/entities/Risk';
 
 const route = useRoute();
 const router = useRouter();
@@ -231,9 +232,9 @@ const linkedPlans = computed(() => {
   return actionPlanStore.plans.filter((plan: any) => plan.risque?.id === id);
 });
 
-const getStatusStyle = (statut: string) => {
-  if (statut === 'OUVERT') return 'bg-red-500/20 text-red-400 border border-red-500/30';
-  if (statut === 'EN_COURS') return 'bg-orange-500/20 text-orange-400 border border-orange-500/30';
+const getStatusStyle = (statut: StatutRisque) => {
+  if (statut === StatutRisque.OUVERT) return 'bg-red-500/20 text-red-400 border border-red-500/30';
+  if (statut === StatutRisque.EN_COURS) return 'bg-orange-500/20 text-orange-400 border border-orange-500/30';
   return 'bg-green-500/20 text-green-400 border border-green-500/30';
 };
 

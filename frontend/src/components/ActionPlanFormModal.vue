@@ -71,6 +71,7 @@ import { ref, reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useActionPlanStore } from '../stores/actionPlanStore';
+import { StatutPlanAction } from '../domain/entities/Risk';
 
 const actionPlanStore = useActionPlanStore();
 
@@ -129,7 +130,7 @@ const submitForm = async () => {
       dateFin: form.dateFin || null,
       risque: { id: props.riskId },
       tauxAvancement: 0,
-      statut: 'NON_COMMENCE'
+      statut: StatutPlanAction.A_FAIRE
     };
 
     try {

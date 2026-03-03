@@ -67,4 +67,12 @@ public class UtilisateurResource {
         utilisateurService.delete(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
+
+    @POST
+    @Path("/{id}/sync")
+    @RolesAllowed("ADMIN")
+    public Response syncWithKeycloak(@PathParam("id") UUID id) {
+        utilisateurService.syncUserWithKeycloak(id);
+        return Response.ok().build();
+    }
 }

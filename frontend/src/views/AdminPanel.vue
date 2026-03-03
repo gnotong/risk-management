@@ -47,10 +47,9 @@
                 class="w-full px-4 py-2 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <option value="">{{ $t('admin.all_roles') }}</option>
-                <option value="ADMIN">{{ $t('role.admin') }}</option>
-                <option value="AUDITEUR">{{ $t('role.auditeur') }}</option>
-                <option value="RESPONSABLE">{{ $t('role.responsable') }}</option>
-                <option value="LECTEUR">{{ $t('role.lecteur') }}</option>
+                <option v-for="roleValue in Object.values(Role)" :key="roleValue" :value="roleValue">
+                  {{ $t('role.' + roleValue.toLowerCase()) }}
+                </option>
               </select>
             </div>
             <!-- Status Filter -->
@@ -104,6 +103,14 @@
                     </span>
                   </td>
                   <td class="px-4 py-3 text-right space-x-3">
+                    <button v-if="user.keycloakSyncStatus && user.keycloakSyncStatus !== KeycloakSyncStatus.SYNCED"
+                            @click="syncUserLocal(user)"
+                            class="text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 font-medium text-sm transition-colors"
+                            :title="$t('admin.sync_user')" :disabled="isSyncing">
+                      <span v-if="isSyncing" class="animate-spin inline-block">🔄</span>
+                      <span v-else>🔄</span>
+                      <span class="sr-only">{{ $t('admin.sync_pending') }}</span>
+                    </button>
                     <button @click="editUser(user)" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors" :title="$t('admin.edit_user')">
                       🖍️
                     </button>
@@ -205,6 +212,7 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/userStore';
+import { Role, KeycloakSyncStatus } from '../domain/entities/Risk';
 
 import UserFormModal from '../components/UserFormModal.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
@@ -220,6 +228,7 @@ const userToEdit = ref<any>(null);
 const isDeleteModalOpen = ref(false);
 const userToDelete = ref<any>(null);
 const isDeleting = ref(false);
+const isSyncing = ref(false);
 
 const errorMessage = ref('');
 const successMessage = ref('');
@@ -246,7 +255,7 @@ const currentPage = ref(1);
 const itemsPerPage = ref(10); // Dynamic items per page
 
 const isAdmin = computed(() => {
-  return userStore.userRole === 'ADMIN';
+  return userStore.userRole === Role.ADMIN;
 });
 
 onMounted(() => {
@@ -350,12 +359,27 @@ const confirmDeleteUser = async () => {
   }
 };
 
-const getRoleBadgeClass = (role: string) => {
-  const classes: { [key: string]: string } = {
-    'ADMIN': 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-200',
-    'AUDITEUR': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-200',
-    'RESPONSABLE': 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-200',
-    'LECTEUR': 'bg-slate-200 text-slate-700 dark:bg-slate-500/20 dark:text-slate-200'
+const syncUserLocal = async (user: any) => {
+  if (isSyncing.value) return;
+  
+  isSyncing.value = true;
+  try {
+    await userStore.syncUser(user.id);
+    showSuccess(t('admin.sync_success'));
+    await userStore.fetchUsers();
+  } catch (error) {
+    showError((error as Error).message || 'Erreur de synchronisation Keycloak');
+  } finally {
+    isSyncing.value = false;
+  }
+};
+
+const getRoleBadgeClass = (role: Role) => {
+  const classes: Record<Role, string> = {
+    [Role.ADMIN]: 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-200',
+    [Role.AUDITEUR]: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-200',
+    [Role.RESPONSABLE]: 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-200',
+    [Role.LECTEUR]: 'bg-slate-200 text-slate-700 dark:bg-slate-500/20 dark:text-slate-200'
   };
   return classes[role] || 'bg-slate-200 text-slate-700 dark:bg-slate-500/20 dark:text-slate-200';
 };

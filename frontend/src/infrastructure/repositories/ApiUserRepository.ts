@@ -24,6 +24,10 @@ export class ApiUserRepository implements UserRepository {
     async delete(id: string): Promise<void> {
         await httpClient.delete(`/utilisateurs/${id}`);
     }
+
+    async sync(id: string): Promise<void> {
+        await httpClient.post(`/utilisateurs/${id}/sync`);
+    }
 }
 
 export const apiUserRepository = new ApiUserRepository();

@@ -5,4 +5,5 @@ export interface UserRepository {
     create(request: CreateUserRequest): Promise<User>;
     update(id: string, request: UpdateUserRequest): Promise<User>;
     delete(id: string): Promise<void>;
+    sync(id: string): Promise<void>;
 }

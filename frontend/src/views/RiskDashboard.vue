@@ -179,6 +179,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { useI18n } from 'vue-i18n';
+import { StatutRisque } from '../domain/entities/Risk';
 
 const store = useRiskStore();
 const actionPlanStore = useActionPlanStore();
@@ -267,9 +268,9 @@ const getRiskPlanStats = (riskId: string) => {
   };
 };
 
-const getStatusColor = (statut: string) => {
-  if (statut === 'OUVERT') return 'bg-red-500';
-  if (statut === 'EN_COURS') return 'bg-orange-500';
+const getStatusColor = (statut: StatutRisque) => {
+  if (statut === StatutRisque.OUVERT) return 'bg-red-500';
+  if (statut === StatutRisque.EN_COURS) return 'bg-orange-500';
   return 'bg-green-500';
 };
 

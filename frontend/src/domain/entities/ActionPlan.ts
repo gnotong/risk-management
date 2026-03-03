@@ -1,4 +1,5 @@
 import type { Risk, User } from './Risk';
+import { StatutPlanAction } from './Risk';
 
 export interface Suivi {
     id?: string;
@@ -12,7 +13,7 @@ export interface ActionPlan {
     description?: string;
     dateDebut?: string;
     dateFin?: string;
-    statut?: string;
+    statut?: StatutPlanAction;
     tauxAvancement?: number;
     risque?: Partial<Risk>;
     responsable?: User;

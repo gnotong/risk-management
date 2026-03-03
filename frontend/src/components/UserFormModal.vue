@@ -50,10 +50,9 @@
             <label class="text-sm font-medium text-slate-700 dark:text-slate-200 block text-left mb-1">{{ $t('admin.role') }} <span class="text-red-500">*</span></label>
             <select v-model="formData.role" class="w-full px-4 py-2 bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
               <option value="" disabled>{{ $t('admin.select_role') }}</option>
-              <option value="ADMIN">{{ $t('role.admin') }}</option>
-              <option value="AUDITEUR">{{ $t('role.auditeur') }}</option>
-              <option value="RESPONSABLE">{{ $t('role.responsable') }}</option>
-              <option value="LECTEUR">{{ $t('role.lecteur') }}</option>
+              <option v-for="roleValue in Object.values(Role)" :key="roleValue" :value="roleValue">
+                {{ $t('role.' + roleValue.toLowerCase()) }}
+              </option>
             </select>
           </div>
 
@@ -86,6 +85,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useUserStore } from '../stores/userStore';
+import { Role } from '../domain/entities/Risk';
 
 const props = defineProps<{
   isOpen: boolean;
@@ -105,7 +105,7 @@ const formData = ref({
   lastName: '',
   email: '',
   password: '',
-  role: '',
+  role: '' as Role | '',
   isActive: true
 });
 
@@ -119,7 +119,7 @@ watch(() => props.isOpen, (newVal) => {
         lastName: props.userToEdit.lastName || props.userToEdit.nom || '',
         email: props.userToEdit.email || '',
         password: '',
-        role: props.userToEdit.role || '',
+        role: (props.userToEdit.role as Role) || '',
         isActive: props.userToEdit.isActive ?? true
       };
     } else {

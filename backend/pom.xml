@@ -79,6 +79,10 @@
         <!-- rest-assured is only needed for tests; keep the later scoped declaration and remove the runtime one -->
         <dependency>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-scheduler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit</artifactId>
             <scope>test</scope>
         </dependency>
