@@ -6,6 +6,7 @@
         "dashboard": "Dashboard",
         "risks": "Risk Register",
         "action_plans": "Action Plans",
+        "admin": "Admin",
         "switch_lang": "FR",
         "app_title": "Risk Management"
     },
@@ -114,10 +115,43 @@
         "error_delete_comment": "Error deleting comment.",
         "error_delete_plan": "Error deleting action plan"
     },
+    "role": {
+        "admin": "Administrator",
+        "auditeur": "Auditor",
+        "responsable": "Responsible",
+        "lecteur": "Reader"
+    },
+    "admin": {
+        "title": "Administration",
+        "description": "Manage users and system configuration",
+        "access_denied": "Access denied. Only administrators can access this page.",
+        "create_user": "Create New User",
+        "create_user_btn": "Create User",
+        "username": "Username",
+        "username_placeholder": "Enter username",
+        "first_name": "First Name",
+        "first_name_placeholder": "Enter first name",
+        "last_name": "Last Name",
+        "last_name_placeholder": "Enter last name",
+        "email": "Email",
+        "email_placeholder": "user{'@'}example.com",
+        "password": "Password",
+        "password_placeholder": "Enter a secure password",
+        "role": "Role",
+        "select_role": "Select a role",
+        "users_list": "Users Directory",
+        "no_users": "No users found.",
+        "status": "Status",
+        "active": "Active",
+        "inactive": "Inactive"
+    },
+    "common": {
+        "loading": "Loading"
+    },
     "risk_detail": {
         "title": "Risk Details",
         "overview": "Overview",
-        "prob_grav_score": "Likelihood: {prob} | Impact: {grav} = Score: {score}",
+        "prob_grav_score": "Likelihood: {prob}  Impact: {grav} = Score: {score}",
         "owner": "Owner",
         "status": "Status:",
         "created_at": "Created on",

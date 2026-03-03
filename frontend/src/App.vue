@@ -14,6 +14,8 @@
           <router-link to="/" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors uppercase text-xs tracking-wider font-semibold">{{ $t('nav.risks') }}</router-link>
           <router-link to="/action-plans" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors uppercase text-xs tracking-wider font-semibold">{{ $t('nav.action_plans') }}</router-link>
           
+          <router-link v-if="isAdmin" to="/admin" class="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors uppercase text-xs tracking-wider font-semibold">⚙️ {{ $t('nav.admin') }}</router-link>
+          
           <div class="w-px h-6 bg-gray-200 dark:bg-white/10 mx-1 sm:mx-2"></div>
           
           <!-- User Info Panel -->
@@ -67,9 +69,11 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { computed, ref, onMounted } from 'vue';
+import { useUserStore } from './stores/userStore';
 import keycloak from './plugins/keycloak';
 
 const { locale } = useI18n();
+const userStore = useUserStore();
 
 const toggleLanguage = () => {
   locale.value = locale.value === 'fr' ? 'en' : 'fr';
@@ -85,6 +89,20 @@ onMounted(() => {
   } else {
     isDark.value = false;
     document.documentElement.classList.remove('dark');
+  }
+
+  // Extract user role from Keycloak token
+  if (isKeycloakEnabled.value && keycloak.tokenParsed) {
+    const roles = (keycloak.tokenParsed as any).realm_access?.roles || [];
+    const userRole = roles.find((r: string) => ['ADMIN', 'AUDITEUR', 'RESPONSABLE', 'LECTEUR'].includes(r));
+    if (userRole) {
+      userStore.setUserRole(userRole);
+    }
+    
+    const userName = (keycloak.tokenParsed as any).preferred_username || (keycloak.tokenParsed as any).name;
+    if (userName) {
+      userStore.setUsername(userName);
+    }
   }
 });
 
@@ -107,6 +125,8 @@ const username = computed(() => {
   }
   return keycloak.tokenParsed?.preferred_username || keycloak.tokenParsed?.name || '';
 });
+
+const isAdmin = computed(() => userStore.isAdmin);
 
 const logout = () => {
   if (isKeycloakEnabled.value) {

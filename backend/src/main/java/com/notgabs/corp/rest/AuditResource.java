@@ -13,7 +13,7 @@ import jakarta.annotation.security.RolesAllowed;
 @Path("/api/audits")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed("USER")
+@RolesAllowed({"USER", "ADMIN"})
 public class AuditResource {
 
     @Inject

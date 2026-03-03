@@ -19,6 +19,22 @@
             ]
         },
         {
+            "username": "martin",
+            "enabled": true,
+            "email": "martin@local.test",
+            "firstName": "Sophie",
+            "lastName": "Martin",
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "martin"
+                }
+            ],
+            "realmRoles": [
+                "RESPONSABLE"
+            ]
+        },
+        {
             "username": "user",
             "enabled": true,
             "email": "user@example.com",
@@ -40,6 +56,18 @@
             {
                 "name": "ADMIN",
                 "description": "Administrator role"
+            },
+            {
+                "name": "AUDITEUR",
+                "description": "Auditor role"
+            },
+            {
+                "name": "RESPONSABLE",
+                "description": "Responsible role"
+            },
+            {
+                "name": "LECTEUR",
+                "description": "Reader role"
             },
             {
                 "name": "USER",

@@ -6,6 +6,7 @@
         "dashboard": "Tableau de bord",
         "risks": "Registre des Risques",
         "action_plans": "Plans d'Action",
+        "admin": "Admin",
         "switch_lang": "EN",
         "app_title": "Gestion des risques"
     },
@@ -114,10 +115,43 @@
         "error_delete_comment": "Erreur lors de la suppression du commentaire.",
         "error_delete_plan": "Erreur lors de la suppression"
     },
+    "role": {
+        "admin": "Administrateur",
+        "auditeur": "Auditeur",
+        "responsable": "Responsable",
+        "lecteur": "Lecteur"
+    },
+    "admin": {
+        "title": "Administration",
+        "description": "Gérez les utilisateurs et la configuration du système",
+        "access_denied": "Accès refusé. Seuls les administrateurs peuvent accéder à cette page.",
+        "create_user": "Créer un Nouvel Utilisateur",
+        "create_user_btn": "Créer l'Utilisateur",
+        "username": "Nom d'utilisateur",
+        "username_placeholder": "Entrez un nom d'utilisateur",
+        "first_name": "Prénom",
+        "first_name_placeholder": "Entrez le prénom",
+        "last_name": "Nom de Famille",
+        "last_name_placeholder": "Entrez le nom de famille",
+        "email": "Email",
+        "email_placeholder": "utilisateur{'@'}example.com",
+        "password": "Mot de passe",
+        "password_placeholder": "Entrez un mot de passe sécurisé",
+        "role": "Rôle",
+        "select_role": "Sélectionner un rôle",
+        "users_list": "Annuaire des Utilisateurs",
+        "no_users": "Aucun utilisateur trouvé.",
+        "status": "Statut",
+        "active": "Actif",
+        "inactive": "Inactif"
+    },
+    "common": {
+        "loading": "Chargement"
+    },
     "risk_detail": {
         "title": "Détails du Risque",
         "overview": "Aperçu Global",
-        "prob_grav_score": "Probabilité: {prob} | Gravité: {grav} = Score: {score}",
+        "prob_grav_score": "Probabilité: {prob}  Gravité: {grav} = Score: {score}",
         "owner": "Propriétaire",
         "status": "Statut:",
         "created_at": "Créé le",

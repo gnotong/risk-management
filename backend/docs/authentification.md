@@ -25,3 +25,35 @@ Voici le workflow complet, de bout en bout :
 ### Résumé
 
 L'accès aux écrans Vue est bloqué tant que l'utilisateur ne s'est pas connecté via la mire Keycloak. Une passe technique (Token JWT) est alors délivrée et présentée à chaque appel API via Axios. Côté Quarkus, la porte ne s'ouvre que si le porteur de la passe dispose sur son badge des rôles (`@RolesAllowed`) exigés par la route ciblée.
+
+---
+
+## Gestion des utilisateurs synchronisée avec Keycloak
+
+Afin de permettre aux administrateurs de créer des comptes directement depuis l'interface, le back-end expose désormais un endpoint protégé qui effectue simultanément :
+
+1. **Création dans Keycloak** via l'API Admin (service `KeycloakAdminService`).
+   * Obtention d'un jeton administratif (`admin-cli`) sur le realm `risk-realm`.
+   * Envoi d'une requête POST `/admin/realms/{realm}/users` contenant le username, prénom, nom, email et statut actif.
+   * Assignation du rôle adéquat (`ADMIN`, `AUDITEUR`, `RESPONSABLE`, `LECTEUR`, etc.) et définition du mot de passe.
+
+2. **Persistance en base** de l'entité `Utilisateur` avec le même username et rôle métier.
+   * Méthode `UtilisateurService.createWithKeycloak(CreateUserRequest)` réalise la synchronisation et lève des `BusinessException` en cas de doublon ou d'erreur.
+
+3. **Routes REST** :
+   * `POST /api/utilisateurs/register` accessible uniquement aux utilisateurs ayant le rôle `ADMIN`.
+   * La ressource `UtilisateurResource` est annotée `@RolesAllowed("ADMIN")` sur ce chemin spécifique, garantissant qu'un simple "USER" ne peut pas appeler cette opération.
+
+4. **Interface Frontend** :
+   * Une nouvelle vue `AdminPanel.vue` (route `/admin`) propose un formulaire pour saisir les informations (username, prénom, nom, email, mot de passe, rôle).
+   * Seuls les administrateurs (détectés via le rôle extrait du token Keycloak) voient le lien de navigation vers cette page.
+   * Après soumission, le backend crée le compte et le reflète immédiatement dans la liste des utilisateurs affichés.
+
+5. **Configuration** :
+   * Ajout des propriétés `keycloak.server-url`, `keycloak.admin.username`, `keycloak.admin.password` dans `application.properties`.
+   * `risk-realm.json` enrichi avec les rôles métiers et un utilisateur `martin` pour garder la cohérence entre Keycloak et la table `Utilisateur` existante.
+
+**Conséquence** : chaque utilisateur créé via l'UI peut se connecter immédiatement avec les identifiants choisis, et ses droits sont gérés par Keycloak tout en restant référencé dans la base de données métier.
+
+---
+

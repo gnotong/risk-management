@@ -75,6 +75,8 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-security</artifactId>
         </dependency>
+        <!-- quarkus-rest-client-reactive was previously declared but not used; removed to avoid missing artifact errors -->
+        <!-- rest-assured is only needed for tests; keep the later scoped declaration and remove the runtime one -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit</artifactId>

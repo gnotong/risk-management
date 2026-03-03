@@ -1,5 +1,6 @@
 package com.notgabs.corp.rest;
 
+import com.notgabs.corp.dto.CreateUserRequest;
 import com.notgabs.corp.model.Utilisateur;
 import com.notgabs.corp.service.UtilisateurService;
 import jakarta.inject.Inject;
@@ -13,7 +14,7 @@ import jakarta.annotation.security.RolesAllowed;
 @Path("/api/utilisateurs")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed("USER")
+@RolesAllowed("ADMIN")
 public class UtilisateurResource {
 
     @Inject
@@ -36,8 +37,20 @@ public class UtilisateurResource {
         return Response.ok(created).status(Response.Status.CREATED).build();
     }
 
+    /**
+     * Create user with password and sync to Keycloak (Admin only)
+     */
+    @POST
+    @Path("/register")
+    @RolesAllowed("ADMIN")
+    public Response createUser(CreateUserRequest request) {
+        Utilisateur created = utilisateurService.createWithKeycloak(request);
+        return Response.ok(created).status(Response.Status.CREATED).build();
+    }
+
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("ADMIN")
     public Response delete(@PathParam("id") UUID id) {
         utilisateurService.delete(id);
         return Response.status(Response.Status.NO_CONTENT).build();

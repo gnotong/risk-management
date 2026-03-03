@@ -5,6 +5,16 @@ export interface User {
     roles?: string[];
 }
 
+export interface CreateUserRequest {
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password?: string;
+    role: string;
+}
+
+
 export interface Risk {
     id: string;
     libelle: string;
