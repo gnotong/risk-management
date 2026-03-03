@@ -3,9 +3,7 @@
     <!-- Header with Back Button -->
     <div class="flex items-center gap-4">
       <router-link to="/" class="p-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-full border border-gray-200 dark:border-white/10 transition-colors text-gray-700 dark:text-white shadow-sm dark:shadow-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
+        <ArrowLeft class="h-6 w-6" />
       </router-link>
       <div>
         <h2 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight transition-colors">{{ $t('risk_detail.title') }}</h2>
@@ -14,9 +12,9 @@
         <button 
           v-if="!loading && risque"
           @click="openDeleteModal"
-          class="bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2"
+          class="btn-icon-danger flex items-center gap-2 px-4 py-2 font-bold"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          <Trash2 class="h-4 w-4" />
           {{ $t('form.delete') }}
         </button>
       </div>
@@ -91,7 +89,7 @@
                 <option v-for="user in userStore.users" :key="user.id" :value="user.id">{{ user.nom }} ({{ user.roles?.join(', ') || '' }})</option>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-blue-400">
-                <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                <ChevronDown class="w-4 h-4 fill-current" />
               </div>
             </div>
             
@@ -154,7 +152,7 @@
               <div class="flex justify-between items-start mb-2">
                 <h5 class="font-bold text-gray-800 dark:text-gray-200 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">{{ plan.nom }}</h5>
                 <span class="text-xs px-2 py-0.5 rounded font-bold" :class="plan.statut === StatutPlanAction.TERMINE ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'">
-                  {{ $t(`status.${plan.statut || StatutPlanAction.A_FAIRE}`) }}
+                  {{ $t(`status.${plan.statut || StatutPlanAction.NON_COMMENCE}`) }}
                 </span>
               </div>
               <div class="flex justify-between items-center mt-3 text-sm">
@@ -192,6 +190,7 @@ import ActionPlanFormModal from '../components/ActionPlanFormModal.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useI18n } from 'vue-i18n';
 import { StatutRisque, StatutPlanAction } from '../domain/entities/Risk';
+import { ArrowLeft, Trash2, ChevronDown } from 'lucide-vue-next';
 
 const route = useRoute();
 const router = useRouter();

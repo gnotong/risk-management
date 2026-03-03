@@ -93,10 +93,10 @@
                 <!-- Delete Button -->
                 <button 
                   @click.prevent="confirmDeleteRisk(r.id, r.libelle)"
-                  class="p-2 rounded-lg bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-600 dark:hover:bg-red-500 hover:text-white dark:hover:text-white transition-colors border border-red-200 dark:border-red-500/20 hover:border-red-600 dark:hover:border-red-500 opacity-0 group-hover:opacity-100 cursor-pointer shadow-sm dark:shadow-none"
+                  class="btn-icon-danger opacity-0 group-hover:opacity-100"
                   title="Supprimer le risque"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  <Trash2 class="h-5 w-5" />
                 </button>
               </div>
             </router-link>
@@ -180,6 +180,7 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { useI18n } from 'vue-i18n';
 import { StatutRisque } from '../domain/entities/Risk';
+import { Trash2 } from 'lucide-vue-next';
 
 const store = useRiskStore();
 const actionPlanStore = useActionPlanStore();

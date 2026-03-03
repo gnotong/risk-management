@@ -102,20 +102,19 @@
                       {{ user.isActive ? $t('admin.active') : $t('admin.inactive') }}
                     </span>
                   </td>
-                  <td class="px-4 py-3 text-right space-x-3">
+                  <td class="px-4 py-3 text-right space-x-2">
                     <button v-if="user.keycloakSyncStatus && user.keycloakSyncStatus !== KeycloakSyncStatus.SYNCED"
                             @click="syncUserLocal(user)"
-                            class="text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 font-medium text-sm transition-colors"
+                            class="btn-icon-warning"
                             :title="$t('admin.sync_user')" :disabled="isSyncing">
-                      <span v-if="isSyncing" class="animate-spin inline-block">🔄</span>
-                      <span v-else>🔄</span>
+                      <RefreshCw class="w-4 h-4" :class="{'animate-spin': isSyncing}" />
                       <span class="sr-only">{{ $t('admin.sync_pending') }}</span>
                     </button>
-                    <button @click="editUser(user)" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors" :title="$t('admin.edit_user')">
-                      🖍️
+                    <button @click="editUser(user)" class="btn-icon-primary" :title="$t('admin.edit_user')">
+                      <Edit2 class="w-4 h-4" />
                     </button>
-                    <button @click="deleteUserLocal(user)" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium text-sm transition-colors" :title="$t('admin.delete_user')">
-                      🗑️
+                    <button @click="deleteUserLocal(user)" class="btn-icon-danger" :title="$t('admin.delete_user')">
+                      <Trash2 class="w-4 h-4" />
                     </button>
                   </td>
                 </tr>
@@ -181,11 +180,11 @@
 
       <!-- Toast Messages (Optional, if we want to show generic success) -->
       <div v-if="successMessage" class="fixed bottom-4 right-4 bg-green-100 dark:bg-green-500/20 border border-green-200 dark:border-green-500 text-green-800 dark:text-green-200 px-4 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2 animate-in slide-in-from-bottom-5">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+        <Check class="h-5 w-5" />
         <span>{{ successMessage }}</span>
       </div>
       <div v-if="errorMessage" class="fixed bottom-4 right-4 bg-red-100 dark:bg-red-500/20 border border-red-200 dark:border-red-500 text-red-800 dark:text-red-200 px-4 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2 animate-in slide-in-from-bottom-5">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <XCircle class="h-5 w-5" />
         <span>{{ errorMessage }}</span>
       </div>
 
@@ -217,6 +216,7 @@ import { Role, KeycloakSyncStatus } from '../domain/entities/Risk';
 import UserFormModal from '../components/UserFormModal.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useI18n } from 'vue-i18n';
+import { Check, XCircle, RefreshCw, Edit2, Trash2 } from 'lucide-vue-next';
 
 const { t } = useI18n();
 const router = useRouter();

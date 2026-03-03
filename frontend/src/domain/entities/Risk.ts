@@ -13,11 +13,10 @@ export enum StatutRisque {
 }
 
 export enum StatutPlanAction {
-    A_FAIRE = 'A_FAIRE',
+    NON_COMMENCE = 'NON_COMMENCE',
     EN_COURS = 'EN_COURS',
     TERMINE = 'TERMINE',
-    ANNULE = 'ANNULE',
-    RETARD = 'RETARD'
+    EN_RETARD = 'EN_RETARD'
 }
 
 export enum StatutRecommandation {

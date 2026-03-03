@@ -130,7 +130,7 @@ const submitForm = async () => {
       dateFin: form.dateFin || null,
       risque: { id: props.riskId },
       tauxAvancement: 0,
-      statut: StatutPlanAction.A_FAIRE
+      statut: StatutPlanAction.NON_COMMENCE
     };
 
     try {

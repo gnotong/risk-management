@@ -11,9 +11,7 @@
     <div class="mt-4 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white dark:bg-white/5 p-4 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
       <div class="relative w-full sm:w-1/2">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-          </svg>
+          <Search class="h-5 w-5 text-gray-400" />
         </div>
         <input 
           v-model="searchQuery" 
@@ -28,7 +26,7 @@
           class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
         >
           <option value="">Tous les statuts</option>
-          <option :value="StatutPlanAction.A_FAIRE">{{ $t('status.A_FAIRE') }}</option>
+          <option :value="StatutPlanAction.NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
           <option :value="StatutPlanAction.EN_COURS">{{ $t('status.EN_COURS') }}</option>
           <option :value="StatutPlanAction.TERMINE">{{ $t('status.TERMINE') }}</option>
         </select>
@@ -40,9 +38,7 @@
     </div>
     
     <div v-else-if="filteredPlans.length === 0" class="glass-card p-12 mt-6 text-center text-gray-400 flex flex-col items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-6 text-gray-500 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-      </svg>
+      <FileX class="h-20 w-20 mb-6 text-gray-500 opacity-50" />
       <p class="text-lg">{{ $t('action_plans.empty') }}</p>
     </div>
 
@@ -57,7 +53,7 @@
           <div class="w-full sm:w-auto">
             <div class="flex gap-3 items-center mb-1 flex-wrap">
               <h3 class="font-bold text-base sm:text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ plan.nom }}</h3>
-              <span class="px-2 py-0.5 text-[10px] sm:text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ $t(`status.${plan.statut || StatutPlanAction.A_FAIRE}`) }}</span>
+              <span class="px-2 py-0.5 text-[10px] sm:text-xs font-bold rounded" :class="getStatusStyle(plan.statut)">{{ $t(`status.${plan.statut || StatutPlanAction.NON_COMMENCE}`) }}</span>
             </div>
             <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 max-w-2xl">{{ plan.description || '' }}</p>
           </div>
@@ -70,10 +66,10 @@
             <button 
               v-if="plan.statut !== StatutPlanAction.TERMINE"
               @click.prevent="openDeleteModal(plan.id, plan.nom)"
-              class="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20 hover:border-red-500 opacity-0 group-hover:opacity-100"
+              class="btn-icon-danger opacity-0 group-hover:opacity-100"
               :title="$t('action_plans.delete_plan_title')"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+              <Trash2 class="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -163,6 +159,7 @@ import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useActionPlanStore } from '../stores/actionPlanStore';
 import { useI18n } from 'vue-i18n';
 import { StatutPlanAction } from '../domain/entities/Risk';
+import { Search, FileX, Trash2 } from 'lucide-vue-next';
 
 const store = useActionPlanStore();
 const { t } = useI18n();
@@ -176,7 +173,7 @@ const filteredPlans = computed(() => {
   let result = store.plans;
   
   if (searchStatus.value) {
-    result = result.filter(plan => (plan.statut || StatutPlanAction.A_FAIRE) === searchStatus.value);
+    result = result.filter(plan => (plan.statut || StatutPlanAction.NON_COMMENCE) === searchStatus.value);
   }
 
   if (searchQuery.value) {

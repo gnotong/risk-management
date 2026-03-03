@@ -3,9 +3,7 @@
     <!-- Header -->
     <div class="flex flex-wrap items-center gap-3 sm:gap-4">
       <button @click="goBack" class="p-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 rounded-full border border-gray-200 dark:border-white/10 transition-colors text-gray-700 dark:text-white cursor-pointer flex-shrink-0 shadow-sm dark:shadow-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
+        <ArrowLeft class="h-5 w-5 sm:h-6 sm:w-6" />
       </button>
       <div class="flex-1 min-w-[200px]">
         <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight break-words transition-colors">{{ $t('action_plan_detail.title') }}</h2>
@@ -14,11 +12,11 @@
         <button 
           @click="deletePlanModal.isOpen = true"
           :disabled="plan.tauxAvancement > 0"
-          :class="plan.tauxAvancement > 0 ? 'opacity-50 cursor-not-allowed bg-gray-400 dark:bg-gray-600 text-white' : 'bg-red-600 dark:bg-red-500/20 hover:bg-red-700 dark:hover:bg-red-500/30 text-white dark:text-red-400'"
-          class="px-4 py-2 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 shadow-sm dark:shadow-none"
+          :class="plan.tauxAvancement > 0 ? 'opacity-50 cursor-not-allowed bg-gray-400 dark:bg-gray-600 text-white' : 'btn-icon-danger font-bold'"
+          class="flex items-center gap-2 px-4 py-2"
           :title="plan.tauxAvancement > 0 ? 'Impossible de supprimer un plan ayant un avancement > 0%' : ''"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          <Trash2 class="h-4 w-4" />
           {{ $t('form.delete') || 'Supprimer' }}
         </button>
       </div>
@@ -80,9 +78,9 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ $t('action_plan_detail.status') }}</label>
                 <select v-model="editForm.statut" :disabled="plan.statut === StatutPlanAction.TERMINE" class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none disabled:opacity-50 disabled:cursor-not-allowed">
-                  <option :value="StatutPlanAction.A_FAIRE">{{ $t('status.A_FAIRE') }}</option>
+                  <option :value="StatutPlanAction.NON_COMMENCE">{{ $t('status.NON_COMMENCE') }}</option>
                   <option :value="StatutPlanAction.EN_COURS">{{ $t('status.EN_COURS') }}</option>
-                  <option :value="StatutPlanAction.RETARD">{{ $t('status.EN_RETARD') }}</option>
+                  <option :value="StatutPlanAction.EN_RETARD">{{ $t('status.EN_RETARD') }}</option>
                   <option :value="StatutPlanAction.TERMINE">{{ $t('status.TERMINE') }}</option>
                 </select>
               </div>
@@ -138,10 +136,10 @@
                 <div class="text-xs text-emerald-600 dark:text-emerald-400 font-mono">{{ formatDateTime(s.dateSuivi) }}</div>
                 <button 
                   @click="openDeleteSuiviModal(s.id)"
-                  class="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-red-50 dark:bg-red-500/10 rounded"
+                  class="btn-icon-danger opacity-0 group-hover:opacity-100"
                   title="Supprimer le journal"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  <Trash2 class="h-4 w-4" />
                 </button>
               </div>
               <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{{ s.commentaire }}</p>
@@ -191,6 +189,7 @@ import { useActionPlanStore } from '../stores/actionPlanStore';
 import { useI18n } from 'vue-i18n';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { StatutPlanAction } from '../domain/entities/Risk';
+import { ArrowLeft, Trash2 } from 'lucide-vue-next';
 
 const route = useRoute();
 const router = useRouter();
@@ -216,7 +215,7 @@ const loadingSuivis = ref(false);
 
 const editForm = reactive({
   tauxAvancement: 0,
-  statut: StatutPlanAction.A_FAIRE,
+  statut: StatutPlanAction.NON_COMMENCE,
   dateDebut: '',
   dateFin: '',
   commentaire: ''
@@ -229,7 +228,7 @@ const loadData = async () => {
     const data = await store.getPlanById(id);
     plan.value = data;
     editForm.tauxAvancement = data.tauxAvancement || 0;
-    editForm.statut = data.statut || StatutPlanAction.A_FAIRE;
+    editForm.statut = data.statut || StatutPlanAction.NON_COMMENCE;
     editForm.dateDebut = data.dateDebut || '';
     editForm.dateFin = data.dateFin || '';
 

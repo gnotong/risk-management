@@ -36,13 +36,9 @@
             <button @click="toggleTheme" class="relative inline-flex h-7 w-14 shrink-0 cursor-pointer items-center justify-between rounded-full border border-gray-300 dark:border-transparent transition-colors duration-200 ease-in-out shadow-inner" :class="isDark ? 'bg-[#24292e]' : 'bg-gray-200'" role="switch" :aria-checked="isDark">
               <span class="sr-only">Toggle theme</span>
               <!-- Sun Icon (Left side when light mode) -->
-              <svg class="w-4 h-4 ml-1 z-10 transition-opacity duration-200" :class="isDark ? 'opacity-0' : 'opacity-100 text-[#24292e]'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
+              <Sun class="w-4 h-4 ml-1 z-10 transition-opacity duration-200" :class="isDark ? 'opacity-0' : 'opacity-100 text-[#24292e]'" />
               <!-- Moon Icon (Right side when dark mode) -->
-              <svg class="w-4 h-4 mr-1 z-10 absolute right-0 transition-opacity duration-200" :class="isDark ? 'opacity-100 text-white' : 'opacity-0'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
+              <Moon class="w-4 h-4 mr-1 z-10 absolute right-0 transition-opacity duration-200" :class="isDark ? 'opacity-100 text-white' : 'opacity-0'" />
               <!-- Sliding knob -->
               <span aria-hidden="true" class="absolute left-0 inline-block h-6 w-6 transform rounded-full shadow ring-0 transition duration-200 ease-in-out" :class="isDark ? 'translate-x-7 bg-white' : 'translate-x-0 bg-[#24292e]'"></span>
             </button>
@@ -71,6 +67,7 @@ import { useI18n } from 'vue-i18n';
 import { computed, ref, onMounted } from 'vue';
 import { useUserStore } from './stores/userStore';
 import keycloak from './plugins/keycloak';
+import { Sun, Moon } from 'lucide-vue-next';
 
 const { locale } = useI18n();
 const userStore = useUserStore();
