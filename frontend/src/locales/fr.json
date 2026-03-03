@@ -143,7 +143,17 @@
         "no_users": "Aucun utilisateur trouvé.",
         "status": "Statut",
         "active": "Actif",
-        "inactive": "Inactif"
+        "inactive": "Inactif",
+        "search_placeholder": "Filtrer par nom ou email...",
+        "all_roles": "Tous les rôles",
+        "all_statuses": "Tous les statuts",
+        "prev": "Précédent",
+        "next": "Suivant",
+        "first": "Première",
+        "last": "Dernière",
+        "page_info": "Page {current} sur {total}",
+        "total_records": "Total: {count} utilisateur(s)",
+        "items_per_page": "Lignes par page"
     },
     "common": {
         "loading": "Chargement"

@@ -143,7 +143,17 @@
         "no_users": "No users found.",
         "status": "Status",
         "active": "Active",
-        "inactive": "Inactive"
+        "inactive": "Inactive",
+        "search_placeholder": "Search by name or email...",
+        "all_roles": "All roles",
+        "all_statuses": "All statuses",
+        "prev": "Previous",
+        "next": "Next",
+        "first": "First",
+        "last": "Last",
+        "page_info": "Page {current} of {total}",
+        "total_records": "Total: {count} user(s)",
+        "items_per_page": "Items per page"
     },
     "common": {
         "loading": "Loading"

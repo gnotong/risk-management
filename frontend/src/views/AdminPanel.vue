@@ -118,8 +118,50 @@
 
       <!-- Users List -->
       <div class="lg:col-span-2">
-        <div class="bg-white dark:bg-slate-800/80 backdrop-blur-lg rounded-xl shadow-xl dark:shadow-2xl border border-slate-200 dark:border-slate-700/50 p-6">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{{ $t('admin.users_list') }}</h2>
+        <div class="bg-white dark:bg-slate-800/80 backdrop-blur-lg rounded-xl shadow-xl dark:shadow-2xl border border-slate-200 dark:border-slate-700/50 p-6 flex flex-col h-full">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $t('admin.users_list') }}</h2>
+            <div class="text-sm text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-700/50 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-600">
+              {{ $t('admin.total_records', { count: filteredUsers.length }) }}
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <!-- Search -->
+            <div>
+              <input
+                v-model="searchQuery"
+                type="text"
+                class="w-full px-4 py-2 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                :placeholder="$t('admin.search_placeholder')"
+              />
+            </div>
+            <!-- Role Filter -->
+            <div>
+              <select
+                v-model="selectedRole"
+                class="w-full px-4 py-2 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              >
+                <option value="">{{ $t('admin.all_roles') }}</option>
+                <option value="ADMIN">{{ $t('role.admin') }}</option>
+                <option value="AUDITEUR">{{ $t('role.auditeur') }}</option>
+                <option value="RESPONSABLE">{{ $t('role.responsable') }}</option>
+                <option value="LECTEUR">{{ $t('role.lecteur') }}</option>
+              </select>
+            </div>
+            <!-- Status Filter -->
+            <div>
+              <select
+                v-model="selectedStatus"
+                class="w-full px-4 py-2 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              >
+                <option value="">{{ $t('admin.all_statuses') }}</option>
+                <option value="active">{{ $t('admin.active') }}</option>
+                <option value="inactive">{{ $t('admin.inactive') }}</option>
+              </select>
+            </div>
+          </div>
 
           <!-- Loading State -->
           <div v-if="userStore.loading" class="text-center text-slate-600 dark:text-slate-300">
@@ -127,7 +169,7 @@
           </div>
 
           <!-- Empty State -->
-          <div v-else-if="userStore.users.length === 0" class="text-center text-slate-600 dark:text-slate-300 py-8">
+          <div v-else-if="paginatedUsers.length === 0" class="text-center text-slate-600 dark:text-slate-300 py-8 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg">
             {{ $t('admin.no_users') }}
           </div>
 
@@ -143,7 +185,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="user in userStore.users" :key="user.id" class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+                <tr v-for="user in paginatedUsers" :key="user.id" class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
                   <td class="px-4 py-3 text-slate-700 dark:text-slate-200">{{ user.username }}</td>
                   <td class="px-4 py-3 text-slate-700 dark:text-slate-200">{{ user.email }}</td>
                   <td class="px-4 py-3">
@@ -161,6 +203,60 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Pagination Controls -->
+          <div v-if="totalPages > 1 || paginatedUsers.length > 0" class="mt-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200 dark:border-slate-700 mt-6">
+            <div class="flex items-center gap-4">
+              <div class="text-sm text-slate-600 dark:text-slate-400">
+                {{ $t('admin.page_info', { current: currentPage, total: totalPages }) }}
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-slate-600 dark:text-slate-400">{{ $t('admin.items_per_page') }}:</span>
+                <select 
+                  v-model="itemsPerPage" 
+                  class="bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded text-slate-700 dark:text-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 py-1"
+                >
+                  <option :value="5">5</option>
+                  <option :value="10">10</option>
+                  <option :value="20">20</option>
+                  <option :value="50">50</option>
+                  <option :value="100">100</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button 
+                @click="firstPage" 
+                :disabled="currentPage === 1"
+                class="px-3 py-1 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                :title="$t('admin.first')"
+              >
+                &laquo;
+              </button>
+              <button 
+                @click="prevPage" 
+                :disabled="currentPage === 1"
+                class="px-3 py-1 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {{ $t('admin.prev') }}
+              </button>
+              <button 
+                @click="nextPage" 
+                :disabled="currentPage === totalPages"
+                class="px-3 py-1 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {{ $t('admin.next') }}
+              </button>
+              <button 
+                @click="lastPage" 
+                :disabled="currentPage === totalPages"
+                class="px-3 py-1 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                :title="$t('admin.last')"
+              >
+                &raquo;
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -168,7 +264,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/userStore';
 
@@ -188,6 +284,13 @@ const isLoading = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
 
+// List Filters & Pagination state
+const searchQuery = ref('');
+const selectedRole = ref('');
+const selectedStatus = ref('');
+const currentPage = ref(1);
+const itemsPerPage = ref(10); // Dynamic items per page
+
 const isAdmin = computed(() => {
   return userStore.userRole === 'ADMIN';
 });
@@ -199,6 +302,54 @@ onMounted(() => {
     userStore.fetchUsers();
   }
 });
+
+// Computed properties for filtering and pagination
+const filteredUsers = computed(() => {
+  let result = userStore.users;
+
+  // Search by username or email
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    result = result.filter(u => 
+      u.username?.toLowerCase().includes(query) || 
+      u.email?.toLowerCase().includes(query)
+    );
+  }
+
+  // Filter by role
+  if (selectedRole.value) {
+    result = result.filter(u => u.role === selectedRole.value);
+  }
+
+  // Filter by status
+  if (selectedStatus.value !== '') {
+    const isActiveTarget = selectedStatus.value === 'active';
+    result = result.filter(u => u.isActive === isActiveTarget);
+  }
+
+  return result;
+});
+
+const totalPages = computed(() => {
+  return Math.max(1, Math.ceil(filteredUsers.value.length / itemsPerPage.value));
+});
+
+const paginatedUsers = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredUsers.value.slice(start, end);
+});
+
+// Reset to first page when filtering conditions change
+watch([searchQuery, selectedRole, selectedStatus, itemsPerPage], () => {
+  currentPage.value = 1;
+});
+
+// Pagination Navigation Methods
+const firstPage = () => { currentPage.value = 1; };
+const prevPage = () => { if (currentPage.value > 1) currentPage.value--; };
+const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++; };
+const lastPage = () => { currentPage.value = totalPages.value; };
 
 const submitForm = async () => {
   if (!formData.value.username || !formData.value.email || !formData.value.password || !formData.value.role) {
