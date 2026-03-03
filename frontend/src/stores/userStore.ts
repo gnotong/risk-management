@@ -3,10 +3,14 @@ import { ref, computed } from 'vue';
 import { apiUserRepository } from '../infrastructure/repositories/ApiUserRepository';
 import { GetUsersUseCase } from '../application/usecases/user/GetUsersUseCase';
 import { CreateUserUseCase } from '../application/usecases/user/CreateUserUseCase';
-import type { CreateUserRequest } from '../domain/entities/Risk';
+import { UpdateUserUseCase } from '../application/usecases/user/UpdateUserUseCase';
+import { DeleteUserUseCase } from '../application/usecases/user/DeleteUserUseCase';
+import type { CreateUserRequest, UpdateUserRequest } from '../domain/entities/Risk';
 
 const getUsersUseCase = new GetUsersUseCase(apiUserRepository);
 const createUserUseCase = new CreateUserUseCase(apiUserRepository);
+const updateUserUseCase = new UpdateUserUseCase(apiUserRepository);
+const deleteUserUseCase = new DeleteUserUseCase(apiUserRepository);
 
 export const useUserStore = defineStore('user', () => {
     const users = ref<any[]>([]);
@@ -37,6 +41,14 @@ export const useUserStore = defineStore('user', () => {
         return await createUserUseCase.execute(request);
     };
 
+    const updateUser = async (id: string, request: UpdateUserRequest) => {
+        return await updateUserUseCase.execute(id, request);
+    };
+
+    const deleteUser = async (id: string) => {
+        return await deleteUserUseCase.execute(id);
+    };
+
     const isAdmin = computed(() => userRole.value === 'ADMIN');
 
     return {
@@ -44,6 +56,8 @@ export const useUserStore = defineStore('user', () => {
         loading,
         fetchUsers,
         createUser,
+        updateUser,
+        deleteUser,
         userRole,
         setUserRole,
         username,

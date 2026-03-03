@@ -7,11 +7,21 @@ export interface User {
 
 export interface CreateUserRequest {
     username: string;
+    email: string;
     firstName: string;
     lastName: string;
-    email: string;
+    role: string | null;
     password?: string;
-    role: string;
+}
+
+export interface UpdateUserRequest {
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string | null;
+    password?: string;
+    isActive?: boolean;
 }
 
 

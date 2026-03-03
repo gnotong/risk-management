@@ -1,6 +1,7 @@
 package com.notgabs.corp.service;
 
 import com.notgabs.corp.dto.CreateUserRequest;
+import com.notgabs.corp.dto.UpdateUserRequest;
 import com.notgabs.corp.exception.BusinessException;
 import com.notgabs.corp.exception.NotFoundException;
 import com.notgabs.corp.model.PlanAction;
@@ -107,6 +108,66 @@ public class UtilisateurService {
     }
 
     @Transactional
+    public Utilisateur updateWithKeycloak(UUID id, UpdateUserRequest request) {
+        Utilisateur existing = getById(id);
+
+        if (request.username == null || request.username.trim().isEmpty()) {
+            throw new BusinessException("Username is required");
+        }
+        if (request.firstName == null || request.firstName.trim().isEmpty()) {
+            throw new BusinessException("First name is required");
+        }
+        if (request.lastName == null || request.lastName.trim().isEmpty()) {
+            throw new BusinessException("Last name is required");
+        }
+        if (request.role == null) {
+            throw new BusinessException("Role is required");
+        }
+
+        if (!existing.username.equals(request.username)) {
+            Utilisateur usernameCheck = Utilisateur.findByUsername(request.username);
+            if (usernameCheck != null) {
+                throw new BusinessException("User with username '" + request.username + "' already exists");
+            }
+        }
+
+        try {
+            String keycloakUserId = keycloakAdminService.getKeycloakUserId(existing.username);
+            
+            if (keycloakUserId == null) {
+                Log.warn("User " + existing.username + " not found in Keycloak. Database update will continue but Keycloak won't be modified.");
+            } else {
+                boolean isEnabled = request.isActive != null ? request.isActive : existing.isActive;
+                keycloakAdminService.updateUser(
+                        keycloakUserId,
+                        request.username,
+                        request.firstName,
+                        request.lastName,
+                        request.email,
+                        request.role.toString(),
+                        request.password,
+                        isEnabled
+                );
+            }
+
+            existing.username = request.username;
+            existing.nom = request.lastName;
+            existing.prenom = request.firstName;
+            existing.email = request.email;
+            existing.role = request.role;
+            if (request.isActive != null) {
+                existing.isActive = request.isActive;
+            }
+            
+            Log.info("User " + existing.username + " updated successfully");
+            return existing;
+        } catch (Exception e) {
+            Log.error("Error updating user with Keycloak", e);
+            throw new BusinessException("Failed to update user: " + e.getMessage());
+        }
+    }
+
+    @Transactional
     public void delete(UUID id) {
         Utilisateur entity = getById(id);
         
@@ -117,6 +178,19 @@ public class UtilisateurService {
             throw new BusinessException("Suppression interdite : Cet utilisateur est responsable d'un Risque ou d'un Plan d'Action.");
         }
         
+        try {
+            String keycloakUserId = keycloakAdminService.getKeycloakUserId(entity.username);
+            if (keycloakUserId != null) {
+                keycloakAdminService.deleteUser(keycloakUserId);
+                Log.info("User " + entity.username + " deleted from Keycloak");
+            } else {
+                Log.warn("User " + entity.username + " not found in Keycloak during deletion");
+            }
+        } catch (Exception e) {
+            Log.error("Failed to delete user from Keycloak", e);
+            throw new BusinessException("Failed to delete user from Keycloak: " + e.getMessage());
+        }
+
         entity.delete();
     }
 }

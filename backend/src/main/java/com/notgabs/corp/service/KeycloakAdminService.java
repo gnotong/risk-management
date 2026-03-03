@@ -118,6 +118,78 @@ public class KeycloakAdminService {
     }
 
     /**
+     * Update a user in Keycloak
+     */
+    public void updateUser(String userId, String username, String firstName, String lastName, String email, String role, String password, boolean enabled) {
+        try {
+            String token = getAdminToken();
+            String updateUserUrl = keycloakServerUrl + "/admin/realms/" + realm + "/users/" + userId;
+
+            String userJson = String.format(
+                    "{\"username\":\"%s\",\"email\":\"%s\",\"firstName\":\"%s\",\"lastName\":\"%s\",\"enabled\":%b}",
+                    username, email, firstName, lastName, enabled);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(updateUserUrl))
+                    .header("Authorization", "Bearer " + token)
+                    .header("Content-Type", "application/json")
+                    .PUT(HttpRequest.BodyPublishers.ofString(userJson))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 204) {
+                Log.info("User " + username + " updated in Keycloak");
+
+                // Set new password if provided
+                if (password != null && !password.trim().isEmpty()) {
+                    setUserPassword(userId, password, token);
+                }
+
+                // Update role
+                updateUserRole(userId, role, token);
+
+            } else {
+                Log.error("Failed to update user in Keycloak: " + response.body());
+                throw new RuntimeException("Failed to update user in Keycloak: " + response.body());
+            }
+        } catch (Exception e) {
+            Log.error("Error updating user in Keycloak", e);
+            throw new RuntimeException("Failed to update user in Keycloak", e);
+        }
+    }
+
+    /**
+     * Delete a user in Keycloak
+     */
+    public void deleteUser(String userId) {
+        try {
+            String token = getAdminToken();
+            String deleteUserUrl = keycloakServerUrl + "/admin/realms/" + realm + "/users/" + userId;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(deleteUserUrl))
+                    .header("Authorization", "Bearer " + token)
+                    .DELETE()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 204) {
+                Log.info("User deleted from Keycloak: " + userId);
+            } else if (response.statusCode() == 404) {
+                Log.warn("User already deleted or not found in Keycloak: " + userId);
+            } else {
+                Log.error("Failed to delete user in Keycloak: " + response.body());
+                throw new RuntimeException("Failed to delete user in Keycloak: " + response.body());
+            }
+        } catch (Exception e) {
+            Log.error("Error deleting user in Keycloak", e);
+            throw new RuntimeException("Failed to delete user in Keycloak", e);
+        }
+    }
+
+    /**
      * Set user password in Keycloak
      */
     private void setUserPassword(String userId, String password, String token) {
@@ -144,6 +216,42 @@ public class KeycloakAdminService {
             }
         } catch (Exception e) {
             Log.error("Error setting user password", e);
+        }
+    }
+
+    /**
+     * Update user role (removes existing realm roles and assigns new one)
+     */
+    private void updateUserRole(String userId, String roleName, String token) {
+        try {
+            // First, get currently assigned realm roles
+            String getRolesUrl = keycloakServerUrl + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/realm";
+            HttpRequest getRolesRequest = HttpRequest.newBuilder()
+                    .uri(URI.create(getRolesUrl))
+                    .header("Authorization", "Bearer " + token)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> getRolesResponse = httpClient.send(getRolesRequest, HttpResponse.BodyHandlers.ofString());
+            
+            if (getRolesResponse.statusCode() == 200) {
+                // Delete existing roles
+                JsonNode existingRoles = objectMapper.readTree(getRolesResponse.body());
+                if (existingRoles.isArray() && existingRoles.size() > 0) {
+                    HttpRequest deleteRolesRequest = HttpRequest.newBuilder()
+                            .uri(URI.create(getRolesUrl))
+                            .header("Authorization", "Bearer " + token)
+                            .header("Content-Type", "application/json")
+                            .method("DELETE", HttpRequest.BodyPublishers.ofString(existingRoles.toString()))
+                            .build();
+                    httpClient.send(deleteRolesRequest, HttpResponse.BodyHandlers.ofString());
+                }
+                
+                // Assign new role
+                assignRoleToUser(userId, roleName, token);
+            }
+        } catch (Exception e) {
+            Log.error("Error updating user role", e);
         }
     }
 
@@ -214,5 +322,12 @@ public class KeycloakAdminService {
             Log.error("Error getting user ID", e);
         }
         return null;
+    }
+
+    /**
+     * Public method to get user ID by username
+     */
+    public String getKeycloakUserId(String username) {
+        return getUserId(username, getAdminToken());
     }
 }

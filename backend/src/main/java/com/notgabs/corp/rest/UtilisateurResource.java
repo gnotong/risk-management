@@ -1,6 +1,7 @@
 package com.notgabs.corp.rest;
 
 import com.notgabs.corp.dto.CreateUserRequest;
+import com.notgabs.corp.dto.UpdateUserRequest;
 import com.notgabs.corp.model.Utilisateur;
 import com.notgabs.corp.service.UtilisateurService;
 import jakarta.inject.Inject;
@@ -46,6 +47,17 @@ public class UtilisateurResource {
     public Response createUser(CreateUserRequest request) {
         Utilisateur created = utilisateurService.createWithKeycloak(request);
         return Response.ok(created).status(Response.Status.CREATED).build();
+    }
+
+    /**
+     * Update user with Keycloak sync (Admin only)
+     */
+    @PUT
+    @Path("/{id}")
+    @RolesAllowed("ADMIN")
+    public Response updateUser(@PathParam("id") UUID id, UpdateUserRequest request) {
+        Utilisateur updated = utilisateurService.updateWithKeycloak(id, request);
+        return Response.ok(updated).build();
     }
 
     @DELETE

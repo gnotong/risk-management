@@ -11,113 +11,16 @@
       <p>{{ $t('admin.access_denied') }}</p>
     </div>
 
-    <div v-if="isAdmin" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Create User Form -->
-      <div class="lg:col-span-1">
-        <div class="bg-white dark:bg-slate-800/80 backdrop-blur-lg rounded-xl shadow-xl dark:shadow-2xl border border-slate-200 dark:border-slate-700/50 p-6">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{{ $t('admin.create_user') }}</h2>
-          
-          <form @submit.prevent="submitForm" class="space-y-4">
-            <!-- Username -->
-            <div>
-              <label class="text-sm font-medium text-slate-700 dark:text-slate-200 block text-left">{{ $t('admin.username') }}</label>
-              <input
-                v-model="formData.username"
-                type="text"
-                class="w-full px-4 py-2 mt-1 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                :placeholder="$t('admin.username_placeholder')"
-                required
-              />
-            </div>
-
-            <!-- First Name -->
-            <div>
-              <label class="text-sm font-medium text-slate-700 dark:text-slate-200 block text-left">{{ $t('admin.first_name') }}</label>
-              <input
-                v-model="formData.firstName"
-                type="text"
-                class="w-full px-4 py-2 mt-1 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                :placeholder="$t('admin.first_name_placeholder')"
-                required
-              />
-            </div>
-
-            <!-- Last Name -->
-            <div>
-              <label class="text-sm font-medium text-slate-700 dark:text-slate-200 block text-left">{{ $t('admin.last_name') }}</label>
-              <input
-                v-model="formData.lastName"
-                type="text"
-                class="w-full px-4 py-2 mt-1 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                :placeholder="$t('admin.last_name_placeholder')"
-                required
-              />
-            </div>
-
-            <!-- Email -->
-            <div>
-              <label class="text-sm font-medium text-slate-700 dark:text-slate-200 block text-left">{{ $t('admin.email') }}</label>
-              <input
-                v-model="formData.email"
-                type="email"
-                class="w-full px-4 py-2 mt-1 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                :placeholder="$t('admin.email_placeholder')"
-                required
-              />
-            </div>
-
-            <!-- Password -->
-            <div>
-              <label class="text-sm font-medium text-slate-700 dark:text-slate-200 block text-left">{{ $t('admin.password') }}</label>
-              <input
-                v-model="formData.password"
-                type="password"
-                class="w-full px-4 py-2 mt-1 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                :placeholder="$t('admin.password_placeholder')"
-                required
-              />
-            </div>
-
-            <!-- Role -->
-            <div>
-              <label class="text-sm font-medium text-slate-700 dark:text-slate-200 block text-left">{{ $t('admin.role') }}</label>
-              <select
-                v-model="formData.role"
-                class="w-full px-4 py-2 mt-1 bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              >
-                <option value="">{{ $t('admin.select_role') }}</option>
-                <option value="ADMIN">{{ $t('role.admin') }}</option>
-                <option value="AUDITEUR">{{ $t('role.auditor') }}</option>
-                <option value="RESPONSABLE">{{ $t('role.responsible') }}</option>
-                <option value="LECTEUR">{{ $t('role.reader') }}</option>
-              </select>
-            </div>
-
-            <!-- Submit Button -->
-            <button
-              type="submit"
-              :disabled="isLoading"
-              class="w-full mt-6 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 font-semibold transition-all"
-            >
-              {{ isLoading ? $t('common.loading') : $t('admin.create_user_btn') }}
-            </button>
-          </form>
-
-          <!-- Success Message -->
-          <div v-if="successMessage" class="mt-4 bg-green-100 dark:bg-green-500/20 border border-green-200 dark:border-green-500 text-green-800 dark:text-green-200 px-4 py-2 rounded-lg shadow-sm">
-            {{ successMessage }}
-          </div>
-
-          <!-- Error Message -->
-          <div v-if="errorMessage" class="mt-4 bg-red-100 dark:bg-red-500/20 border border-red-200 dark:border-red-500 text-red-800 dark:text-red-200 px-4 py-2 rounded-lg shadow-sm">
-            {{ errorMessage }}
-          </div>
-        </div>
+    <div v-if="isAdmin" class="space-y-6">
+      <div class="flex justify-end">
+        <button @click="openCreateModal" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm transition-colors flex items-center gap-2">
+          <span>+</span>
+          {{ $t('admin.create_user_btn') }}
+        </button>
       </div>
 
       <!-- Users List -->
-      <div class="lg:col-span-2">
+      <div>
         <div class="bg-white dark:bg-slate-800/80 backdrop-blur-lg rounded-xl shadow-xl dark:shadow-2xl border border-slate-200 dark:border-slate-700/50 p-6 flex flex-col h-full">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $t('admin.users_list') }}</h2>
@@ -182,6 +85,7 @@
                   <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $t('admin.email') }}</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $t('admin.role') }}</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $t('admin.status') }}</th>
+                  <th class="px-4 py-3 text-right text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $t('admin.actions') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -198,6 +102,14 @@
                     <span :class="user.isActive ? 'text-green-600 dark:text-green-400 font-medium' : 'text-red-600 dark:text-red-400 font-medium'">
                       {{ user.isActive ? $t('admin.active') : $t('admin.inactive') }}
                     </span>
+                  </td>
+                  <td class="px-4 py-3 text-right space-x-3">
+                    <button @click="editUser(user)" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors" :title="$t('admin.edit_user')">
+                      🖍️
+                    </button>
+                    <button @click="deleteUserLocal(user)" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium text-sm transition-colors" :title="$t('admin.delete_user')">
+                      🗑️
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -259,6 +171,32 @@
           </div>
         </div>
       </div>
+
+      <!-- Toast Messages (Optional, if we want to show generic success) -->
+      <div v-if="successMessage" class="fixed bottom-4 right-4 bg-green-100 dark:bg-green-500/20 border border-green-200 dark:border-green-500 text-green-800 dark:text-green-200 px-4 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2 animate-in slide-in-from-bottom-5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+        <span>{{ successMessage }}</span>
+      </div>
+      <div v-if="errorMessage" class="fixed bottom-4 right-4 bg-red-100 dark:bg-red-500/20 border border-red-200 dark:border-red-500 text-red-800 dark:text-red-200 px-4 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2 animate-in slide-in-from-bottom-5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <UserFormModal 
+        :is-open="isUserModalOpen" 
+        :user-to-edit="userToEdit" 
+        @close="closeUserModal" 
+        @saved="onUserSaved" 
+      />
+
+      <ConfirmationModal
+        :is-open="isDeleteModalOpen"
+        :title="$t('admin.delete_user')"
+        :message="$t('admin.confirm_delete')"
+        :loading="isDeleting"
+        @confirm="confirmDeleteUser"
+        @cancel="closeDeleteModal"
+      />
     </div>
   </div>
 </template>
@@ -268,21 +206,37 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/userStore';
 
+import UserFormModal from '../components/UserFormModal.vue';
+import ConfirmationModal from '../components/ConfirmationModal.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const router = useRouter();
 const userStore = useUserStore();
 
-const formData = ref({
-  username: '',
-  firstName: '',
-  lastName: '',
-  email: '',
-  password: '',
-  role: ''
-});
+// Modals State
+const isUserModalOpen = ref(false);
+const userToEdit = ref<any>(null);
+const isDeleteModalOpen = ref(false);
+const userToDelete = ref<any>(null);
+const isDeleting = ref(false);
 
-const isLoading = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
+
+let timeout: number;
+
+const showSuccess = (msg: string) => {
+  successMessage.value = msg;
+  clearTimeout(timeout);
+  timeout = window.setTimeout(() => successMessage.value = '', 4000);
+};
+
+const showError = (msg: string) => {
+  errorMessage.value = msg;
+  clearTimeout(timeout);
+  timeout = window.setTimeout(() => errorMessage.value = '', 4000);
+};
 
 // List Filters & Pagination state
 const searchQuery = ref('');
@@ -351,41 +305,48 @@ const prevPage = () => { if (currentPage.value > 1) currentPage.value--; };
 const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++; };
 const lastPage = () => { currentPage.value = totalPages.value; };
 
-const submitForm = async () => {
-  if (!formData.value.username || !formData.value.email || !formData.value.password || !formData.value.role) {
-    errorMessage.value = 'Tous les champs sont requis';
-    return;
-  }
+const openCreateModal = () => {
+  userToEdit.value = null;
+  isUserModalOpen.value = true;
+};
 
-  isLoading.value = true;
-  errorMessage.value = '';
-  successMessage.value = '';
+const editUser = (user: any) => {
+  userToEdit.value = user;
+  isUserModalOpen.value = true;
+};
 
+const closeUserModal = () => {
+  isUserModalOpen.value = false;
+  userToEdit.value = null;
+};
+
+const onUserSaved = () => {
+  showSuccess(userToEdit.value ? t('admin.update_success') : 'Utilisateur créé avec succès!');
+};
+
+const deleteUserLocal = (user: any) => {
+  userToDelete.value = user;
+  isDeleteModalOpen.value = true;
+};
+
+const closeDeleteModal = () => {
+  isDeleteModalOpen.value = false;
+  userToDelete.value = null;
+  isDeleting.value = false;
+};
+
+const confirmDeleteUser = async () => {
+  if (!userToDelete.value) return;
+  
+  isDeleting.value = true;
   try {
-    const newUser = {
-      username: formData.value.username,
-      firstName: formData.value.firstName,
-      lastName: formData.value.lastName,
-      email: formData.value.email,
-      password: formData.value.password,
-      role: formData.value.role
-    };
-
-    await userStore.createUser(newUser);
-    successMessage.value = 'Utilisateur créé avec succès!';
-    formData.value = {
-      username: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      role: ''
-    };
+    await userStore.deleteUser(userToDelete.value.id);
+    showSuccess(t('admin.delete_success'));
     await userStore.fetchUsers();
+    closeDeleteModal();
   } catch (error) {
-    errorMessage.value = (error as Error).message || 'Erreur de connexion';
-  } finally {
-    isLoading.value = false;
+    showError((error as Error).message || 'Erreur lors de la suppression');
+    isDeleting.value = false;
   }
 };
 
