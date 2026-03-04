@@ -1,8 +1,8 @@
 -- Insert a default user
-INSERT INTO Utilisateur (id, username, nom, prenom, email, role, is_active) 
+INSERT INTO Utilisateur (id, username, nom, prenom, email, role, is_active)
 VALUES ('c9925e07-aa3a-4ef4-9e3f-67f781ea32a6', 'admin', 'Dupont', 'Jean', 'admin@local.test', 'ADMIN', true);
 
-INSERT INTO Utilisateur (id, username, nom, prenom, email, role, is_active) 
+INSERT INTO Utilisateur (id, username, nom, prenom, email, role, is_active)
 VALUES ('b6537c35-ae53-488f-9a1d-7bb3d7f9f3ab', 'martin', 'Martin', 'Sophie', 'martin@local.test', 'RESPONSABLE', true);
 
 -- Insert risks

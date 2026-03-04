@@ -13,6 +13,7 @@ import com.notgabs.corp.model.Utilisateur;
 import com.notgabs.corp.interceptor.ValidateBusinessRules;
 import com.notgabs.corp.interceptor.CheckAccess;
 import com.notgabs.corp.interceptor.LogExecution;
+import com.notgabs.corp.model.StatutRisque;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
@@ -62,8 +63,8 @@ public class PlanActionService {
                     }
                 }
                 
-                if (risque.statut == com.notgabs.corp.model.StatutRisque.CLOTURE) {
-                    risque.statut = com.notgabs.corp.model.StatutRisque.EN_COURS;
+                if (risque.statut == StatutRisque.CLOTURE) {
+                    risque.statut = StatutRisque.EN_COURS;
                     risque.persist();
                 }
             }
@@ -136,16 +137,16 @@ public class PlanActionService {
             }
             
             if (unfinishedCount == 0) {
-                if (entity.risque.statut != com.notgabs.corp.model.StatutRisque.CLOTURE) {
-                    entity.risque.statut = com.notgabs.corp.model.StatutRisque.CLOTURE;
+                if (entity.risque.statut != StatutRisque.CLOTURE) {
+                    entity.risque.statut = StatutRisque.CLOTURE;
                     entity.risque.persist();
                 }
             } else {
-                if (entity.risque.statut == com.notgabs.corp.model.StatutRisque.CLOTURE) {
-                    entity.risque.statut = com.notgabs.corp.model.StatutRisque.EN_COURS;
+                if (entity.risque.statut == StatutRisque.CLOTURE) {
+                    entity.risque.statut = StatutRisque.EN_COURS;
                     entity.risque.persist();
-                } else if (entity.risque.statut == com.notgabs.corp.model.StatutRisque.OUVERT && (planAction.statut == StatutPlanAction.EN_COURS || planAction.statut == StatutPlanAction.EN_RETARD)) {
-                    entity.risque.statut = com.notgabs.corp.model.StatutRisque.EN_COURS;
+                } else if (entity.risque.statut == StatutRisque.OUVERT && (planAction.statut == StatutPlanAction.EN_COURS || planAction.statut == StatutPlanAction.EN_RETARD)) {
+                    entity.risque.statut = StatutRisque.EN_COURS;
                     entity.risque.persist();
                 }
             }

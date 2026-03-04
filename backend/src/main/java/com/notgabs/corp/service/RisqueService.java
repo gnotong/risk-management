@@ -7,6 +7,7 @@ import com.notgabs.corp.model.PlanAction;
 import com.notgabs.corp.model.Risque;
 import com.notgabs.corp.interceptor.ValidateBusinessRules;
 import com.notgabs.corp.interceptor.LogExecution;
+import com.notgabs.corp.model.StatutRisque;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -52,7 +53,7 @@ public class RisqueService {
     public Risque update(UUID id, Risque updateData) {
         Risque entity = getById(id);
         
-        if (entity.statut == com.notgabs.corp.model.StatutRisque.CLOTURE) {
+        if (entity.statut == StatutRisque.CLOTURE) {
             throw new BusinessException("Modification interdite : Impossible de modifier un risque clôturé.");
         }
         if (updateData.proprietaire == null || updateData.proprietaire.id == null) {
