@@ -5,6 +5,7 @@
     "nav": {
         "dashboard": "Dashboard",
         "risks": "Risk Register",
+        "incidents": "Incidents",
         "action_plans": "Action Plans",
         "admin": "Admin",
         "switch_lang": "FR",
@@ -16,8 +17,15 @@
         "EN_RETARD": "Overdue",
         "TERMINE": "Done",
         "OUVERT": "Open",
+        "RESOLU": "Resolved",
         "CLOS": "Closed",
         "CLOTURE": "Closed"
+    },
+    "severity": {
+        "FAIBLE": "Low",
+        "MOYEN": "Medium",
+        "ELEVE": "High",
+        "CRITIQUE": "Critical"
     },
     "dashboard": {
         "title": "Risk Dashboard",
@@ -187,5 +195,31 @@
         "risk_not_found": "Risk not found.",
         "back_to_dashboard": "Back to dashboard",
         "no_description": "No description provided."
+    },
+    "incidents": {
+        "title": "Incidents Management",
+        "subtitle": "Track and manage incidents related to risks.",
+        "empty": "No incidents recorded yet.",
+        "new_incident": "New Incident",
+        "delete_incident_title": "Delete incident",
+        "delete_incident_msg": "Are you sure you want to permanently delete this incident?",
+        "risk": "Related risk:",
+        "reporter": "Reporter:",
+        "date_occurence": "Occurrence Date:",
+        "severity": "Severity"
+    },
+    "incident_detail": {
+        "title": "Incident Details",
+        "save": "Save changes",
+        "linked_risk": "Associated risk",
+        "reporter": "Reporter",
+        "date_occurence": "Occurrence Date",
+        "date_creation": "Creation Date",
+        "date_resolution": "Resolution Date",
+        "severity": "Severity",
+        "status": "Status",
+        "impact_reel": "Real Impact",
+        "impact_placeholder": "Financial, Image, Operational...",
+        "not_found": "Incident not found."
     }
 }

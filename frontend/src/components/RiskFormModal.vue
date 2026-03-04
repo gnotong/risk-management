@@ -69,7 +69,7 @@
             class="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none" 
           >
             <option :value="null" disabled>-- {{ $t('dashboard.unassigned') }} --</option>
-            <option v-for="user in userStore.users" :key="user.id" :value="{ id: user.id }">{{ user.nom }} ({{ user.roles?.join(', ') || '' }})</option>
+            <option v-for="user in userStore.users" :key="user.id" :value="{ id: user.id }">{{ user.nom }} {{ user.roles?.join(', ') || '' }}</option>
           </select>
           <div v-if="v$.proprietaire.$error" class="text-red-500 dark:text-red-400 text-xs mt-1 text-left">{{ $t('form.required') }}</div>
         </div>

@@ -89,6 +89,10 @@ export const useRiskStore = defineStore('risk', () => {
         (selectedGrav.value === null || r.gravite === selectedGrav.value);
 
       return matchSearch && matchScore && matchOwner && matchHeatmap;
+    }).sort((a, b) => {
+      const dateA = a.dateCreation ? new Date(a.dateCreation).getTime() : (a.id || 0);
+      const dateB = b.dateCreation ? new Date(b.dateCreation).getTime() : (b.id || 0);
+      return dateB - dateA;
     });
   });
 

@@ -12,6 +12,7 @@
         </div>
         <div class="flex flex-wrap gap-4 sm:gap-6 items-center w-full lg:w-auto justify-center lg:justify-end">
           <router-link to="/" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors uppercase text-xs tracking-wider font-semibold">{{ $t('nav.risks') }}</router-link>
+          <router-link to="/incidents" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors uppercase text-xs tracking-wider font-semibold">{{ $t('nav.incidents') }}</router-link>
           <router-link to="/action-plans" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors uppercase text-xs tracking-wider font-semibold">{{ $t('nav.action_plans') }}</router-link>
           
           <router-link v-if="isAdmin" to="/admin" class="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors uppercase text-xs tracking-wider font-semibold">⚙️ {{ $t('nav.admin') }}</router-link>

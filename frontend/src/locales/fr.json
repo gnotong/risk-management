@@ -5,6 +5,7 @@
     "nav": {
         "dashboard": "Tableau de bord",
         "risks": "Registre des Risques",
+        "incidents": "Incidents",
         "action_plans": "Plans d'Action",
         "admin": "Admin",
         "switch_lang": "EN",
@@ -16,8 +17,15 @@
         "EN_RETARD": "En retard",
         "TERMINE": "Terminé",
         "OUVERT": "Ouvert",
+        "RESOLU": "Résolu",
         "CLOS": "Clos",
         "CLOTURE": "Clôturé"
+    },
+    "severity": {
+        "FAIBLE": "Faible",
+        "MOYEN": "Moyen",
+        "ELEVE": "Élevé",
+        "CRITIQUE": "Critique"
     },
     "dashboard": {
         "title": "Tableau de Bord des Risques",
@@ -187,5 +195,31 @@
         "risk_not_found": "Risque introuvable.",
         "back_to_dashboard": "Retour au tableau de bord",
         "no_description": "Aucune description fournie."
+    },
+    "incidents": {
+        "title": "Gestion des Incidents",
+        "subtitle": "Suivez et gérez les incidents survenus liés aux risques.",
+        "empty": "Aucun incident enregistré pour le moment.",
+        "new_incident": "Nouvel Incident",
+        "delete_incident_title": "Supprimer l'incident",
+        "delete_incident_msg": "Êtes-vous sûr de vouloir supprimer définitivement cet incident ?",
+        "risk": "Risque lié:",
+        "reporter": "Signaleur:",
+        "date_occurence": "Date d'occurrence:",
+        "severity": "Sévérité"
+    },
+    "incident_detail": {
+        "title": "Détails de l'Incident",
+        "save": "Enregistrer les modifications",
+        "linked_risk": "Risque associé",
+        "reporter": "Signaleur",
+        "date_occurence": "Date d'occurrence",
+        "date_creation": "Date de création",
+        "date_resolution": "Date de résolution",
+        "severity": "Sévérité",
+        "status": "Statut",
+        "impact_reel": "Impact réel",
+        "impact_placeholder": "Financier, Image, Opérationnel...",
+        "not_found": "Incident introuvable."
     }
 }

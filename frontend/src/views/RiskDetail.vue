@@ -86,7 +86,7 @@
                 title="Changer le propriétaire"
               >
                 <option value="" disabled>-- {{ $t('dashboard.unassigned') }} --</option>
-                <option v-for="user in userStore.users" :key="user.id" :value="user.id">{{ user.nom }} ({{ user.roles?.join(', ') || '' }})</option>
+                <option v-for="user in userStore.users" :key="user.id" :value="user.id">{{ user.nom }} {{ user.roles?.join(', ') || '' }}</option>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-blue-400">
                 <ChevronDown class="w-4 h-4 fill-current" />
@@ -166,6 +166,47 @@
               </div>
             </router-link>
           </div>
+
+          <!-- Incidents Section -->
+          <div class="flex items-center justify-between mb-4 mt-8">
+            <h4 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <span class="w-1.5 h-4 bg-red-500 rounded-full"></span> {{ $t('incidents.title') }}
+            </h4>
+            <router-link 
+              v-if="!incidentStore.loading" 
+              :to="`/incidents/new?riskId=${id}`"
+              class="text-xs bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-transparent hover:bg-red-100 dark:hover:bg-red-500/30 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 font-bold shadow-sm dark:shadow-none"
+            >
+              + {{ $t('incidents.new_incident') }}
+            </router-link>
+          </div>
+          
+          <div v-if="incidentStore.loading" class="animate-pulse flex space-x-4">
+            <div class="flex-1 space-y-4 py-1">
+              <div class="h-4 bg-gray-700 rounded w-3/4"></div>
+              <div class="space-y-2">
+                <div class="h-4 bg-gray-700 rounded"></div>
+              </div>
+            </div>
+          </div>
+          <div v-else-if="linkedIncidents.length === 0" class="text-gray-500 text-sm italic py-2">
+            {{ $t('incidents.empty') }}
+          </div>
+          <div v-else class="space-y-4">
+            <router-link 
+              v-for="inc in linkedIncidents" 
+              :key="inc.id" 
+              :to="`/incidents/${inc.id}`"
+              class="block p-4 rounded-xl bg-gray-50 dark:bg-black/30 border border-gray-200 dark:border-white/5 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group shadow-sm dark:shadow-none"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h5 class="font-bold text-gray-800 dark:text-gray-200 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">{{ inc.titre }}</h5>
+                <span class="text-xs px-2 py-0.5 rounded font-bold" :class="inc.statut === StatutIncident.RESOLU || inc.statut === StatutIncident.CLOTURE ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'">
+                  {{ $t(`status.${inc.statut || StatutIncident.OUVERT}`) }}
+                </span>
+              </div>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -184,12 +225,14 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useActionPlanStore } from '../stores/actionPlanStore';
+import { useIncidentStore } from '../stores/incidentStore';
 import { useRiskStore } from '../stores/riskStore';
 import { useUserStore } from '../stores/userStore';
 import ActionPlanFormModal from '../components/ActionPlanFormModal.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useI18n } from 'vue-i18n';
 import { StatutRisque, StatutPlanAction } from '../domain/entities/Risk';
+import { StatutIncident } from '../domain/entities/Incident';
 import { ArrowLeft, Trash2, ChevronDown } from 'lucide-vue-next';
 
 const route = useRoute();
@@ -199,6 +242,7 @@ const { t } = useI18n();
 const loading = ref(true);
 const risque = ref<any>(null);
 const actionPlanStore = useActionPlanStore();
+const incidentStore = useIncidentStore();
 const riskStore = useRiskStore();
 const userStore = useUserStore();
 const isActionPlanModalOpen = ref(false);
@@ -214,6 +258,7 @@ onMounted(async () => {
     editForm.value.proprietaireId = risque.value.proprietaire?.id || '';
     
     await actionPlanStore.fetchPlans();
+    await incidentStore.fetchIncidents();
     await userStore.fetchUsers();
   } catch (e) {
     console.error("Failed to load risk", e);
@@ -229,6 +274,11 @@ const onActionPlanCreated = async () => {
 const linkedPlans = computed(() => {
   if (!actionPlanStore.plans) return [];
   return actionPlanStore.plans.filter((plan: any) => plan.risque?.id === id);
+});
+
+const linkedIncidents = computed(() => {
+  if (!incidentStore.incidents) return [];
+  return incidentStore.incidents.filter((inc: any) => inc.risque?.id === id);
 });
 
 const getStatusStyle = (statut: StatutRisque) => {

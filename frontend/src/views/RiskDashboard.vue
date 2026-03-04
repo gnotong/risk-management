@@ -6,6 +6,9 @@
         <p class="text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 text-xs sm:text-sm md:text-base truncate">{{ $t('dashboard.subtitle') }}</p>
       </div>
       <div class="flex flex-wrap justify-start md:justify-end gap-2 sm:gap-3 mt-4 md:mt-0 w-full sm:w-auto">
+        <router-link to="/incidents" class="bg-orange-600 dark:bg-orange-600 hover:bg-orange-700 dark:hover:bg-orange-500 text-white px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-semibold shadow-sm transition-colors flex items-center gap-1 sm:gap-2 group cursor-pointer flex-1 sm:flex-none justify-center">
+          <span class="group-hover:scale-110 transition-transform">🚨</span> <span class="truncate">{{ $t('nav.incidents') }}</span>
+        </router-link>
         <button @click="isModalOpen = true" class="bg-emerald-600 dark:bg-emerald-600 hover:bg-emerald-700 dark:hover:bg-emerald-500 text-white px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-semibold shadow-sm transition-colors flex items-center gap-1 sm:gap-2 group cursor-pointer flex-1 sm:flex-none justify-center">
           <span class="text-sm sm:text-base md:text-lg group-hover:scale-110 transition-transform leading-none">+</span> <span class="truncate">{{ $t('dashboard.new_risk') }}</span>
         </button>
